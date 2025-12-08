@@ -57,8 +57,8 @@ const TickNTrackSections = () => {
     ];
 
     return (
-      <section className="relative pt-8 md:pt-12 pb-24 bg-white overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative pt-8 md:pt-12 pb-24 bg-white overflow-hidden w-full">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-4 2xl:px-6">
           {/* Section Header */}
           <div className="text-center max-w-3xl mx-auto mb-8 md:mb-16">
             <div className="inline-flex items-center gap-1.5 md:gap-2 px-3 md:px-4 py-1.5 md:py-2 bg-gray-100 rounded-full mb-3 md:mb-4">
@@ -261,8 +261,8 @@ const TickNTrackSections = () => {
     };
 
     return (
-      <section className="py-24 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-24 bg-gray-50 w-full">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-4 2xl:px-6">
           {/* Header */}
           <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12">
             <div>
@@ -437,8 +437,8 @@ const TickNTrackSections = () => {
     ];
 
     return (
-      <section className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-24 bg-white w-full">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-4 2xl:px-6">
           {/* Stats Bar */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
             {stats.map((stat, idx) => (

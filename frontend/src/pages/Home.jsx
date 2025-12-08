@@ -6,7 +6,7 @@ import TickNTrackSections from '../components/TickNTrackSections';
 
 const Home = () => {
   return (
-    <div className="min-h-screen pt-0 pb-16 md:pb-0 mt-0">
+    <div className="min-h-screen pt-0 pb-16 md:pb-0 mt-0 w-full">
       {/* Hero Slider */}
       <HeroSlider
         slides={[

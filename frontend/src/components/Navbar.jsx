@@ -243,10 +243,10 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="relative z-[70] bg-white">
+    <nav className="relative z-[70] bg-white w-full">
       {/* Top Bar - Dark Grey with Social Icons and Account Links */}
-      <div className="bg-gray-800 text-white py-1">
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
+      <div className="bg-gray-800 text-white py-1 w-full">
+        <div className="w-full px-3 sm:px-4 md:px-6 lg:px-8 xl:px-4 2xl:px-6">
           <div className="flex items-center justify-between">
             {/* Social Media Icons - Left */}
             <div className="flex items-center space-x-1 sm:space-x-1.5 md:space-x-2">
@@ -322,8 +322,8 @@ const Navbar = () => {
       </div>
 
       {/* Bottom Bar - White with Logo, Navigation, and Icons */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="bg-white border-b border-gray-200 w-full">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-4 2xl:px-6">
           <div className="flex items-center justify-between h-14 md:h-16">
             {/* Logo/Brand - Left */}
             <Link to="/" className="flex-shrink-0">
