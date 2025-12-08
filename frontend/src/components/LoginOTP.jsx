@@ -9,7 +9,10 @@ const LoginOTP = () => {
   const [success, setSuccess] = useState('');
   const [resendTimer, setResendTimer] = useState(0);
 
-  const API_BASE = 'http://localhost:4000';
+  // Use environment variable for OTP server URL, fallback to backend URL or localhost
+  const API_BASE = import.meta.env.VITE_OTP_SERVER_URL || 
+                   import.meta.env.VITE_BACKEND_URL || 
+                   'http://localhost:4000';
 
   // Resend OTP timer countdown
   useEffect(() => {
