@@ -531,7 +531,7 @@ const Navbar = () => {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div id="mobile-menu" className="md:hidden py-6 border-t border-gray-200 bg-white shadow-lg">
+          <div id="mobile-menu" className="md:hidden py-6 border-t border-gray-200 bg-white shadow-lg relative z-[70]">
             {/* Mobile Navigation Links with Categories */}
             <nav className="flex flex-col space-y-1 px-4">
               {categories.map((category) => (
@@ -560,36 +560,36 @@ const Navbar = () => {
                   </button>
                   {activeCategory === category.name && category.subcategories && (
                     <div className="pl-4 space-y-1.5 mt-2 animate-in">
-                      <button
-                        type="button"
-                        className="w-full text-left block text-gray-900 hover:text-gray-900 bg-white hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 font-semibold py-3 px-4 rounded-lg transition-all duration-200 text-xs shadow-sm border border-gray-200 flex items-center gap-2 group"
+                      <Link
+                        to={category.path}
+                        className="w-full text-left block text-gray-900 hover:text-gray-900 bg-white hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 font-semibold py-3 px-4 rounded-lg transition-all duration-200 text-xs shadow-sm border border-gray-200 flex items-center gap-2 group cursor-pointer"
                         onClick={(e) => {
-                          e.preventDefault();
+                          e.stopPropagation();
                           setActiveCategory(null);
                           setIsMobileMenuOpen(false);
-                          navigate(category.path);
+                          window.scrollTo(0, 0);
                         }}
                       >
                         <svg className="w-3.5 h-3.5 text-gray-400 group-hover:text-gray-900 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                         </svg>
                         <span>All {category.name}</span>
-                      </button>
+                      </Link>
                       {category.subcategories.map((subcategory) => (
-                        <button
+                        <Link
                           key={subcategory.name}
-                          type="button"
-                          className="w-full text-left block text-gray-700 hover:text-gray-900 bg-white hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 font-medium py-2.5 px-4 rounded-lg transition-all duration-200 text-xs border border-transparent hover:border-gray-200 flex items-center gap-2 group"
+                          to={subcategory.path}
+                          className="w-full text-left block text-gray-700 hover:text-gray-900 bg-white hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 font-medium py-2.5 px-4 rounded-lg transition-all duration-200 text-xs border border-transparent hover:border-gray-200 flex items-center gap-2 group cursor-pointer"
                           onClick={(e) => {
-                            e.preventDefault();
+                            e.stopPropagation();
                             setActiveCategory(null);
                             setIsMobileMenuOpen(false);
-                            navigate(subcategory.path);
+                            window.scrollTo(0, 0);
                           }}
                         >
                           <div className="w-1.5 h-1.5 rounded-full bg-gray-300 group-hover:bg-gray-600 transition-colors"></div>
                           <span>{subcategory.name}</span>
-                        </button>
+                        </Link>
                       ))}
                     </div>
                   )}
