@@ -207,94 +207,157 @@ const SignIn = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-neutral-50 to-white">
-      <div className="flex h-screen">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-teal-50/30 to-cyan-50/30 relative">
+      {/* Animated Background Elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-teal-200/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-cyan-200/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+      </div>
+      
+      <div className="flex min-h-screen relative z-10">
         {/* Left Side - Logo */}
-        <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-rose-100 via-pink-100 to-amber-100 items-center justify-center">
-          <div className="text-center">
-            <Link to="/" className="inline-block mb-8">
-              <h1 className="text-5xl font-serif font-bold bg-gradient-to-r from-pink-500 via-rose-500 to-amber-500 bg-clip-text text-transparent">
-                SaariSanskar
+        <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-teal-500/10 via-cyan-500/10 to-blue-500/10 backdrop-blur-sm items-center justify-center relative overflow-hidden">
+          {/* Decorative Pattern */}
+          <div className="absolute inset-0 opacity-5">
+            <div className="absolute top-20 left-20 w-32 h-32 border-2 border-teal-600 rounded-full"></div>
+            <div className="absolute bottom-20 right-20 w-40 h-40 border-2 border-cyan-600 rounded-full"></div>
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 border-2 border-blue-600 rounded-full"></div>
+            <div className="absolute top-1/3 right-1/4 w-20 h-20 border-2 border-teal-500 rounded-full"></div>
+          </div>
+          {/* Grid Pattern Overlay */}
+          <div className="absolute inset-0 opacity-[0.02]" style={{
+            backgroundImage: 'linear-gradient(teal 1px, transparent 1px), linear-gradient(90deg, teal 1px, transparent 1px)',
+            backgroundSize: '50px 50px'
+          }}></div>
+          <div className="text-center relative z-10">
+            <Link to="/" className="inline-block mb-8 transform hover:scale-105 transition-transform duration-300">
+              <h1 className="text-6xl font-bold bg-gradient-to-r from-teal-600 via-cyan-600 to-blue-600 bg-clip-text text-transparent drop-shadow-lg">
+                TickNTrack
               </h1>
+              <div className="mt-2 h-1 w-24 mx-auto bg-gradient-to-r from-teal-600 to-cyan-600 rounded-full"></div>
             </Link>
-            <p className="text-lg text-gray-600 max-w-sm mx-auto leading-relaxed">
-              Discover the elegance of traditional Indian sarees. Your journey to timeless beauty starts here.
+            <p className="text-lg text-gray-700 max-w-sm mx-auto leading-relaxed font-medium">
+              Your destination for premium shoes and watches. Step into style, track your time with elegance.
             </p>
           </div>
         </div>
 
         {/* Right Side - Form */}
-        <div className="w-full lg:w-1/2 flex items-center justify-center py-8 px-4">
-          <div className="w-full max-w-sm">
+        <div className="w-full lg:w-1/2 flex items-center justify-center py-8 px-4 min-h-screen bg-gradient-to-br from-teal-500/10 via-cyan-500/10 to-blue-500/10 backdrop-blur-sm relative overflow-hidden">
+          {/* Decorative Pattern - Same as left side */}
+          <div className="absolute inset-0 opacity-5">
+            <div className="absolute top-20 right-20 w-32 h-32 border-2 border-teal-600 rounded-full"></div>
+            <div className="absolute bottom-20 left-20 w-40 h-40 border-2 border-cyan-600 rounded-full"></div>
+            <div className="absolute top-1/2 right-1/4 w-24 h-24 border-2 border-blue-600 rounded-full"></div>
+            <div className="absolute top-1/3 left-1/3 w-20 h-20 border-2 border-teal-500 rounded-full"></div>
+          </div>
+          {/* Grid Pattern Overlay */}
+          <div className="absolute inset-0 opacity-[0.02]" style={{
+            backgroundImage: 'linear-gradient(teal 1px, transparent 1px), linear-gradient(90deg, teal 1px, transparent 1px)',
+            backgroundSize: '50px 50px'
+          }}></div>
+          
+          <div className="w-full max-w-sm relative z-10">
             {/* Mobile Logo */}
-            <div className="lg:hidden text-center mb-6">
-              <Link to="/" className="inline-block mb-6">
-                <h1 className="text-2xl font-serif font-bold bg-gradient-to-r from-pink-500 via-rose-500 to-amber-500 bg-clip-text text-transparent">
-                  SaariSanskar
+            <div className="lg:hidden text-center mb-8">
+              <Link to="/" className="inline-block mb-6 transform hover:scale-105 transition-transform duration-300">
+                <h1 className="text-3xl font-bold bg-gradient-to-r from-teal-600 via-cyan-600 to-blue-600 bg-clip-text text-transparent">
+                  TickNTrack
                 </h1>
+                <div className="mt-2 h-1 w-16 mx-auto bg-gradient-to-r from-teal-600 to-cyan-600 rounded-full"></div>
               </Link>
             </div>
 
             {/* Form Header */}
-            <div className="text-center mb-6">
-              <h2 className="text-xl font-serif font-semibold text-neutral-800 mb-1">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold text-gray-900 mb-2 tracking-tight">
                 Welcome Back
               </h2>
-              <p className="text-gray-600">
+              <p className="text-gray-600 text-sm">
                 Sign in to your account to continue shopping
               </p>
             </div>
 
             {/* Sign In Form */}
-            <div className="bg-white rounded-2xl shadow-lg p-6 border border-neutral-100">
-              {error && (<div className="mb-4 text-sm text-red-600">{error}</div>)}
-              {success && (<div className="mb-4 text-sm text-green-600">{success}</div>)}
+            <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-gray-200/50 hover:shadow-teal-500/20 transition-all duration-300 relative">
+              {/* Subtle glow effect */}
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-teal-500/20 via-cyan-500/20 to-blue-500/20 rounded-3xl blur opacity-50 -z-10"></div>
+              {error && (
+                <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-600 flex items-center gap-2 animate-shake">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                  </svg>
+                  {error}
+                </div>
+              )}
+              {success && (
+                <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-xl text-sm text-green-600 flex items-center gap-2">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  {success}
+                </div>
+              )}
 
               {loginMode === 'email' ? (
                 <form onSubmit={handleEmailLogin} className="space-y-4">
                   <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-neutral-700 mb-2">
+                    <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
                       Email Address
                     </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-3 py-2 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-400 focus:border-transparent transition-all"
-                      placeholder="Enter your email"
-                    />
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
+                        </svg>
+                      </div>
+                      <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        required
+                        className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all bg-gray-50 focus:bg-white"
+                        placeholder="Enter your email"
+                      />
+                    </div>
                   </div>
 
                   <div>
-                    <label htmlFor="password" className="block text-sm font-medium text-neutral-700 mb-2">
+                    <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-2">
                       Password
                     </label>
-                    <input
-                      type="password"
-                      id="password"
-                      name="password"
-                      value={formData.password}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-3 py-2 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-400 focus:border-transparent transition-all"
-                      placeholder="Enter your password"
-                    />
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                      </div>
+                      <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        required
+                        className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all bg-gray-50 focus:bg-white"
+                        placeholder="Enter your password"
+                      />
+                    </div>
                   </div>
 
                   <div className="flex items-center justify-between">
                     <label className="flex items-center">
                       <input
                         type="checkbox"
-                        className="h-4 w-4 text-rose-500 focus:ring-rose-400 border-neutral-300 rounded"
+                        className="h-4 w-4 text-teal-600 focus:ring-teal-500 border-gray-300 rounded"
                       />
                       <span className="ml-2 text-sm text-gray-600">Remember me</span>
                     </label>
                     <Link
                       to="/forgot-password"
-                      className="text-sm text-rose-500 hover:text-rose-600 transition-colors"
+                      className="text-sm text-teal-600 hover:text-teal-700 transition-colors"
                     >
                       Forgot password?
                     </Link>
@@ -303,14 +366,29 @@ const SignIn = () => {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full bg-gradient-to-r from-rose-500 to-rose-600 text-white py-2 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-60"
+                    className="w-full bg-gradient-to-r from-teal-600 to-cyan-600 text-white py-3.5 rounded-xl font-semibold shadow-lg hover:shadow-xl hover:shadow-teal-500/50 transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-60 transform active:scale-95 flex items-center justify-center gap-2"
                   >
-                    {loading ? 'Signing In...' : 'Sign In'}
+                    {loading ? (
+                      <>
+                        <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Signing In...
+                      </>
+                    ) : (
+                      <>
+                        Sign In
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                        </svg>
+                      </>
+                    )}
                   </button>
                   <button
                     type="button"
                     onClick={() => navigate(location.state?.from?.pathname || '/')}
-                    className="w-full mt-2 border border-neutral-200 text-neutral-700 py-2 rounded-lg font-semibold hover:bg-neutral-50 transition-all duration-300"
+                    className="w-full mt-3 border-2 border-gray-200 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-50 hover:border-gray-300 transition-all duration-300 transform active:scale-95"
                   >
                     Continue as Guest
                   </button>
@@ -325,33 +403,40 @@ const SignIn = () => {
                     ← Back to email login
                   </button>
                   <div>
-                    <label htmlFor="mobile" className="block text-sm font-medium text-neutral-700 mb-2">
+                    <label htmlFor="mobile" className="block text-sm font-medium text-gray-700 mb-2">
                       Mobile Number
                     </label>
-                    <input
-                      type="tel"
-                      id="mobile"
-                      name="mobile"
-                      value={mobile}
-                      onChange={handleMobileChange}
-                      required
-                      maxLength={10}
-                      className="w-full px-3 py-2 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-400 focus:border-transparent transition-all"
-                      placeholder="Enter your 10-digit mobile number"
-                    />
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                        </svg>
+                      </div>
+                      <input
+                        type="tel"
+                        id="mobile"
+                        name="mobile"
+                        value={mobile}
+                        onChange={handleMobileChange}
+                        required
+                        maxLength={10}
+                        className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all bg-gray-50 focus:bg-white"
+                        placeholder="Enter your 10-digit mobile number"
+                      />
+                    </div>
                   </div>
 
                   <button
                     type="submit"
                     disabled={loading || mobile.length !== 10}
-                    className="w-full bg-gradient-to-r from-rose-500 to-rose-600 text-white py-2 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-60"
+                    className="w-full bg-gradient-to-r from-teal-600 to-cyan-600 text-white py-3.5 rounded-xl font-semibold shadow-lg hover:shadow-xl hover:shadow-teal-500/50 transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-60 transform active:scale-95"
                   >
                     {loading ? 'Sending OTP...' : 'Send OTP'}
                   </button>
                   <button
                     type="button"
                     onClick={() => navigate(location.state?.from?.pathname || '/')}
-                    className="w-full mt-2 border border-neutral-200 text-neutral-700 py-2 rounded-lg font-semibold hover:bg-neutral-50 transition-all duration-300"
+                    className="w-full mt-2 border border-gray-200 text-gray-700 py-2 rounded-lg font-semibold hover:bg-gray-50 transition-all duration-300"
                   >
                     Continue as Guest
                   </button>
@@ -366,12 +451,12 @@ const SignIn = () => {
                     ← Back to email login
                   </button>
                   <div>
-                    <label htmlFor="otp" className="block text-sm font-medium text-neutral-700 mb-2">
+                    <label htmlFor="otp" className="block text-sm font-medium text-gray-700 mb-2">
                       Enter OTP
                     </label>
                     <div className="mb-2 text-center">
                       <p className="text-sm text-gray-600">
-                        OTP sent to <span className="font-semibold text-neutral-800 text-base">{mobile}</span>
+                        OTP sent to <span className="font-semibold text-gray-900 text-base">{mobile}</span>
                       </p>
                     </div>
                     <input
@@ -382,7 +467,7 @@ const SignIn = () => {
                       onChange={handleOtpChange}
                       required
                       maxLength={6}
-                      className="w-full px-3 py-2 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-400 focus:border-transparent transition-all text-center text-lg tracking-widest"
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all text-center text-2xl tracking-[0.5em] font-semibold bg-gray-50 focus:bg-white"
                       placeholder="000000"
                     />
                   </div>
@@ -397,7 +482,7 @@ const SignIn = () => {
                         type="button"
                         onClick={handleResendOtp}
                         disabled={loading}
-                        className="text-sm text-rose-500 hover:text-rose-600 transition-colors disabled:opacity-50"
+                        className="text-sm text-teal-600 hover:text-teal-700 transition-colors disabled:opacity-50"
                       >
                         Resend OTP
                       </button>
@@ -415,14 +500,14 @@ const SignIn = () => {
                   <button
                     type="submit"
                     disabled={loading || otp.length !== 6}
-                    className="w-full bg-gradient-to-r from-rose-500 to-rose-600 text-white py-2 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-60"
+                    className="w-full bg-gradient-to-r from-teal-600 to-cyan-600 text-white py-3.5 rounded-xl font-semibold shadow-lg hover:shadow-xl hover:shadow-teal-500/50 transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-60 transform active:scale-95"
                   >
                     {loading ? 'Verifying...' : 'Verify OTP'}
                   </button>
                   <button
                     type="button"
                     onClick={() => navigate(location.state?.from?.pathname || '/')}
-                    className="w-full mt-2 border border-neutral-200 text-neutral-700 py-2 rounded-lg font-semibold hover:bg-neutral-50 transition-all duration-300"
+                    className="w-full mt-2 border border-gray-200 text-gray-700 py-2 rounded-lg font-semibold hover:bg-gray-50 transition-all duration-300"
                   >
                     Continue as Guest
                   </button>
@@ -430,13 +515,13 @@ const SignIn = () => {
               )}
 
               {/* Divider */}
-              <div className="mt-6 mb-4">
+              <div className="mt-8 mb-6">
                 <div className="relative">
                   <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-neutral-200"></div>
+                    <div className="w-full border-t border-gray-200"></div>
                   </div>
                   <div className="relative flex justify-center text-sm">
-                    <span className="px-4 bg-white text-gray-500">Or continue with</span>
+                    <span className="px-4 bg-white/80 text-gray-500 font-medium">Or continue with</span>
                   </div>
                 </div>
               </div>
@@ -453,7 +538,7 @@ const SignIn = () => {
 
 
                   }}
-                  className="flex items-center justify-center w-full px-4 py-2 border border-neutral-200 rounded-lg hover:bg-neutral-50 transition-colors"
+                  className="flex items-center justify-center w-full px-4 py-3 border-2 border-gray-200 rounded-xl hover:bg-gray-50 hover:border-gray-300 transition-all duration-300 transform active:scale-95 font-medium"
                 >
                   <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
                     <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -467,7 +552,7 @@ const SignIn = () => {
                   <button
                     type="button"
                     onClick={handleMobileLoginClick}
-                    className="flex items-center justify-center w-full px-4 py-2 border border-neutral-200 rounded-lg hover:bg-neutral-50 transition-colors"
+                    className="flex items-center justify-center w-full px-4 py-3 border-2 border-gray-200 rounded-xl hover:bg-gray-50 hover:border-gray-300 transition-all duration-300 transform active:scale-95 font-medium"
                   >
                     <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
@@ -483,7 +568,7 @@ const SignIn = () => {
                   Don't have an account?{' '}
                   <Link
                     to="/signup"
-                    className="text-rose-500 hover:text-rose-600 font-semibold transition-colors"
+                    className="text-teal-600 hover:text-teal-700 font-semibold transition-colors"
                   >
                     Sign up here
                   </Link>

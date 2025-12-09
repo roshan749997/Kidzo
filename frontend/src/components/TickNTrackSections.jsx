@@ -184,7 +184,7 @@ const TickNTrackSections = () => {
     ];
 
     return (
-      <section className="pt-4 md:pt-6 pb-24 bg-gray-50 w-full">
+      <section className="pt-4 md:pt-6 pb-4 md:pb-6 bg-gray-50 w-full">
         <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-4 2xl:px-6">
           {/* Category Grid */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
@@ -214,7 +214,7 @@ const TickNTrackSections = () => {
           </div>
 
           {/* Banner Image with Text Overlay */}
-          <div className="w-full mt-6 md:mt-8 relative">
+          <div className="w-full mt-4 md:mt-6 mb-0 relative">
             <picture>
               <source 
                 media="(max-width: 1023px)" 
@@ -286,7 +286,7 @@ const TickNTrackSections = () => {
     ];
 
     return (
-      <section className="pt-8 md:pt-12 pb-24 bg-white w-full">
+      <section className="pt-2 md:pt-4 pb-24 bg-white w-full">
         <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-4 2xl:px-6">
           {/* Stats Bar */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
