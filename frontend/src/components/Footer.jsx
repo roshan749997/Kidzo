@@ -4,33 +4,6 @@ import { Heart, Mail, Phone, MapPin, Facebook, Instagram, Twitter, Youtube, Shop
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
-  const quickLinks = [
-    { name: 'Home', path: '/' },
-    { name: 'All Products', path: '/products' },
-    { name: 'New Arrivals', path: '/new-arrivals' },
-    { name: 'Best Sellers', path: '/best-sellers' },
-    { name: 'About Us', path: '/about' },
-    { name: 'Contact', path: '/contact' },
-  ];
-
-  const categories = [
-    { name: 'Men\'s Shoes', path: '/category/shoes/mens-shoes' },
-    { name: 'Women\'s Shoes', path: '/category/shoes/womens-shoes' },
-    { name: 'Sports Shoes', path: '/category/shoes/sports-shoes' },
-    { name: 'Luxury Watches', path: '/category/watches/luxury-watches' },
-    { name: 'Smart Watches', path: '/category/watches/smart-watches' },
-    { name: 'Accessories', path: '/category/accessories' },
-  ];
-
-  const customerService = [
-    { name: 'Shipping Policy', path: '/shipping' },
-    { name: 'Returns & Exchange', path: '/returns' },
-    { name: 'Size Guide', path: '/size-guide' },
-    { name: 'Care Instructions', path: '/care-instructions' },
-    { name: 'FAQ', path: '/faq' },
-    { name: 'Warranty', path: '/warranty' },
-  ];
-
   const companyInfo = [
     { name: 'Our Story', path: '/about' },
     { name: 'Careers', path: '/careers' },
@@ -93,9 +66,9 @@ const Footer = () => {
 
       {/* Main Footer Content */}
       <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-4 2xl:px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
           {/* Brand Column */}
-          <div className="lg:col-span-2">
+          <div>
             <div className="mb-6">
               <img 
                 src="https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765015560/13d1b209-cadd-4897-a880-6449d9ee256a.png"
@@ -141,83 +114,6 @@ const Footer = () => {
                   </a>
                 ))}
               </div>
-            </div>
-          </div>
-
-          {/* Quick Links */}
-          <div>
-            <h5 className="font-semibold text-white mb-4">Quick Links</h5>
-            <ul className="space-y-3">
-              {quickLinks.map((link, index) => (
-                <li key={index}>
-                  <Link 
-                    to={link.path}
-                    className="text-gray-400 hover:text-teal-400 transition-colors duration-300 flex items-center gap-2"
-                  >
-                    <ChevronRight className="w-4 h-4" />
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Categories */}
-          <div>
-            <h5 className="font-semibold text-white mb-4">Shop by Category</h5>
-            <ul className="space-y-3">
-              {categories.map((category, index) => (
-                <li key={index}>
-                  <Link 
-                    to={category.path}
-                    className="text-gray-400 hover:text-teal-400 transition-colors duration-300 flex items-center gap-2"
-                  >
-                    <ChevronRight className="w-4 h-4" />
-                    {category.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Customer Service */}
-          <div>
-            <h5 className="font-semibold text-white mb-4">Customer Service</h5>
-            <ul className="space-y-3">
-              {customerService.map((service, index) => (
-                <li key={index}>
-                  <Link 
-                    to={service.path}
-                    className="text-gray-400 hover:text-teal-400 transition-colors duration-300 flex items-center gap-2"
-                  >
-                    <ChevronRight className="w-4 h-4" />
-                    {service.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        {/* Newsletter Section */}
-        <div className="border-t border-gray-800 mt-12 pt-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-            <div>
-              <h5 className="font-semibold text-white mb-2">Subscribe to Our Newsletter</h5>
-              <p className="text-gray-400">
-                Get exclusive offers, new product updates, and style tips delivered to your inbox
-              </p>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <input
-                type="email"
-                placeholder="Enter your email address"
-                className="flex-1 px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
-              />
-              <button className="px-6 py-3 bg-teal-600 text-white font-semibold rounded-lg hover:bg-teal-700 transition-colors duration-300 flex items-center justify-center gap-2">
-                <Mail className="w-5 h-5" />
-                Subscribe
-              </button>
             </div>
           </div>
         </div>

@@ -313,7 +313,7 @@ const TickNTrackSections = () => {
           </div>
 
           {/* Features Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
             {features.map((feature, idx) => (
               <div
                 key={idx}
@@ -321,40 +321,26 @@ const TickNTrackSections = () => {
                 onMouseLeave={() => setHoveredCard(null)}
                 className="group text-center"
               >
-                <div className={`relative bg-white rounded-2xl p-8 border-2 transition-all duration-500 ${hoveredCard === `trust-${idx}` ? 'border-teal-600 shadow-xl -translate-y-2' : 'border-gray-200 shadow-md'}`}>
+                <div className={`relative bg-white rounded-2xl p-4 md:p-6 lg:p-8 border-2 transition-all duration-500 h-full min-h-[280px] md:min-h-[300px] lg:min-h-[320px] flex flex-col ${hoveredCard === `trust-${idx}` ? 'border-teal-600 shadow-xl -translate-y-2' : 'border-gray-200 shadow-md'}`}>
                   {/* Icon */}
-                  <div className={`inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-xl mb-6 text-white transition-transform duration-500 ${hoveredCard === `trust-${idx}` ? 'scale-110 rotate-6' : 'scale-100'}`}>
+                  <div className={`inline-flex items-center justify-center w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-xl mb-4 md:mb-5 lg:mb-6 text-white transition-transform duration-500 mx-auto ${hoveredCard === `trust-${idx}` ? 'scale-110 rotate-6' : 'scale-100'}`}>
                     {feature.icon}
                   </div>
 
                   {/* Content */}
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">
+                  <h3 className="text-base md:text-lg lg:text-xl font-bold text-gray-900 mb-2 md:mb-3">
                     {feature.title}
                   </h3>
-                  <p className="text-gray-600 mb-4 leading-relaxed">
+                  <p className="text-sm md:text-base text-gray-600 mb-3 md:mb-4 leading-relaxed flex-grow">
                     {feature.description}
                   </p>
-                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-teal-50 text-teal-700 rounded-lg text-sm font-semibold">
-                    <Zap className="w-4 h-4" />
+                  <div className="inline-flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 bg-teal-50 text-teal-700 rounded-lg text-xs md:text-sm font-semibold">
+                    <Zap className="w-3 h-3 md:w-4 md:h-4" />
                     {feature.stats}
                   </div>
                 </div>
               </div>
             ))}
-          </div>
-
-          {/* CTA */}
-          <div className="mt-16 text-center">
-            <div className="inline-flex flex-col sm:flex-row gap-4">
-              <button className="inline-flex items-center gap-2 px-8 py-4 bg-gray-900 text-white rounded-xl font-semibold hover:bg-teal-600 transition-colors duration-300 shadow-lg hover:shadow-xl">
-                <ShoppingBag className="w-5 h-5" />
-                Start Shopping
-              </button>
-              <button className="inline-flex items-center gap-2 px-8 py-4 bg-white text-gray-900 border-2 border-gray-900 rounded-xl font-semibold hover:bg-gray-900 hover:text-white transition-colors duration-300 shadow-lg">
-                <Phone className="w-5 h-5" />
-                Contact Support
-              </button>
-            </div>
           </div>
         </div>
       </section>
