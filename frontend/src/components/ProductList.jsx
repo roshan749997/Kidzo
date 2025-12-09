@@ -71,6 +71,7 @@ const ProductList = ({ defaultCategory } = {}) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
+  const [displayCount, setDisplayCount] = useState(20); // Initial products to show
   
   // Filter states
   const [selectedPriceRange, setSelectedPriceRange] = useState(null);
@@ -371,6 +372,7 @@ const ProductList = ({ defaultCategory } = {}) => {
         // Clear products immediately when category changes
         setProducts([]);
         setFilteredProducts([]);
+        setDisplayCount(20); // Reset to initial 20 products when category changes
         
         // Use subcategory if available, otherwise use category
         const data = await fetchSarees(effectiveCategory, effectiveSubCategory || null);
@@ -501,6 +503,8 @@ const ProductList = ({ defaultCategory } = {}) => {
     }
     
     setFilteredProducts(result);
+    // Reset display count when filters change
+    setDisplayCount(20);
   }, [
     products, 
     selectedPriceRange, 
@@ -1407,8 +1411,9 @@ const ProductList = ({ defaultCategory } = {}) => {
                 )}
               </div>
             ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-4 md:gap-5 lg:gap-6">
-                {filteredProducts.map((p) => (
+              <>
+                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-4 md:gap-5 lg:gap-6">
+                  {filteredProducts.slice(0, displayCount).map((p) => (
                   <div
                     key={p._id || p.title}
                     className="group bg-white overflow-hidden rounded-xl sm:rounded-2xl shadow-sm sm:shadow-md hover:shadow-xl sm:hover:shadow-2xl transition-all duration-500 cursor-pointer border border-gray-100 hover:border-teal-300 sm:hover:border-[#7A2A2A]/20 transform hover:-translate-y-1 sm:hover:-translate-y-2"
@@ -1463,7 +1468,20 @@ const ProductList = ({ defaultCategory } = {}) => {
                     </div>
                   </div>
                 ))}
-              </div>
+                </div>
+                
+                {/* Load More Button */}
+                {filteredProducts.length > displayCount && (
+                  <div className="flex justify-center mt-8 sm:mt-12">
+                    <button
+                      onClick={() => setDisplayCount(prev => prev + 20)}
+                      className="px-8 py-3 sm:px-12 sm:py-4 bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-bold rounded-xl hover:from-teal-700 hover:to-cyan-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 text-sm sm:text-base"
+                    >
+                      Load More Products
+                    </button>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>
