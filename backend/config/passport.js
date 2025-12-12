@@ -13,17 +13,15 @@ export function setupPassport() {
   const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
   const callbackURL = process.env.GOOGLE_CALLBACK_URL || "http://localhost:5000/api/auth/google/callback";
 
-  if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
-    console.warn('[passport] Missing GOOGLE_CLIENT_ID/GOOGLE_CLIENT_SECRET');
-  }
-
-  passport.use(
-    new GoogleStrategy(
-      {
-        clientID: GOOGLE_CLIENT_ID || '',
-        clientSecret: GOOGLE_CLIENT_SECRET || '',
-        callbackURL: callbackURL,
-      },
+  // Only register GoogleStrategy if credentials are provided
+  if (GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET) {
+    passport.use(
+      new GoogleStrategy(
+        {
+          clientID: GOOGLE_CLIENT_ID,
+          clientSecret: GOOGLE_CLIENT_SECRET,
+          callbackURL: callbackURL,
+        },
       async (accessToken, refreshToken, profile, done) => {
         try {
           const googleId = profile.id;
@@ -74,7 +72,11 @@ export function setupPassport() {
         }
       }
     )
-  );
+    );
+    console.log('[passport] Google OAuth strategy registered');
+  } else {
+    console.warn('[passport] Google OAuth disabled: Missing GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET');
+  }
 
   passport.serializeUser((user, done) => {
     done(null, user.id);
