@@ -1,129 +1,313 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Heart, Star, TrendingUp, Zap, ChevronRight, ShoppingBag, Award, Shield, Truck, Sparkles, ArrowRight, Clock, Search, User, Phone, Mail } from 'lucide-react';
+import { FaTruck, FaAward, FaShieldAlt, FaUndo } from 'react-icons/fa';
 
-const TickNTrackSections = () => {
+const KidzoSections = () => {
   const navigate = useNavigate();
   const [hoveredCard, setHoveredCard] = useState(null);
-  const [activeFilter, setActiveFilter] = useState('all');
 
-  // Premium Collection Categories
-  const CollectionShowcase = () => {
-    const collections = [
+  // Click Handler Function
+  const handleCategoryClick = (path) => {
+    navigate(path);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Shop by Category Section
+  const MainCategories = () => {
+    const categories = [
+      { 
+        name: 'Cloths', 
+        icon: '🚴‍♂️', 
+        image: 'https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765538765/unnamed_yt1lzi.jpg', 
+        path: '/category/kids-clothing' 
+      },
+      { 
+        name: 'Winterwear', 
+        icon: '🚙', 
+        image: 'https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765538871/unnamed_t9cus4.jpg', 
+        path: '/category/kids-clothing/winterwear' 
+      },
+      { 
+        name: 'Kids Accessories', 
+        icon: '🚛', 
+        image: 'https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765538873/unnamed_cus3wx.jpg', 
+        path: '/category/kids-accessories' 
+      },
+      { 
+        name: 'Footwear', 
+        icon: '🚜', 
+        image: 'https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765538961/unnamed_hqycjk.jpg', 
+        path: '/category/footwear' 
+      },
+      { 
+        name: 'Baby Care', 
+        icon: '🏎️', 
+        image: 'https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765538964/unnamed_fn6esy.jpg', 
+        path: '/category/baby-care' 
+      },
+      { 
+        name: 'Toys', 
+        icon: '🔥', 
+        image: 'https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765539006/unnamed_vlrbtq.jpg', 
+        path: '/category/toys' 
+      }
+    ];
+
+    return (
+      <section 
+        className="py-8 sm:py-10 md:py-12 lg:py-16 px-2 sm:px-4 md:px-6 lg:px-8 w-full" 
+        style={{ backgroundColor: '#E6D9F2' }}
+      >
+        <div className="w-full">
+          <div className="text-center mb-8 sm:mb-10 md:mb-12 px-2 sm:px-4">
+            <h2 
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-black mb-2 sm:mb-3 uppercase" 
+              style={{ 
+                fontFamily: "'Bebas Neue', sans-serif", 
+                letterSpacing: '2px', 
+                textShadow: '0 2px 4px rgba(0,0,0,0.1)' 
+              }}
+            >
+              SHOP BY CATEGORY
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3 md:gap-4 lg:gap-5 px-2 sm:px-4">
+            {categories.map((category, index) => (
+              <div
+                key={index}
+                className="group cursor-pointer"
+                onClick={() => handleCategoryClick(category.path)}
+              >
+                <div className="relative aspect-square bg-white rounded-lg sm:rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden transform hover:scale-105">
+                  <div className="absolute inset-0 bg-gray-100">
+                    <img
+                      src={category.image}
+                      alt={category.name}
+                      className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = 'https://via.placeholder.com/200x200/1F2937/FFFFFF?text=Car';
+                      }}
+                    />
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </div>
+                <h3 className="text-center mt-3 text-xs sm:text-sm md:text-base font-semibold text-gray-900 group-hover:text-[#02050B] transition-colors duration-300">
+                  {category.name}
+                </h3>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  };
+
+  // Offer Zone Section
+  const FeaturedSection = () => {
+    const offers = [
       {
         id: 1,
-        title: "Athletic Performance",
-        subtitle: "Professional Sport Collection",
-        description: "Engineered for peak performance",
-        items: "500+",
-        image: "https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765022742/f8dbd04d-719c-431f-a21f-78b7a17d166c.png",
-        gradient: "from-blue-600/95 via-indigo-700/95 to-purple-800/95",
-        badge: "Performance Line",
-        path: "/category/shoes/mens-shoes/Men-sports-shoes"
+        badge: 'Limited Time',
+        title: '20%',
+        subtitle: 'OFF',
+        description: 'Limited Stock',
+        text: 'Grab your favorite products before they run out!',
+        buttonText: 'Shop Now →',
+        gradient: 'from-pink-500 via-pink-600 to-pink-700',
+        image: 'https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765538964/unnamed_fn6esy.jpg',
+        buttonClass: 'bg-white text-[#02050B] hover:bg-[#02050B] hover:text-white',
+        path: '/shop'
       },
       {
         id: 2,
-        title: "Luxury Timepieces",
-        subtitle: "Swiss Craftsmanship",
-        description: "Precision meets elegance",
-        items: "300+",
-        image: "https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765022796/7486ac18-1754-45a3-863d-4a9e8b45d006.png",
-        gradient: "from-amber-600/95 via-yellow-700/95 to-orange-800/95",
-        badge: "Luxury Collection",
-        path: "/category/watches/men-watches/Men-luxury-watches"
+        badge: 'New Arrival',
+        title: 'NEW',
+        subtitle: 'Collection',
+        description: 'Latest Products',
+        text: 'Explore our newest arrivals!',
+        buttonText: 'Explore →',
+        gradient: 'from-blue-500 via-purple-600 to-blue-700',
+        image: 'https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765538871/unnamed_t9cus4.jpg',
+        path: '/shop'
       },
       {
         id: 3,
-        title: "Designer Footwear",
-        subtitle: "Premium Women's Range",
-        description: "Sophistication in every step",
-        items: "650+",
-        image: "https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765022843/7fccca1e-24b4-458a-80cd-5e245bcf37a2.png",
-        gradient: "from-rose-600/95 via-pink-700/95 to-purple-800/95",
-        badge: "Designer Series",
-        path: "/category/shoes/womens-shoes"
+        badge: 'Special Offer',
+        title: 'FREE',
+        subtitle: 'Shipping',
+        description: 'On Orders Above ₹999',
+        text: 'Shop more and save on delivery charges!',
+        buttonText: 'Shop Now →',
+        gradient: 'from-teal-500 via-green-500 to-teal-600',
+        image: 'https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765538961/unnamed_hqycjk.jpg',
+        buttonClass: 'bg-white text-[#02050B] hover:bg-[#02050B] hover:text-white',
+        path: '/shop'
       },
       {
         id: 4,
-        title: "Urban Lifestyle",
-        subtitle: "Contemporary Casual",
-        description: "Style meets comfort",
-        items: "400+",
-        image: "https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765022911/0451752d-41ef-40d2-b851-d9b9aff53885.png",
-        gradient: "from-teal-600/95 via-cyan-700/95 to-blue-800/95",
-        badge: "Lifestyle Collection",
-        path: "/category/shoes/mens-shoes/Men-casual-shoes"
+        badge: 'Hot Deals',
+        title: '30%',
+        subtitle: 'OFF',
+        description: 'Premium Collection',
+        text: 'Best deals on premium products!',
+        buttonText: 'Shop Now →',
+        gradient: 'from-blue-400 via-blue-500 to-blue-600',
+        image: 'https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765538765/unnamed_yt1lzi.jpg',
+        buttonClass: 'bg-white text-blue-700 hover:bg-blue-50',
+        badgeClass: 'bg-blue-300/30',
+        path: '/shop'
       }
     ];
 
     return (
-      <section className="relative pt-8 md:pt-12 pb-8 md:pb-12 bg-white overflow-hidden w-full">
-        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-4 2xl:px-6">
-          {/* Section Header */}
-          <div className="text-center max-w-3xl mx-auto mb-8 md:mb-16">
-            <div className="inline-flex items-center gap-1.5 md:gap-2 px-3 md:px-4 py-1.5 md:py-2 bg-gray-100 rounded-full mb-3 md:mb-4">
-              <Sparkles className="w-3 h-3 md:w-4 md:h-4 text-teal-600" />
-              <span className="text-xs md:text-sm font-semibold text-gray-700 uppercase tracking-wider">Curated Collections</span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 md:mb-4 tracking-tight px-2">
-              Premium Product Categories
+      <section 
+        className="py-8 sm:py-10 md:py-12 lg:py-16 px-2 sm:px-4 md:px-6 lg:px-8 w-full" 
+        style={{ backgroundColor: '#E6D9F2' }}
+      >
+        <div className="w-full">
+          <div className="text-center mb-8 sm:mb-10 md:mb-12 px-2 sm:px-4">
+            <h2 
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-black mb-2 sm:mb-3 uppercase" 
+              style={{ 
+                fontFamily: "'Bebas Neue', sans-serif", 
+                letterSpacing: '2px', 
+                textShadow: '0 2px 4px rgba(0,0,0,0.1)' 
+              }}
+            >
+              OFFER ZONE
             </h2>
-            <p className="text-sm sm:text-base md:text-lg text-gray-600 leading-relaxed px-2">
-              Explore our carefully curated collections designed for discerning customers who value quality and style
-            </p>
+            <p className="text-gray-600 text-sm sm:text-base mt-2">Limited time offers - Don't miss out!</p>
           </div>
 
-          {/* Collections Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
-            {collections.map((collection, idx) => (
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 md:gap-5 lg:gap-6 px-2 sm:px-4">
+            {offers.map((offer) => (
               <div
-                key={collection.id}
-                onMouseEnter={() => setHoveredCard(`col-${idx}`)}
-                onMouseLeave={() => setHoveredCard(null)}
-                className="group relative overflow-hidden rounded-xl md:rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500"
+                key={offer.id}
+                onClick={() => handleCategoryClick(offer.path)}
+                className="relative overflow-hidden rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] group cursor-pointer"
               >
-                <div className="aspect-[16/10] relative">
-                  {/* Image */}
+                <div className={`absolute inset-0 bg-gradient-to-br ${offer.gradient}`}></div>
+                <div className="absolute inset-0">
                   <img
-                    src={collection.image}
-                    alt={collection.title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    src={offer.image}
+                    alt={offer.badge}
+                    className="w-full h-full object-cover opacity-20 group-hover:opacity-30 transition-opacity duration-300"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = 'https://via.placeholder.com/600/1F2937/FFFFFF?text=Offer';
+                    }}
                   />
-                  
-                  {/* Gradient Overlay */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${collection.gradient} mix-blend-multiply`} />
-                  
-                  {/* Content */}
-                  <div className="absolute inset-0 p-4 sm:p-6 md:p-8 flex flex-col justify-between text-white">
-                    <div className="flex justify-between items-start gap-2">
-                      <span className="px-2 sm:px-3 md:px-4 py-1 sm:py-1.5 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full text-[10px] sm:text-xs font-semibold uppercase tracking-wide whitespace-nowrap">
-                        {collection.badge}
-                      </span>
-                      <span className="px-2 sm:px-3 md:px-4 py-1 sm:py-1.5 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full text-[10px] sm:text-xs md:text-sm font-bold whitespace-nowrap">
-                        {collection.items} Products
-                      </span>
+                </div>
+                <div className="relative p-4 sm:p-5 md:p-6 text-white z-10">
+                  <div className={`inline-block ${offer.badgeClass || 'bg-white/20'} backdrop-blur-sm px-3 py-1 rounded-full mb-2`}>
+                    <span className="text-xs font-bold uppercase tracking-wider">{offer.badge}</span>
                     </div>
-
-                    <div>
-                      <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-1 sm:mb-2 tracking-tight">
-                        {collection.title}
-                      </h3>
-                      <p className="text-sm sm:text-base md:text-lg font-medium text-white/90 mb-0.5 sm:mb-1">
-                        {collection.subtitle}
-                      </p>
-                      <p className="text-xs sm:text-sm text-white/80 mb-4 sm:mb-6">
-                        {collection.description}
-                      </p>
-                      
-                      <button 
-                        onClick={() => collection.path && navigate(collection.path)}
-                        className={`inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 md:py-3 bg-white text-gray-900 rounded-lg md:rounded-xl text-xs sm:text-sm md:text-base font-semibold hover:bg-teal-500 hover:text-white transition-all duration-300 ${hoveredCard === `col-${idx}` ? 'translate-x-2' : ''}`}
-                      >
-                        Explore Collection
-                        <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4" />
+                  <div className="text-3xl sm:text-4xl md:text-5xl font-black mb-1 leading-none">{offer.title}</div>
+                  <div className="text-xl sm:text-2xl md:text-3xl font-bold mb-1">{offer.subtitle}</div>
+                  <div className="text-sm sm:text-base mb-2 font-semibold opacity-95">{offer.description}</div>
+                  <p className="text-xs sm:text-sm opacity-90 mb-2">{offer.text}</p>
+                  <button className={`mt-2 ${offer.buttonClass} px-4 py-1.5 rounded-lg text-sm font-bold transition-all duration-300 transform group-hover:scale-105`}>
+                    {offer.buttonText}
                       </button>
                     </div>
-                  </div>
+                <div className="absolute top-4 right-4 w-20 h-20 bg-white/10 rounded-full blur-xl"></div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  };
+
+  // Premium Collection Section
+  const PremiumCollection = () => {
+    const productData = [
+      {
+        image: 'https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765545802/Blue_Pink_and_White_Modern_Kids_Fashion_Instagram_Post_1_jlr5f8.png',
+        name: 'Kids Clothing Set',
+        path: '/category/kids-clothing'
+      },
+      {
+        image: 'https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765547808/unnamed_vaowmm.jpg',
+        name: 'Winter Wear Collection',
+        path: '/category/kids-clothing/winterwear'
+      },
+      {
+        image: 'https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765538765/unnamed_yt1lzi.jpg',
+        name: 'Girls Fashion Set',
+        path: '/category/kids-clothing/girls-cloths'
+      },
+      {
+        image: 'https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765546653/unnamed_a17jn6.jpg',
+        name: 'Kids Accessories Pack',
+        path: '/category/kids-accessories'
+      },
+      {
+        image: 'https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765538961/unnamed_hqycjk.jpg',
+        name: 'Kids Footwear',
+        path: '/category/footwear'
+      },
+      {
+        image: 'https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765538964/unnamed_fn6esy.jpg',
+        name: 'Baby Care Essentials',
+        path: '/category/baby-care'
+      },
+      {
+        image: 'https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765546805/unnamed_ofelua.jpg',
+        name: 'Premium Toys',
+        path: '/category/toys'
+      },
+      {
+        image: 'https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765547808/unnamed_vaowmm.jpg',
+        name: 'Boys Collection',
+        path: '/category/kids-clothing/boys-cloth'
+      }
+    ];
+
+    return (
+      <section 
+        className="py-6 sm:py-8 md:py-10 lg:py-12 px-1 sm:px-2 md:px-3 lg:px-4 w-full" 
+        style={{ backgroundColor: '#E6D9F2' }}
+      >
+        <div className="w-full">
+          <div className="text-center mb-6 sm:mb-8 md:mb-10 lg:mb-12 px-2 sm:px-4">
+            <h2 
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-center mb-2 sm:mb-3 text-black overflow-hidden uppercase" 
+              style={{ 
+                fontFamily: "'Bebas Neue', sans-serif", 
+                letterSpacing: '2px', 
+                textShadow: '0 2px 4px rgba(0,0,0,0.1)' 
+              }}
+            >
+              <span className="inline-block">PREMIUM COLLECTION</span>
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-5 w-full px-2 sm:px-3 md:px-4">
+            {productData.map((product, index) => (
+              <div
+                key={index}
+                onClick={() => handleCategoryClick(product.path)}
+                className="group overflow-hidden rounded-lg sm:rounded-xl bg-white shadow-md hover:shadow-xl transition-all duration-300 w-full cursor-pointer"
+              >
+                <div className="relative w-full aspect-square bg-gray-100 overflow-hidden">
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                    loading="lazy"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = 'https://via.placeholder.com/400x500/1F2937/FFFFFF?text=Product+Image';
+                    }}
+                  />
+                </div>
+                <div className="p-3 sm:p-4 md:p-5 bg-[#4A4A4D]">
+                  <h3 className="text-white font-semibold text-sm sm:text-base md:text-lg text-center leading-tight line-clamp-2">
+                    {product.name}
+                  </h3>
                 </div>
               </div>
             ))}
@@ -133,111 +317,55 @@ const TickNTrackSections = () => {
     );
   };
 
-  // Category Grid Section
-  const CategoryGrid = () => {
-    const categories = [
-      { name: "Women Analog Watches", path: "/category/watches/Women-watches/Women-analog-watches", image: "https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765215874/unnamed_vxpktl.jpg" },
-      { name: "Men Luxury Watches", path: "/category/watches/men-watches/Men-luxury-watches", image: "https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765217016/unnamed_g02sys.jpg" },
-      { name: "Women Digital Watches", path: "/category/watches/Women-watches/Women-digital-watches", image: "https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765215976/unnamed_whrlsk.jpg" },
-      { name: "Men Digital Watches", path: "/category/watches/men-watches/Men-digital-watches", image: "https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765216828/unnamed_o0mzpn.jpg" },
-      { name: "Men Smart Watches", path: "/category/watches/men-watches/Men-smart-watches", image: "https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765216850/unnamed_gjfozw.jpg" },
-      { name: "Women Smart Watches", path: "/category/watches/Women-watches/Women-smart-watches", image: "https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765216050/unnamed_ysaacr.jpg" },
-      { name: "Men Sports Watches", path: "/category/watches/men-watches/Men-sports-watches", image: "https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765216975/unnamed_nojuvl.jpg" },
-      { name: "Women Fitness Trackers", path: "/category/watches/Women-watches/Women-fitness-trackers", image: "https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765216223/unnamed_nmip79.jpg" },
-      { name: "Women Classic Watches", path: "/category/watches/Women-watches/Women-classic-watches", image: "https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765216236/unnamed_o49ofl.jpg" },
-
-      // Men Watches Subcategories
-      { name: "Men Analog Watches", path: "/category/watches/men-watches/Men-analog-watches", image: "https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765216780/unnamed_v1mbbj.jpg" },
-      { name: "Men Chronograph Watches", path: "/category/watches/men-watches/Men-chronograph-watches", image: "https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765217016/unnamed_g02sys.jpg" },
-      // Men's Shoes Subcategories
-      { name: "Men Sports Shoes", path: "/category/shoes/mens-shoes/Men-sports-shoes", image: "https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765206732/unnamed_p3ovth.jpg" },
-      { name: "Men Casual Shoes", path: "/category/shoes/mens-shoes/Men-casual-shoes", image: "https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765206928/ac0404c8-d323-4367-a2fa-d988b9bb642b.png" },
-      { name: "Men Formal Shoes", path: "/category/shoes/mens-shoes/Men-formal-shoes", image: "https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765207062/b3aae7be-8c69-4702-99ce-ceea80362b2f.png" },
-      { name: "Men Sneakers", path: "/category/shoes/mens-shoes/Men-sneakers", image: "https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765207177/unnamed_prumtn.jpg" },
-      { name: "Men Boots", path: "/category/shoes/mens-shoes/Men-boots", image: "https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765207208/unnamed_howyee.jpg" },
-      { name: "Men Sandals", path: "/category/shoes/mens-shoes/Men-sandals", image: "https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765207245/unnamed_chcwum.jpg" },
-      
-      // Women's Shoes Subcategories
-      { name: "Women Heels", path: "/category/shoes/womens-shoes/Women-heels", image: "https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765207254/unnamed_av2vv2.jpg" },
-      { name: "Women Flats", path: "/category/shoes/womens-shoes/Women-flats", image: "https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765207315/unnamed_hmoyfa.jpg" },
-      { name: "Women Sneakers", path: "/category/shoes/womens-shoes/Women-sneakers", image: "https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765207807/unnamed_ldee8d.jpg" },
-      { name: "Women Sports Shoes", path: "/category/shoes/womens-shoes/Women-sports-shoes", image: "https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765207816/unnamed_p7tedm.jpg" },
-      { name: "Women Chappals", path: "/category/shoes/womens-shoes/Women-chappals", image: "https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765207827/unnamed_gwgxpw.jpg" },
-      { name: "Women Sandals", path: "/category/shoes/womens-shoes/Women-sandals", image: "https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765207839/unnamed_otxqea.jpg" },
-      
-      // Women Accessories Subcategories
-      { name: "Women Belts", path: "/category/accessories/women-accessories/women-belts", image: "https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765215874/unnamed_vxpktl.jpg" },
-      { name: "Women Goggles", path: "/category/accessories/women-accessories/women-goggles", image: "https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765215976/unnamed_whrlsk.jpg" },
-      { name: "Women Sunglasses", path: "/category/accessories/women-accessories/women-sunglasses", image: "https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765216050/unnamed_ysaacr.jpg" },
-      { name: "Women Handbags", path: "/category/accessories/women-accessories/women-handbags", image: "https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765216223/unnamed_nmip79.jpg" },
-      
-      // Men Accessories Subcategories
-      { name: "Men Belts", path: "/category/accessories/men-accessories/men-belts", image: "https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765216780/unnamed_v1mbbj.jpg" },
-      { name: "Men Goggles", path: "/category/accessories/men-accessories/men-goggles", image: "https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765216828/unnamed_o0mzpn.jpg" },
-      { name: "Men Sunglasses", path: "/category/accessories/men-accessories/men-sunglasses", image: "https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765216850/unnamed_gjfozw.jpg" },
-      { name: "Men Wallets", path: "/category/accessories/men-accessories/men-wallets", image: "https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765216975/unnamed_nojuvl.jpg" },
-      { name: "Men Caps", path: "/category/accessories/men-accessories/men-caps", image: "https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765217016/unnamed_g02sys.jpg" },
-      
-    ];
-
+  // Banner Section
+  const BannerSection = () => {
     return (
-      <section className="pt-4 md:pt-6 pb-4 md:pb-6 bg-gray-50 w-full">
-        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-4 2xl:px-6">
-          {/* Category Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-            {categories.map((category, idx) => (
-              <div
-                key={idx}
-                onClick={() => navigate(category.path)}
-                onMouseEnter={() => setHoveredCard(`cat-${idx}`)}
-                onMouseLeave={() => setHoveredCard(null)}
-                className="group relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 cursor-pointer"
-              >
-                <div className="aspect-square relative bg-gray-100 overflow-hidden">
-                  <img
-                    src={category.image}
-                    alt={category.name}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors duration-300" />
-                </div>
-                <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 bg-gradient-to-t from-black/80 via-black/60 to-transparent">
-                  <h3 className="text-white font-medium text-sm md:text-base lg:text-lg text-center uppercase">
-                    {category.name}
-                  </h3>
-                </div>
-              </div>
-            ))}
+      <section 
+        className="py-8 sm:py-10 md:py-12 lg:py-16 px-2 sm:px-4 md:px-6 lg:px-8 w-full" 
+        style={{ backgroundColor: '#E6D9F2' }}
+      >
+        <div className="w-full">
+          <div className="text-center mb-8 sm:mb-10 md:mb-12 px-2 sm:px-4">
+            <h2 
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-black mb-2 sm:mb-3 uppercase" 
+              style={{ 
+                fontFamily: "'Bebas Neue', sans-serif", 
+                letterSpacing: '2px', 
+                textShadow: '0 2px 4px rgba(0,0,0,0.1)' 
+              }}
+            >
+              SPECIAL COLLECTION
+            </h2>
+            <p className="text-gray-600 text-sm sm:text-base mt-2">Discover our exclusive range of premium products</p>
           </div>
 
-          {/* Banner Image with Text Overlay */}
-          <div className="w-full mt-4 md:mt-6 mb-0 relative">
-            <picture>
-              <source 
-                media="(max-width: 1023px)" 
-                srcSet="https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765205176/b073eda1-3a35-4ab9-93d4-5f66f27c046b.png" 
-              />
-              <source 
-                media="(min-width: 1024px)" 
-                srcSet="https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765205478/821ba8cf-8fd0-4568-8bc6-947bf94888b4.png" 
-              />
+          <div className="w-full px-2 sm:px-4">
+            {/* Mobile Banner */}
+            <div className="relative overflow-hidden rounded-2xl shadow-xl md:hidden">
+              <div className="w-full">
+                <img
+                  src="https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765548837/Beige_Kids_Fashion_Sale_Ad_Instagram_Story_gwokfq.svg"
+                  alt="Special Collection Banner"
+                  className="w-full h-auto object-cover"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = 'https://via.placeholder.com/600x800/FEF8DD/000000?text=Banner';
+                  }}
+                />
+              </div>
+            </div>
+            {/* Desktop Banner */}
+            <div className="relative overflow-hidden rounded-2xl md:rounded-3xl shadow-xl hidden md:block">
+              <div className="w-full">
               <img 
-                src="https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765205478/821ba8cf-8fd0-4568-8bc6-947bf94888b4.png" 
-                alt="TickNTrack Banner" 
+                  src="https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765541014/White_and_Pink_Fashion_Kids_Edition_Banner_1920_x_600_mm_jpmhbs.svg"
+                  alt="Special Collection Banner"
                 className="w-full h-auto object-cover"
-              />
-            </picture>
-            
-            {/* Text Overlay for Desktop */}
-            <div className="hidden lg:flex absolute inset-0 items-center justify-end pr-8 md:pr-12 lg:pr-16 xl:pr-20">
-              <div className="text-right max-w-md">
-                <p className="text-sm md:text-base text-gray-700 mb-2 font-medium">Machine Washable</p>
-                <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 mb-2 leading-tight">
-                  SNEAKERS DESIGNED TO
-                </h2>
-                <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 leading-tight">
-                  MOVE YOU FORWARD.
-                </h2>
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = 'https://via.placeholder.com/1200x400/FEF8DD/000000?text=Banner';
+                  }}
+                />
               </div>
             </div>
           </div>
@@ -246,96 +374,176 @@ const TickNTrackSections = () => {
     );
   };
 
-  // Trust & Features Section
-  const TrustSection = () => {
+  // Why Choose Us Section
+  const WhyChooseUs = () => {
     const features = [
       {
-        icon: <Truck className="w-8 h-8" />,
-        title: "Free Express Shipping",
-        description: "Complimentary delivery on orders above ₹999",
-        stats: "Delivered in 2-3 days"
+        id: 1,
+        icon: FaTruck,
+        title: 'Fast Delivery',
+        description: 'Quick and reliable shipping across India with secure packaging',
+        color: 'blue',
+        gradient: 'from-blue-500 to-blue-600'
       },
       {
-        icon: <Shield className="w-8 h-8" />,
-        title: "Secure Payments",
-        description: "SSL encrypted transactions for your safety",
-        stats: "100% Protected"
+        id: 2,
+        icon: FaAward,
+        title: 'Premium Quality',
+        description: 'Authentic products with superior craftsmanship and attention to detail',
+        color: 'yellow',
+        gradient: 'from-yellow-500 to-yellow-600'
       },
       {
-        icon: <Award className="w-8 h-8" />,
-        title: "Authentic Products",
-        description: "Genuine products with official warranty",
-        stats: "Verified by Experts"
+        id: 3,
+        icon: FaShieldAlt,
+        title: 'Safe & Certified',
+        description: 'All products meet safety standards and are certified for kids',
+        color: 'green',
+        gradient: 'from-green-500 to-green-600'
       },
       {
-        icon: <Clock className="w-8 h-8" />,
-        title: "24/7 Customer Care",
-        description: "Dedicated support team always available",
-        stats: "Response in 2 hours"
+        id: 4,
+        icon: FaUndo,
+        title: 'Easy Returns',
+        description: 'Hassle-free return policy within 7 days with full refund guarantee',
+        color: 'purple',
+        gradient: 'from-purple-500 to-purple-600'
       }
     ];
 
-    const stats = [
-      { number: "50K+", label: "Happy Customers" },
-      { number: "1000+", label: "Premium Products" },
-      { number: "98%", label: "Customer Satisfaction" },
-      { number: "24/7", label: "Support Available" }
-    ];
+    const colorMap = {
+      blue: 'bg-blue-500',
+      yellow: 'bg-yellow-500',
+      green: 'bg-green-500',
+      purple: 'bg-purple-500'
+    };
 
     return (
-      <section className="pt-2 md:pt-4 pb-24 bg-white w-full">
-        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-4 2xl:px-6">
-          {/* Stats Bar */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
-            {stats.map((stat, idx) => (
-              <div key={idx} className="text-center p-6 bg-gradient-to-br from-gray-50 to-white rounded-2xl border border-gray-100">
-                <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-teal-600 to-cyan-600 text-transparent bg-clip-text mb-2">
-                  {stat.number}
-                </div>
-                <div className="text-sm font-medium text-gray-600">
-                  {stat.label}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Section Header */}
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">
-              The TickNTrack Advantage
+      <section 
+        className="py-12 sm:py-16 md:py-20 lg:py-24 px-2 sm:px-4 md:px-6 lg:px-8 w-full" 
+        style={{ backgroundColor: '#E6D9F2' }}
+      >
+        <div className="w-full">
+          <div className="text-center mb-10 sm:mb-12 md:mb-16 px-2 sm:px-4">
+            <h2 
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-black mb-3 sm:mb-4 uppercase" 
+              style={{ 
+                fontFamily: "'Bebas Neue', sans-serif", 
+                letterSpacing: '2px', 
+                textShadow: '0 2px 4px rgba(0,0,0,0.1)' 
+              }}
+            >
+              WHY CHOOSE US
             </h2>
-            <p className="text-lg text-gray-600 leading-relaxed">
-              Experience premium quality, exceptional service, and complete peace of mind with every purchase
+            <p className="text-gray-600 text-sm sm:text-base md:text-lg max-w-2xl mx-auto">
+              Experience the best in premium kids and baby products with unmatched quality and service
             </p>
           </div>
 
-          {/* Features Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
-            {features.map((feature, idx) => (
-              <div
-                key={idx}
-                onMouseEnter={() => setHoveredCard(`trust-${idx}`)}
-                onMouseLeave={() => setHoveredCard(null)}
-                className="group text-center"
-              >
-                <div className={`relative bg-white rounded-2xl p-4 md:p-6 lg:p-8 border-2 transition-all duration-500 h-full min-h-[280px] md:min-h-[300px] lg:min-h-[320px] flex flex-col ${hoveredCard === `trust-${idx}` ? 'border-teal-600 shadow-xl -translate-y-2' : 'border-gray-200 shadow-md'}`}>
-                  {/* Icon */}
-                  <div className={`inline-flex items-center justify-center w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-xl mb-4 md:mb-5 lg:mb-6 text-white transition-transform duration-500 mx-auto ${hoveredCard === `trust-${idx}` ? 'scale-110 rotate-6' : 'scale-100'}`}>
-                    {feature.icon}
-                  </div>
-
-                  {/* Content */}
-                  <h3 className="text-base md:text-lg lg:text-xl font-bold text-gray-900 mb-2 md:mb-3">
-                    {feature.title}
-                  </h3>
-                  <p className="text-sm md:text-base text-gray-600 mb-3 md:mb-4 leading-relaxed flex-grow">
-                    {feature.description}
-                  </p>
-                  <div className="inline-flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 bg-teal-50 text-teal-700 rounded-lg text-xs md:text-sm font-semibold">
-                    <Zap className="w-3 h-3 md:w-4 md:h-4" />
-                    {feature.stats}
-                  </div>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8 px-2 sm:px-4">
+            {features.map((feature) => {
+              const IconComponent = feature.icon;
+              return (
+                <div
+                  key={feature.id}
+                  className="group relative bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 shadow-md hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100"
+                >
+                  <div className={`absolute top-0 right-0 w-16 h-16 sm:w-20 sm:h-20 ${colorMap[feature.color]} rounded-bl-full opacity-10 group-hover:opacity-20 transition-opacity duration-300`}></div>
+                  <div className="relative z-10">
+                    <div className={`w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-gradient-to-br ${feature.gradient} rounded-lg sm:rounded-xl flex items-center justify-center mb-2 sm:mb-3 md:mb-4 mx-auto group-hover:scale-110 transition-transform duration-300`}>
+                      <IconComponent className="text-lg sm:text-xl md:text-2xl text-white" />
                 </div>
+                    <h3 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-gray-900 mb-1 sm:mb-2 text-center leading-tight">{feature.title}</h3>
+                    <p className="text-xs sm:text-sm md:text-base text-center leading-snug sm:leading-relaxed">{feature.description}</p>
+                </div>
+              </div>
+              );
+            })}
+          </div>
+          </div>
+      </section>
+    );
+  };
+
+  // Promotional Banners Section
+  const PromotionalBanners = () => {
+    const banners = [
+      {
+        id: 1,
+        image: 'https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765610052/Pink_and_Yellow_Playful_Kids_Fashion_Sale_Promotion_Landscape_Banner_dl4a3a.svg',
+        alt: 'Pink and Yellow Kids Fashion Sale Promotion',
+        path: '/shop'
+      },
+      {
+        id: 2,
+        image: 'https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765610311/Colorful_Kids_Fashion_Tips_YouTube_Thumbnail_wfyxyn.svg',
+        alt: 'Green and Pink Modern Gradient Summer Kids Fashion Banner',
+        path: '/shop'
+      }
+    ];
+
+    return (
+      <section 
+        className="py-8 sm:py-10 md:py-12 lg:py-16 px-2 sm:px-4 md:px-6 lg:px-8 w-full" 
+        style={{ backgroundColor: '#E6D9F2' }}
+      >
+        <div className="w-full">
+          <div className="text-center mb-8 sm:mb-10 md:mb-12 px-2 sm:px-4">
+            <h2 
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-black mb-2 sm:mb-3 uppercase" 
+              style={{ 
+                fontFamily: "'Bebas Neue', sans-serif", 
+                letterSpacing: '2px', 
+                textShadow: '0 2px 4px rgba(0,0,0,0.1)' 
+              }}
+            >
+              SPECIAL OFFERS
+            </h2>
+            <p className="text-gray-600 text-sm sm:text-base mt-2">Check out our latest promotions and deals</p>
+          </div>
+
+          {/* Mobile Only Banner */}
+          <div className="mb-4 md:hidden px-2">
+            <div
+              onClick={() => handleCategoryClick('/shop')}
+              className="relative overflow-hidden rounded-xl shadow-lg transition-all duration-300 transform active:scale-[0.98] cursor-pointer"
+            >
+              <div className="w-full aspect-[4/5] bg-gray-100 overflow-hidden">
+                <img
+                  src="https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765534235/Blue_Pink_and_White_Modern_Kids_Fashion_Instagram_Post_iye3ee.png"
+                  alt="Special Offers Mobile Banner"
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = 'https://via.placeholder.com/400x500/E6D9F2/000000?text=Banner';
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Desktop Banners - Hidden on Mobile */}
+          <div className="hidden md:grid grid-cols-2 gap-3 sm:gap-4 md:gap-5 lg:gap-6 px-2 sm:px-4">
+            {banners.map((banner) => (
+              <div
+                key={banner.id}
+                onClick={() => handleCategoryClick(banner.path)}
+                className="relative overflow-hidden rounded-xl sm:rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] group cursor-pointer"
+              >
+                <div className="w-full aspect-[4/3] sm:aspect-[3/2] md:aspect-[2/1] bg-gray-100 overflow-hidden">
+                  <img
+                    src={banner.image}
+                    alt={banner.alt}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    loading="lazy"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = 'https://via.placeholder.com/800x400/E6D9F2/000000?text=Banner';
+                    }}
+                  />
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
             ))}
           </div>
@@ -345,12 +553,15 @@ const TickNTrackSections = () => {
   };
 
   return (
-    <div className="bg-white">
-      <CollectionShowcase />
-      <CategoryGrid />
-      <TrustSection />
+    <div style={{ backgroundColor: '#E6D9F2' }}>
+      <MainCategories />
+      <FeaturedSection />
+      <PremiumCollection />
+      <BannerSection />
+      <WhyChooseUs />
+      <PromotionalBanners />
     </div>
   );
 };
 
-export default TickNTrackSections;
+export default KidzoSections;

@@ -1,160 +1,128 @@
 import { Link } from 'react-router-dom';
-import { Heart, Mail, Phone, MapPin, Facebook, Instagram, Twitter, Youtube, ShoppingBag, Truck, Shield, RotateCcw, HeadphonesIcon, Clock, ChevronRight } from 'lucide-react';
+import { Heart, Mail, Phone, MapPin, Facebook, Instagram, Truck, Shield, RotateCcw, HeadphonesIcon, MessageCircle } from 'lucide-react';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   const quickLinks = [
     { name: 'Home', path: '/' },
-    { name: 'All Products', path: '/products' },
+    { name: 'Shop', path: '/products' },
     { name: 'New Arrivals', path: '/new-arrivals' },
-    { name: 'Best Sellers', path: '/best-sellers' },
+    { name: 'Offers', path: '/offers' },
     { name: 'About Us', path: '/about' },
     { name: 'Contact', path: '/contact' },
   ];
 
   const categories = [
-    { name: 'Men\'s Shoes', path: '/category/shoes/mens-shoes' },
-    { name: 'Women\'s Shoes', path: '/category/shoes/womens-shoes' },
-    { name: 'Sports Shoes', path: '/category/shoes/sports-shoes' },
-    { name: 'Luxury Watches', path: '/category/watches/luxury-watches' },
-    { name: 'Smart Watches', path: '/category/watches/smart-watches' },
-    { name: 'Accessories', path: '/category/accessories' },
+    { name: 'Kids Clothing', path: '/category/kids-clothing' },
+    { name: 'Winter Wear', path: '/category/kids-clothing/winterwear' },
+    { name: 'Footwear', path: '/category/footwear' },
+    { name: 'Baby Care', path: '/category/baby-care' },
+    { name: 'Toys', path: '/category/toys' },
   ];
 
-  const customerService = [
-    { name: 'Shipping Policy', path: '/shipping' },
-    { name: 'Returns & Exchange', path: '/returns' },
-    { name: 'Size Guide', path: '/size-guide' },
-    { name: 'Care Instructions', path: '/care-instructions' },
-    { name: 'FAQ', path: '/faq' },
-    { name: 'Warranty', path: '/warranty' },
-  ];
-
-  const companyInfo = [
-    { name: 'Our Story', path: '/about' },
-    { name: 'Careers', path: '/careers' },
-    { name: 'Press', path: '/press' },
-    { name: 'Partner with Us', path: '/partners' },
-    { name: 'Terms & Conditions', path: '/terms' },
-    { name: 'Privacy Policy', path: '/privacy' },
+  const trustFeatures = [
+    { icon: Truck, title: 'Free Shipping', description: 'On orders above ₹999' },
+    { icon: Shield, title: 'Secure Payment', description: '100% secure transactions' },
+    { icon: RotateCcw, title: 'Easy Returns', description: '7-day return policy' },
+    { icon: HeadphonesIcon, title: '24/7 Support', description: 'Dedicated customer care' },
   ];
 
   const socialLinks = [
     {
-      name: 'Facebook',
-      icon: <Facebook className="w-5 h-5" />,
-      url: 'https://facebook.com/tickntrack',
-    },
-    {
       name: 'Instagram',
-      icon: <Instagram className="w-5 h-5" />,
-      url: 'https://instagram.com/tickntrack',
+      icon: <Instagram className="w-4 h-4 sm:w-5 sm:h-5" />,
+      url: 'https://instagram.com/kidzo',
     },
     {
-      name: 'Twitter',
-      icon: <Twitter className="w-5 h-5" />,
-      url: 'https://twitter.com/tickntrack',
+      name: 'Facebook',
+      icon: <Facebook className="w-4 h-4 sm:w-5 sm:h-5" />,
+      url: 'https://facebook.com/kidzo',
     },
     {
-      name: 'YouTube',
-      icon: <Youtube className="w-5 h-5" />,
-      url: 'https://youtube.com/tickntrack',
+      name: 'WhatsApp',
+      icon: <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5" />,
+      url: 'https://wa.me/919876543210',
     },
-  ];
-
-  const features = [
-    { icon: <Truck className="w-6 h-6" />, title: 'Free Shipping', description: 'On orders above ₹999' },
-    { icon: <RotateCcw className="w-6 h-6" />, title: 'Easy Returns', description: '7-day return policy' },
-    { icon: <Shield className="w-6 h-6" />, title: 'Secure Payment', description: '100% secure transactions' },
-    { icon: <HeadphonesIcon className="w-6 h-6" />, title: '24/7 Support', description: 'Dedicated customer care' },
   ];
 
   return (
-    <footer className="bg-gray-900 text-white w-full">
-      {/* Features Bar */}
-      <div className="border-b border-gray-800">
-        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-4 2xl:px-6 py-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {features.map((feature, index) => (
-              <div key={index} className="flex items-center gap-4">
-                <div className="flex-shrink-0 w-12 h-12 bg-teal-600 rounded-lg flex items-center justify-center">
-                  {feature.icon}
+    <>
+      <style>{`
+        .footer-link {
+          color: #1F2937;
+          transition: color 0.3s ease;
+        }
+        .footer-link:hover {
+          color: #FF5CA8;
+        }
+      `}</style>
+      <footer className="w-full bg-white" style={{ color: '#1F2937' }}>
+      {/* Trust Strip */}
+      <div className="w-full px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-5 md:py-6" style={{ background: 'linear-gradient(135deg, rgba(255, 92, 168, 0.1) 0%, rgba(255, 182, 193, 0.1) 100%)' }}>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-6">
+          {trustFeatures.map((feature, index) => {
+            const IconComponent = feature.icon;
+            return (
+              <div key={index} className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 bg-white/5 rounded-lg sm:rounded-xl p-2 sm:p-3 md:p-4 backdrop-blur-sm">
+                <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(255, 92, 168, 0.2)' }}>
+                  <IconComponent className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" style={{ color: '#FF5CA8' }} />
                 </div>
-                <div>
-                  <h4 className="font-semibold text-white">{feature.title}</h4>
-                  <p className="text-sm text-gray-400">{feature.description}</p>
+                <div className="min-w-0 flex-1">
+                  <h6 className="font-semibold text-xs sm:text-sm md:text-base leading-tight" style={{ color: '#1F2937' }}>{feature.title}</h6>
+                  <p className="text-[10px] sm:text-xs md:text-sm opacity-80 leading-tight mt-0.5 sm:mt-1" style={{ color: '#1F2937' }}>{feature.description}</p>
                 </div>
               </div>
-            ))}
-          </div>
+            );
+          })}
         </div>
       </div>
 
       {/* Main Footer Content */}
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-4 2xl:px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
-          {/* Brand Column */}
-          <div className="lg:col-span-2">
-            <div className="mb-6">
+      <div className="w-full px-3 sm:px-4 md:px-6 lg:px-8 xl:px-4 2xl:px-6 py-8 sm:py-10 md:py-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-12">
+          {/* Brand Section */}
+          <div className="sm:col-span-2 lg:col-span-1">
+            <div className="mb-4 sm:mb-6">
               <img 
-                src="https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765015560/13d1b209-cadd-4897-a880-6449d9ee256a.png"
-                alt="TickNTrack"
-                className="h-12 w-auto object-contain mb-4"
+                src="https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765609203/2_qw44ed.svg"
+                alt="Kidzo"
+                className="h-50 sm:h-60 w-auto object-contain mb-10 sm:mb-4"
               />
-              <p className="text-gray-400 leading-relaxed max-w-md">
-                Your trusted destination for premium footwear and luxury timepieces. 
-                We bring you the finest collection of shoes and watches from top brands worldwide.
+              <p className="text-sm sm:text-base leading-relaxed max-w-md opacity-90" style={{ color: '#1F2937' }}>
+                Your trusted destination for premium kids & baby products. 
+                We bring you the finest collection of clothing, accessories, and toys for your little ones.
               </p>
             </div>
 
             {/* Contact Info */}
-            <div className="space-y-3">
-              <div className="flex items-center gap-3 text-gray-400">
-                <Phone className="w-5 h-5 text-teal-500" />
-                <span>+91 98765 43210</span>
+            <div className="space-y-2 sm:space-y-3">
+              <div className="flex items-start sm:items-center gap-2 sm:gap-3 opacity-90" style={{ color: '#1F2937' }}>
+                <Phone className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 mt-0.5 sm:mt-0" style={{ color: '#FF5CA8' }} />
+                <span className="text-sm sm:text-base break-words">+91 98765 43210</span>
               </div>
-              <div className="flex items-center gap-3 text-gray-400">
-                <Mail className="w-5 h-5 text-teal-500" />
-                <span>support@tickntrack.com</span>
+              <div className="flex items-start sm:items-center gap-2 sm:gap-3 opacity-90" style={{ color: '#1F2937' }}>
+                <Mail className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 mt-0.5 sm:mt-0" style={{ color: '#FF5CA8' }} />
+                <span className="text-sm sm:text-base break-all">support@kidzo.com</span>
               </div>
-              <div className="flex items-center gap-3 text-gray-400">
-                <MapPin className="w-5 h-5 text-teal-500" />
-                <span>123 Fashion Street, Mumbai, India 400001</span>
-              </div>
-            </div>
-
-            {/* Social Links */}
-            <div className="mt-6">
-              <h5 className="font-semibold text-white mb-4">Follow Us</h5>
-              <div className="flex gap-3">
-                {socialLinks.map((social, index) => (
-                  <a
-                    key={index}
-                    href={social.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center text-gray-400 hover:bg-teal-600 hover:text-white transition-colors duration-300"
-                    aria-label={social.name}
-                  >
-                    {social.icon}
-                  </a>
-                ))}
+              <div className="flex items-start sm:items-center gap-2 sm:gap-3 opacity-90" style={{ color: '#1F2937' }}>
+                <MapPin className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 mt-0.5 sm:mt-0" style={{ color: '#FF5CA8' }} />
+                <span className="text-sm sm:text-base break-words">123 Fashion Street, Mumbai, India 400001</span>
               </div>
             </div>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h5 className="font-semibold text-white mb-4">Quick Links</h5>
-            <ul className="space-y-3">
+            <h5 className="font-semibold mb-3 sm:mb-4 text-base sm:text-lg" style={{ color: '#1F2937' }}>Quick Links</h5>
+            <ul className="space-y-2 sm:space-y-3">
               {quickLinks.map((link, index) => (
                 <li key={index}>
                   <Link 
                     to={link.path}
-                    className="text-gray-400 hover:text-teal-400 transition-colors duration-300 flex items-center gap-2"
+                    className="footer-link opacity-90 hover:opacity-100 active:opacity-100 transition-all duration-300 flex items-center gap-2 group text-sm sm:text-base touch-manipulation"
                   >
-                    <ChevronRight className="w-4 h-4" />
+                    <span className="w-1.5 h-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex-shrink-0" style={{ backgroundColor: '#FF5CA8' }}></span>
                     {link.name}
                   </Link>
                 </li>
@@ -164,106 +132,72 @@ const Footer = () => {
 
           {/* Categories */}
           <div>
-            <h5 className="font-semibold text-white mb-4">Shop by Category</h5>
-            <ul className="space-y-3">
+            <h5 className="font-semibold mb-3 sm:mb-4 text-base sm:text-lg" style={{ color: '#1F2937' }}>Categories</h5>
+            <ul className="space-y-2 sm:space-y-3">
               {categories.map((category, index) => (
                 <li key={index}>
                   <Link 
                     to={category.path}
-                    className="text-gray-400 hover:text-teal-400 transition-colors duration-300 flex items-center gap-2"
+                    className="footer-link opacity-90 hover:opacity-100 active:opacity-100 transition-all duration-300 flex items-center gap-2 group text-sm sm:text-base touch-manipulation"
                   >
-                    <ChevronRight className="w-4 h-4" />
+                    <span className="w-1.5 h-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex-shrink-0" style={{ backgroundColor: '#FF5CA8' }}></span>
                     {category.name}
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
+        </div>
+      </div>
 
-          {/* Customer Service */}
-          <div>
-            <h5 className="font-semibold text-white mb-4">Customer Service</h5>
-            <ul className="space-y-3">
-              {customerService.map((service, index) => (
-                <li key={index}>
-                  <Link 
-                    to={service.path}
-                    className="text-gray-400 hover:text-teal-400 transition-colors duration-300 flex items-center gap-2"
-                  >
-                    <ChevronRight className="w-4 h-4" />
-                    {service.name}
-                  </Link>
-                </li>
+      {/* Bottom Footer Bar */}
+      <div className="border-t" style={{ borderColor: 'rgba(229, 231, 235, 0.1)' }}>
+        <div className="w-full px-3 sm:px-4 md:px-6 lg:px-8 xl:px-4 2xl:px-6 py-4 sm:py-5 md:py-6">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4">
+            <div className="text-xs sm:text-sm opacity-90 text-center sm:text-left" style={{ color: '#1F2937' }}>
+              © {currentYear} Kidzo. All Rights Reserved
+            </div>
+            <div className="flex gap-3 sm:gap-4">
+              {socialLinks.map((social, index) => (
+                <a
+                  key={index}
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 touch-manipulation"
+                  style={{ 
+                    backgroundColor: 'rgba(255, 92, 168, 0.2)',
+                    color: '#1F2937'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#FF5CA8';
+                    e.currentTarget.style.color = '#FFFFFF';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'rgba(255, 92, 168, 0.2)';
+                    e.currentTarget.style.color = '#1F2937';
+                  }}
+                  onTouchStart={(e) => {
+                    e.currentTarget.style.backgroundColor = '#FF5CA8';
+                    e.currentTarget.style.color = '#FFFFFF';
+                  }}
+                  onTouchEnd={(e) => {
+                    setTimeout(() => {
+                      e.currentTarget.style.backgroundColor = 'rgba(255, 92, 168, 0.2)';
+                      e.currentTarget.style.color = '#1F2937';
+                    }, 150);
+                  }}
+                  aria-label={social.name}
+                >
+                  {social.icon}
+                </a>
               ))}
-            </ul>
-          </div>
-        </div>
-
-        {/* Newsletter Section */}
-        <div className="border-t border-gray-800 mt-12 pt-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-            <div>
-              <h5 className="font-semibold text-white mb-2">Subscribe to Our Newsletter</h5>
-              <p className="text-gray-400">
-                Get exclusive offers, new product updates, and style tips delivered to your inbox
-              </p>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <input
-                type="email"
-                placeholder="Enter your email address"
-                className="flex-1 px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
-              />
-              <button className="px-6 py-3 bg-teal-600 text-white font-semibold rounded-lg hover:bg-teal-700 transition-colors duration-300 flex items-center justify-center gap-2">
-                <Mail className="w-5 h-5" />
-                Subscribe
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Bottom Footer */}
-      <div className="border-t border-gray-800">
-        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-4 2xl:px-6 py-6">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="text-gray-400 text-sm">
-              © {currentYear} TickNTrack. All rights reserved. Made with 
-              <Heart className="w-4 h-4 inline mx-1 text-red-500" /> 
-              in India
-            </div>
-            <div className="flex gap-6">
-              <Link to="/terms" className="text-gray-400 hover:text-teal-400 text-sm transition-colors duration-300">
-                Terms & Conditions
-              </Link>
-              <Link to="/privacy" className="text-gray-400 hover:text-teal-400 text-sm transition-colors duration-300">
-                Privacy Policy
-              </Link>
-              <Link to="/sitemap" className="text-gray-400 hover:text-teal-400 text-sm transition-colors duration-300">
-                Sitemap
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Payment Methods */}
-      <div className="border-t border-gray-800">
-        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-4 2xl:px-6 py-6">
-          <div className="text-center">
-            <p className="text-gray-400 text-sm mb-4">We Accept</p>
-            <div className="flex justify-center items-center gap-4 flex-wrap">
-              <div className="w-12 h-8 bg-white rounded flex items-center justify-center text-xs font-bold text-gray-800">VISA</div>
-              <div className="w-12 h-8 bg-white rounded flex items-center justify-center text-xs font-bold text-gray-800">MC</div>
-              <div className="w-12 h-8 bg-white rounded flex items-center justify-center text-xs font-bold text-gray-800">UPI</div>
-              <div className="w-12 h-8 bg-white rounded flex items-center justify-center text-xs font-bold text-gray-800">GPay</div>
-              <div className="w-12 h-8 bg-white rounded flex items-center justify-center text-xs font-bold text-gray-800">PayTM</div>
-              <div className="w-12 h-8 bg-white rounded flex items-center justify-center text-xs font-bold text-gray-800">COD</div>
             </div>
           </div>
         </div>
       </div>
     </footer>
+    </>
   );
 };
 

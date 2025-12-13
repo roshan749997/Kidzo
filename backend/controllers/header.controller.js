@@ -10,7 +10,7 @@ export const getHeaderData = async (req, res) => {
     const headerData = {
       logo: {
         url: '/logo.png',
-        alt: 'TickNTrack Logo'
+        alt: 'Kidzo Logo'
       },
       navigation: {
         categories: categories,

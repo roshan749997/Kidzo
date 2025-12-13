@@ -2,7 +2,7 @@ import React from 'react';
 import Collections from '../components/Collections';
 import MobileBottomNav from '../components/MobileBottomNav';
 import HeroSlider from '../components/HeroSlider';
-import TickNTrackSections from '../components/TickNTrackSections';
+import KidzoSections from '../components/TickNTrackSections';
 
 const Home = () => {
   return (
@@ -11,19 +11,19 @@ const Home = () => {
       <HeroSlider
         slides={[
           {
-            desktop: 'https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765019607/Desktop_-_1_8_rkwkq3.svg',
-            alt: 'TickNTrack - Premium Shoes & Watches Collection',
+            desktop: 'https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765533980/Cream_Green_Playful_Kids_Fashion_Trends_Twitter_Header_2048_x_594_px_jsjjsh.png',
+            alt: 'Kidzo - Premium Kids & Baby Products Collection',
           },
           {
-            desktop: 'https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765023578/Desktop_-_1_9_gvj1rs.svg',
-            alt: 'Festive Offer - TickNTrack',
+            desktop: 'https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765533979/Green_Cute_Baby_Store_Facebook_Ads_2048_x_594_px_tiow9i.svg',
+            alt: 'Festive Offer - Kidzo',
           },
         ]}
-        mobileSrc="https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765263320/1aec5eeb-e4e1-447c-9a8a-04e915142ec7_kt2uq8_481909.png"
+        mobileSrc="https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765533983/Beige_Neutral_Kids_Fashion_Product_Detail_Instagram_Post_obnvdg.svg"
       />
 
-      {/* TickNTrack Sections */}
-      <TickNTrackSections />
+      {/* Kidzo Sections */}
+      <KidzoSections />
 
       {/* Featured Collections */}
 

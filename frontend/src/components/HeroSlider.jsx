@@ -2,28 +2,16 @@ import React, { useEffect, useRef, useState } from 'react';
 
 const HeroSlider = ({ slides = [], mobileSrc }) => {
   const [index, setIndex] = useState(0);
-  const timerRef = useRef(null);
   const len = slides.length;
 
-  const stop = () => {
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-      timerRef.current = null;
-    }
-  };
+  // Auto-rotation disabled - banner only changes manually
+  // First banner (index 0) will always be shown initially
 
-  const start = () => {
-    if (len <= 1) return;
-    stop();
-    timerRef.current = setInterval(() => {
-      setIndex((i) => (i + 1) % len);
-    }, 4000);
-  };
-
+  // Dispatch event when banner index changes
   useEffect(() => {
-    start();
-    return stop;
-  }, [len]);
+    const event = new CustomEvent('bannerChanged', { detail: { index, total: len } });
+    window.dispatchEvent(event);
+  }, [index, len]);
 
   const prev = () => setIndex((i) => (i - 1 + len) % len);
   const next = () => setIndex((i) => (i + 1) % len);
@@ -37,8 +25,6 @@ const HeroSlider = ({ slides = [], mobileSrc }) => {
         <div
           className="flex transition-transform duration-500 ease-out"
           style={{ transform: `translateX(-${index * 100}%)` }}
-          onMouseEnter={stop}
-          onMouseLeave={start}
         >
           {slides.map((s, i) => (
             <img

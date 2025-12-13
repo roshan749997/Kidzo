@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { Product } from './models/product.js';
 
-mongoose.connect('mongodb+srv://avcoe55_db_user:1So8J9LI3I3iBlAu@cluster0.yp9u2ft.mongodb.net/TickNTrack?appName=Cluster0')
+mongoose.connect('mongodb+srv://avcoe55_db_user:1So8J9LI3I3iBlAu@cluster0.yp9u2ft.mongodb.net/Kidzo?appName=Cluster0')
 .then(async () => {
   console.log('Connected to MongoDB');
   

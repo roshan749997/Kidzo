@@ -232,7 +232,7 @@ const SignIn = () => {
           <div className="text-center relative z-10">
             <Link to="/" className="inline-block mb-8 transform hover:scale-105 transition-transform duration-300">
               <h1 className="text-6xl font-bold bg-gradient-to-r from-teal-600 via-cyan-600 to-blue-600 bg-clip-text text-transparent drop-shadow-lg">
-                TickNTrack
+                Kidzo
               </h1>
               <div className="mt-2 h-1 w-24 mx-auto bg-gradient-to-r from-teal-600 to-cyan-600 rounded-full"></div>
             </Link>
@@ -262,7 +262,7 @@ const SignIn = () => {
             <div className="lg:hidden text-center mb-8">
               <Link to="/" className="inline-block mb-6 transform hover:scale-105 transition-transform duration-300">
                 <h1 className="text-3xl font-bold bg-gradient-to-r from-teal-600 via-cyan-600 to-blue-600 bg-clip-text text-transparent">
-                  TickNTrack
+                  Kidzo
                 </h1>
                 <div className="mt-2 h-1 w-16 mx-auto bg-gradient-to-r from-teal-600 to-cyan-600 rounded-full"></div>
               </Link>
