@@ -101,21 +101,18 @@ const MobileHeader = () => {
     <>
       <div ref={headerRef} className="md:hidden w-full border-t border-gray-200 border-b border-gray-200 shadow-sm relative" style={{ backgroundColor: '#e7dacf', overflow: 'visible' }}>
         {/* Horizontal Scrollable Categories */}
-        <div className="relative px-2 sm:px-3 pt-1 sm:pt-1.5 pb-0.5 sm:pb-1" ref={categoryRef} style={{ overflow: 'visible' }}>
+        <div className="relative px-2 sm:px-3 pt-1.5 sm:pt-2 pb-1 sm:pb-1.5" ref={categoryRef} style={{ overflow: 'visible' }}>
           <div className="flex items-center space-x-1.5 sm:space-x-2 overflow-x-auto hide-scrollbar" style={{ overflowY: 'visible' }}>
             {categories.map((category) => (
               <div key={category.name} className="relative group shrink-0" style={{ zIndex: activeCategory === category.name ? 100 : 'auto' }}>
                 <div
-                  className={`flex items-center font-bold text-[10px] sm:text-xs transition-all duration-200 cursor-pointer whitespace-nowrap px-1.5 sm:px-2 py-1 sm:py-1.5 rounded-lg hover:bg-gray-50 active:bg-gray-100 touch-manipulation ${
+                  className={`flex items-center font-bold text-[10px] sm:text-xs transition-all duration-200 cursor-pointer whitespace-nowrap px-1.5 sm:px-2 py-1.5 sm:py-2 rounded-lg hover:bg-gray-50 active:bg-gray-100 touch-manipulation ${
                     activeCategory === category.name ? 'bg-gray-50' : ''
                   }`}
                   style={{
                     fontFamily: "'Bebas Neue', sans-serif",
                     letterSpacing: '0.5px',
-                    background: 'linear-gradient(90deg, #8B2BE2 0%, #FF1493 100%)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text',
+                    color: '#000000',
                   }}
                   onClick={(e) => {
                     e.stopPropagation();
@@ -136,7 +133,7 @@ const MobileHeader = () => {
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
-                      style={{ WebkitTextFillColor: '#FF1493' }}
+                      style={{ color: '#000000' }}
                     >
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
@@ -171,10 +168,7 @@ const MobileHeader = () => {
                         style={{
                           fontFamily: "'Bebas Neue', sans-serif",
                           letterSpacing: '0.5px',
-                          background: 'linear-gradient(90deg, #8B2BE2 0%, #FF1493 100%)',
-                          WebkitBackgroundClip: 'text',
-                          WebkitTextFillColor: 'transparent',
-                          backgroundClip: 'text',
+                          color: '#000000',
                         }}
                         onClick={(e) => {
                           e.preventDefault();
@@ -185,7 +179,7 @@ const MobileHeader = () => {
                         }}
                       >
                         <span>All {category.name}</span>
-                        <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5 ml-auto opacity-60 group-hover:opacity-100 transition-all duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ WebkitTextFillColor: '#FF1493' }}>
+                        <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5 ml-auto opacity-60 group-hover:opacity-100 transition-all duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ color: '#000000' }}>
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                         </svg>
                       </button>
@@ -213,7 +207,7 @@ const MobileHeader = () => {
                               style={{
                                 fontFamily: "'Bebas Neue', sans-serif",
                                 letterSpacing: '0.3px',
-                                color: '#6B21A8',
+                                color: '#000000',
                               }}
                             >
                               {subcategory.name}
