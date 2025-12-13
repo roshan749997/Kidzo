@@ -54,7 +54,7 @@ const Wishlist = () => {
   if (loading) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4 bg-gradient-to-b from-gray-50 to-white">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600 mb-4"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF1493] mb-4"></div>
         <p className="text-gray-600">Loading your wishlist...</p>
       </div>
     );
@@ -87,7 +87,7 @@ const Wishlist = () => {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4 bg-gradient-to-b from-gray-50 to-white">
         <div className="mb-6">
-          <svg className="mx-auto h-24 w-24 text-teal-200 mb-4" fill="currentColor" viewBox="0 0 24 24">
+          <svg className="mx-auto h-24 w-24 text-pink-200 mb-4" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
           </svg>
         </div>
@@ -112,7 +112,7 @@ const Wishlist = () => {
         <div className="mb-6 sm:mb-8">
           <div className="flex flex-col items-center text-center mb-4">
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 tracking-tight mb-2">My Wishlist</h1>
-            <div className="w-32 h-1.5 bg-gradient-to-r from-teal-600 via-cyan-600 to-teal-500 rounded-full shadow-sm"></div>
+            <div className="w-32 h-1.5 bg-gradient-to-r from-[#FF1493] via-[#8B2BE2] to-[#FF1493] rounded-full shadow-sm"></div>
             <p className="text-gray-600 mt-2 text-sm sm:text-base">
               {items.length} {items.length === 1 ? 'item' : 'items'} saved
             </p>
@@ -139,8 +139,8 @@ const Wishlist = () => {
               </div>
               <div className="p-4 sm:p-5 bg-white">
                 {/* Gradient accent bar */}
-                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-teal-600 via-cyan-600 to-teal-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
-                <h3 className="text-sm sm:text-base font-bold text-gray-900 line-clamp-2 min-h-[3rem] mb-2 group-hover:text-teal-600 transition-colors">{p.title}</h3>
+                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#FF1493] via-[#8B2BE2] to-[#FF1493] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+                <h3 className="text-sm sm:text-base font-bold text-gray-900 line-clamp-2 min-h-[3rem] mb-2 group-hover:text-[#FF1493] transition-colors">{p.title}</h3>
                 <div className="flex items-center gap-2 mt-3 mb-4">
                   <div className="flex items-center text-gray-900">
                     <FaRupeeSign className="w-4 h-4 text-gray-900" />
@@ -152,7 +152,7 @@ const Wishlist = () => {
                 </div>
                 <div className="flex justify-between items-center pt-3 border-t border-gray-100">
                   <button
-                    className="text-sm font-semibold text-teal-600 hover:text-teal-700 transition-colors"
+                    className="text-sm font-semibold text-[#FF1493] hover:text-[#E01282] transition-colors"
                     onClick={() => navigate(`/product/${p._id}`)}
                   >
                     View Details

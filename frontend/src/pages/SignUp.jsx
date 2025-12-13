@@ -305,7 +305,7 @@ const SignUp = () => {
                   Already have an account?{' '}
                   <Link
                     to="/signin"
-                    className="text-teal-600 hover:text-teal-700 font-semibold transition-colors"
+                    className="text-[#FF1493] hover:text-[#E01282] font-semibold transition-colors"
                   >
                     Sign in here
                   </Link>

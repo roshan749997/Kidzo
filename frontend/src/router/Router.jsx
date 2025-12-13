@@ -3,7 +3,7 @@ import { CartProvider } from '../context/CartContext';
 import Layout from '../components/Layout';
 import Home from '../pages/Home';
 import Shop from '../pages/Shop';
-import Collections from '../pages/Collections';
+import Collections from '../components/Collections';
 import About from '../pages/About';
 import Contact from '../pages/Contact';
 import SignIn from '../pages/SignIn';

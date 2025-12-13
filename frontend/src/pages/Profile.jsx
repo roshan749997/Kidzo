@@ -646,14 +646,14 @@ export default function FlipkartAccountSettings() {
                   {loadingOrders ? (
                     <div className="flex justify-center py-12">
                       <div className="relative">
-                        <div className="animate-spin rounded-full h-12 w-12 border-t-3 border-b-3 border-teal-600"></div>
-                        <div className="absolute inset-0 animate-ping rounded-full h-12 w-12 border-2 border-cyan-600 opacity-20"></div>
+                        <div className="animate-spin rounded-full h-12 w-12 border-t-3 border-b-3 border-[#FF1493]"></div>
+                        <div className="absolute inset-0 animate-ping rounded-full h-12 w-12 border-2 border-[#8B2BE2] opacity-20"></div>
                       </div>
                     </div>
                   ) : orders.length > 0 ? (
                     <div className="space-y-6">
                       {orders.map((order) => (
-                        <div key={order._id} className="border-2 border-gray-200 rounded-xl p-4 sm:p-5 hover:border-teal-600 hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-white to-gray-50">
+                        <div key={order._id} className="border-2 border-gray-200 rounded-xl p-4 sm:p-5 hover:border-pink-300 hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-white to-gray-50">
                           <div className="flex items-center justify-between">
                             <div className="text-sm text-gray-600">Order ID: <span className="font-mono">{String(order._id).slice(-8)}</span></div>
                             <div className="flex items-center gap-3">
@@ -717,7 +717,7 @@ export default function FlipkartAccountSettings() {
                 <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
                     <div className="p-4 sm:p-6 border-b bg-gradient-to-r from-gray-50 to-gray-100">
                       <h2 className="text-lg sm:text-xl font-bold text-gray-800 flex items-center gap-2">
-                        <svg className="w-5 h-5 sm:w-6 sm:h-6 text-teal-600" fill="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-5 h-5 sm:w-6 sm:h-6 text-pink-600" fill="currentColor" viewBox="0 0 24 24">
                           <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
                         </svg>
                         My Addresses
@@ -734,11 +734,11 @@ export default function FlipkartAccountSettings() {
                     ) : addresses.length > 0 ? (
                       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                         {addresses.map((address, index) => (
-                          <div key={index} className="border-2 border-gray-200 rounded-xl p-4 sm:p-5 hover:border-teal-600 hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-white to-gray-50">
+                          <div key={index} className="border-2 border-gray-200 rounded-xl p-4 sm:p-5 hover:border-pink-300 hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-white to-gray-50">
                             <div className="flex justify-between items-start mb-3">
                               <h3 className="font-bold text-gray-800 text-base sm:text-lg">{address.fullName}</h3>
                               {address.isDefault && (
-                                <span className="px-3 py-1 text-xs font-bold bg-gradient-to-r from-teal-600 to-cyan-600 text-white rounded-full shadow-sm">
+                                <span className="px-3 py-1 text-xs font-bold bg-gradient-to-r from-[#FF1493] to-[#8B2BE2] text-white rounded-full shadow-sm">
                                   Default
                                 </span>
                               )}
@@ -752,7 +752,7 @@ export default function FlipkartAccountSettings() {
                                 {address.city}, {address.state} - {address.pincode}
                               </p>
                               <div className="flex items-center gap-2 pt-2 mt-2 border-t border-gray-200">
-                                <svg className="w-4 h-4 text-teal-600" fill="currentColor" viewBox="0 0 24 24">
+                                <svg className="w-4 h-4 text-pink-600" fill="currentColor" viewBox="0 0 24 24">
                                   <path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/>
                                 </svg>
                                 <span className="font-medium text-gray-700">{address.phoneNumber}</span>

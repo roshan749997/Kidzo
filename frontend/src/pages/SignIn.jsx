@@ -534,7 +534,7 @@ const SignIn = () => {
                   Don't have an account?{' '}
                   <Link
                     to="/signup"
-                    className="text-teal-600 hover:text-teal-700 font-semibold transition-colors"
+                    className="text-[#FF1493] hover:text-[#E01282] font-semibold transition-colors"
                   >
                     Sign up here
                   </Link>

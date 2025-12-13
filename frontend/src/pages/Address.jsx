@@ -341,8 +341,8 @@ export default function AddressForm() {
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
           {showForm ? (
-            <form onSubmit={handleSaveAddress} className="bg-white shadow-lg rounded-2xl border border-teal-100 overflow-hidden">
-            <div className="bg-gradient-to-r from-teal-600 to-cyan-600 text-white p-4 flex items-center gap-3">
+            <form onSubmit={handleSaveAddress} className="bg-white shadow-lg rounded-2xl border border-pink-100 overflow-hidden">
+            <div className="bg-gradient-to-r from-[#FF1493] to-[#8B2BE2] text-white p-4 flex items-center gap-3">
               <span className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center font-bold">1</span>
               <span className="font-semibold text-lg">DELIVERY ADDRESS</span>
             </div>
@@ -361,7 +361,7 @@ export default function AddressForm() {
                   {formData.landmark && <div className="text-sm text-gray-700">Landmark: {formData.landmark}</div>}
                   {formData.alternatePhone && <div className="text-sm text-gray-700">Alt: {formData.alternatePhone}</div>}
                   <div className="mt-4 flex gap-3">
-                    <button type="button" onClick={() => setEditMode(true)} className="px-4 py-2 border-2 rounded-lg text-teal-600 border-teal-600 hover:bg-teal-50 cursor-pointer font-semibold transition-all shadow-sm hover:shadow-md">Edit Address</button>
+                    <button type="button" onClick={() => setEditMode(true)} className="px-4 py-2 border-2 rounded-lg text-[#FF1493] border-[#FF1493] hover:bg-pink-50 cursor-pointer font-semibold transition-all shadow-sm hover:shadow-md">Edit Address</button>
                     <button 
                       type="button" 
                       onClick={async () => {
@@ -401,7 +401,7 @@ export default function AddressForm() {
               <button
                 type="button"
                 onClick={handleUseCurrentLocation}
-                className="mb-6 bg-gradient-to-r from-teal-600 to-cyan-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:from-teal-700 hover:to-cyan-700 transition-all font-medium shadow-md hover:shadow-lg cursor-pointer"
+                className="mb-6 bg-gradient-to-r from-[#FF1493] to-[#8B2BE2] text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:from-[#E01282] hover:to-[#7A1BD1] transition-all font-medium shadow-md hover:shadow-lg cursor-pointer"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
@@ -419,7 +419,7 @@ export default function AddressForm() {
                     onChange={handleInputChange}
                     placeholder="Enter your full name"
                     required
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-600 focus:border-teal-600 transition-all"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all"
                   />
                 </div>
                 <div>
@@ -432,7 +432,7 @@ export default function AddressForm() {
                     maxLength={10}
                     placeholder="Enter 10-digit mobile number"
                     required
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-600 focus:border-teal-600 transition-all"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all"
                   />
                 </div>
               </div>
@@ -448,7 +448,7 @@ export default function AddressForm() {
                     maxLength={6}
                     placeholder="Enter 6-digit pincode"
                     required
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-600 focus:border-teal-600 transition-all"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all"
                   />
                 </div>
                 <div>
@@ -460,7 +460,7 @@ export default function AddressForm() {
                     onChange={handleInputChange}
                     placeholder="Enter your locality"
                     required
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-600 focus:border-teal-600 transition-all"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all"
                   />
                 </div>
               </div>
@@ -474,7 +474,7 @@ export default function AddressForm() {
                   rows={3}
                   placeholder="Enter your complete address"
                   required
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-600 focus:border-teal-600 transition-all"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all"
                 />
               </div>
 
@@ -488,13 +488,13 @@ export default function AddressForm() {
                     onChange={handleInputChange}
                     placeholder="Enter your city"
                     required
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-600 focus:border-teal-600 transition-all"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all"
                   />
                 </div>
                 <div className="relative" ref={stateDropdownRef}>
                   <label className="block text-xs text-gray-600 mb-1">State</label>
                   <div 
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-600 focus:border-teal-600 bg-white cursor-pointer transition-all"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white cursor-pointer transition-all"
                     onClick={() => setShowStateDropdown(!showStateDropdown)}
                   >
                     {formData.state || 'Select State'}
@@ -506,7 +506,7 @@ export default function AddressForm() {
                         <input
                           type="text"
                           placeholder="Search state..."
-                          className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 focus:border-teal-600 transition-all"
+                          className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all"
                           value={searchTerm}
                           onChange={(e) => setSearchTerm(e.target.value)}
                           onClick={(e) => e.stopPropagation()}
@@ -517,8 +517,8 @@ export default function AddressForm() {
                           filteredStates.map((state) => (
                             <div
                               key={state}
-                              className={`px-4 py-2 hover:bg-teal-50 cursor-pointer transition-colors ${
-                                formData.state === state ? 'bg-teal-100 text-teal-700 font-medium' : 'text-gray-700'
+                              className={`px-4 py-2 hover:bg-pink-50 cursor-pointer transition-colors ${
+                                formData.state === state ? 'bg-pink-100 text-[#FF1493] font-medium' : 'text-gray-700'
                               }`}
                               onClick={() => {
                                 setFormData({ ...formData, state });
@@ -547,7 +547,7 @@ export default function AddressForm() {
                     value={formData.landmark}
                     onChange={handleInputChange}
                     placeholder="E.g., Near Central Mall"
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-600 focus:border-teal-600 transition-all"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all"
                   />
                 </div>
                 <div>
@@ -559,7 +559,7 @@ export default function AddressForm() {
                     onChange={handleInputChange}
                     maxLength={10}
                     placeholder="Alternate phone (Optional)"
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-600 focus:border-teal-600 transition-all"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all"
                   />
                 </div>
               </div>
@@ -594,21 +594,24 @@ export default function AddressForm() {
                 <button
                   type="submit"
                   disabled={saving}
-                  className={`bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white px-8 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl cursor-pointer w-full sm:w-auto text-center transform hover:scale-105 active:scale-95 ${saving ? 'opacity-70 cursor-not-allowed' : ''}`}
+                  className={`bg-gradient-to-r from-[#FF1493] to-[#8B2BE2] hover:from-[#E01282] hover:to-[#7A1BD1] text-white px-8 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl cursor-pointer w-full sm:w-auto text-center transform hover:scale-105 active:scale-95 ${saving ? 'opacity-70 cursor-not-allowed' : ''}`}
                 >
                   {saving ? 'Saving...' : 'SAVE AND DELIVER HERE'}
                 </button>
                 <button
                   onClick={handleCancel}
-                  className="text-teal-600 hover:text-teal-700 px-6 py-3 rounded-xl font-semibold transition-all cursor-pointer w-full sm:w-auto text-center border-2 border-teal-600 hover:bg-teal-50 shadow-md hover:shadow-lg"
+                  className="text-black px-6 py-3 rounded-xl font-semibold transition-all cursor-pointer w-full sm:w-auto text-center border-2 border-black shadow-md hover:shadow-lg"
+                  style={{ backgroundColor: '#FFD1DC' }}
+                  onMouseEnter={(e) => e.target.style.backgroundColor = '#FFB6C1'}
+                  onMouseLeave={(e) => e.target.style.backgroundColor = '#FFD1DC'}
                 >
                   CANCEL
                 </button>
               </div>
 
               {showSuccess && (
-                <div className="bg-teal-50 border-2 border-teal-300 text-teal-700 px-4 py-3 rounded-lg flex items-center gap-2 font-medium mt-4">
-                  <svg className="w-5 h-5 text-teal-600" fill="currentColor" viewBox="0 0 20 20">
+                <div className="bg-pink-50 border-2 border-pink-300 text-[#FF1493] px-4 py-3 rounded-lg flex items-center gap-2 font-medium mt-4">
+                  <svg className="w-5 h-5 text-[#FF1493]" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
                   Address saved successfully!
@@ -617,13 +620,13 @@ export default function AddressForm() {
             </div>
             </form>
           ) : (
-            <div className="bg-white shadow-lg rounded-2xl border border-teal-100 overflow-hidden">
-              <div className="bg-gradient-to-r from-teal-600 to-cyan-600 text-white p-4 flex items-center gap-3">
+            <div className="bg-white shadow-lg rounded-2xl border border-pink-100 overflow-hidden">
+              <div className="bg-gradient-to-r from-[#FF1493] to-[#8B2BE2] text-white p-4 flex items-center gap-3">
                 <span className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center font-bold">1</span>
                 <span className="font-semibold text-lg">DELIVERY ADDRESS</span>
               </div>
               <div className="p-6">
-                <div className="mb-4 p-4 border-2 border-teal-200 bg-teal-50 rounded-xl">
+                <div className="mb-4 p-4 border-2 border-pink-200 bg-pink-50 rounded-xl">
                   <div className="flex justify-between items-start">
                     <div>
                       <h3 className="font-medium">{formData.name}</h3>
@@ -644,7 +647,7 @@ export default function AddressForm() {
                         <button
                           type="button"
                           onClick={handleEditAddress}
-                          className="text-teal-600 hover:text-teal-800 text-sm font-semibold px-3 py-1.5 rounded-lg hover:bg-teal-100 transition-colors"
+                          className="text-[#FF1493] hover:text-[#E01282] text-sm font-semibold px-3 py-1.5 rounded-lg hover:bg-pink-100 transition-colors"
                         >
                           EDIT
                         </button>
@@ -668,9 +671,9 @@ export default function AddressForm() {
         </div>
 
         <div className="lg:col-span-1">
-          <div className="bg-white shadow-lg rounded-2xl border border-teal-100 p-6 sticky top-4">
+          <div className="bg-white shadow-lg rounded-2xl border border-pink-100 p-6 sticky top-4">
             <h3 className="text-gray-900 text-lg font-bold mb-6 flex items-center gap-2">
-              <span className="w-1 h-6 bg-gradient-to-b from-teal-600 to-cyan-500 rounded-full"></span>
+              <span className="w-1 h-6 bg-gradient-to-b from-[#FF1493] to-[#8B2BE2] rounded-full"></span>
               PRICE DETAILS
             </h3>
 
@@ -681,7 +684,7 @@ export default function AddressForm() {
               </div>
               <div className="flex justify-between text-sm text-gray-700">
                 <span>Shipping</span>
-                <span className={`font-semibold ${priceDetails.shippingCharge > 0 ? 'text-gray-900' : 'text-teal-600'}`}>
+                <span className={`font-semibold ${priceDetails.shippingCharge > 0 ? 'text-gray-900' : 'text-[#FF1493]'}`}>
                   {priceDetails.shippingCharge > 0 ? `₹${priceDetails.shippingCharge.toLocaleString()}` : 'Free ✓'}
                 </span>
               </div>
@@ -691,19 +694,26 @@ export default function AddressForm() {
               </div>
             </div>
 
-            <div className="flex justify-between font-bold text-lg mb-4 pb-4 border-b-2 border-teal-200">
+            <div className="flex justify-between font-bold text-lg mb-4 pb-4 border-b-2 border-pink-200">
               <span className="text-gray-900">Total Payable</span>
-              <span className="text-teal-700">₹{priceDetails.total.toLocaleString()}</span>
+              <span className="text-[#FF1493]">₹{priceDetails.total.toLocaleString()}</span>
             </div>
 
             <button 
               onClick={handlePayment}
               disabled={!hasSavedAddress}
-              className={`w-full mt-4 py-4 px-4 rounded-xl transition-all font-bold cursor-pointer shadow-lg ${
+              className={`w-full mt-4 py-4 px-4 rounded-xl transition-all font-bold cursor-pointer shadow-lg border-2 border-black ${
                 hasSavedAddress 
-                  ? 'bg-gradient-to-r from-teal-600 to-cyan-600 text-white hover:from-teal-700 hover:to-cyan-700 hover:shadow-xl transform hover:scale-105 active:scale-95' 
-                  : 'bg-gray-300 text-gray-600 cursor-not-allowed'
+                  ? 'text-black hover:shadow-xl transform hover:scale-105 active:scale-95' 
+                  : 'bg-gray-300 text-gray-600 cursor-not-allowed border-gray-300'
               }`}
+              style={hasSavedAddress ? { backgroundColor: '#FFD1DC' } : {}}
+              onMouseEnter={(e) => {
+                if (hasSavedAddress) e.target.style.backgroundColor = '#FFB6C1';
+              }}
+              onMouseLeave={(e) => {
+                if (hasSavedAddress) e.target.style.backgroundColor = '#FFD1DC';
+              }}
             >
               PROCEED TO PAYMENT
             </button>
