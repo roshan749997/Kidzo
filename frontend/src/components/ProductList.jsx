@@ -585,7 +585,10 @@ const ProductList = ({ defaultCategory } = {}) => {
         {activeFilterCount > 0 && (
           <button 
             onClick={resetFilters}
-            className="text-sm bg-gradient-to-r from-[#8B2BE2] to-[#FF1493] text-white px-4 py-1.5 rounded-lg hover:from-[#7A1BD1] hover:to-[#E01282] font-medium transition-all shadow-sm"
+            className="text-sm text-black px-4 py-1.5 rounded-lg border-2 border-black font-medium transition-all shadow-sm"
+            style={{ backgroundColor: '#FFD1DC' }}
+            onMouseEnter={(e) => e.target.style.backgroundColor = '#FFB6C1'}
+            onMouseLeave={(e) => e.target.style.backgroundColor = '#FFD1DC'}
           >
             Clear all
           </button>
@@ -1129,7 +1132,7 @@ const ProductList = ({ defaultCategory } = {}) => {
   }
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#E6D9F2', position: 'relative', overflowX: 'hidden' }}>
+    <div className="min-h-screen bg-white" style={{ position: 'relative', overflowX: 'hidden' }}>
       <style>{styles}</style>
       {loading && (
         <div className="fixed left-0 right-0 top-0 z-50">
@@ -1144,14 +1147,10 @@ const ProductList = ({ defaultCategory } = {}) => {
         <div className="mb-2 sm:mb-4">
           <div className="flex flex-col items-center text-center mb-2 sm:mb-3">
             <h1 
-              className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-1 sm:mb-2 uppercase"
+              className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-1 sm:mb-2 uppercase text-black"
               style={{
                 fontFamily: "'Bebas Neue', sans-serif",
                 letterSpacing: '2px',
-                background: 'linear-gradient(90deg, #8B2BE2 0%, #FF1493 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
               }}
             >
               {effectiveSubCategory
@@ -1397,7 +1396,10 @@ const ProductList = ({ defaultCategory } = {}) => {
                     </div>
                     <button
                       onClick={resetFilters}
-                      className="px-8 py-3 bg-gradient-to-r from-[#8B2BE2] to-[#FF1493] text-white rounded-xl hover:from-[#7A1BD1] hover:to-[#E01282] font-semibold transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+                      className="px-8 py-3 text-black rounded-xl border-2 border-black font-semibold transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+                      style={{ backgroundColor: '#FFD1DC' }}
+                      onMouseEnter={(e) => e.target.style.backgroundColor = '#FFB6C1'}
+                      onMouseLeave={(e) => e.target.style.backgroundColor = '#FFD1DC'}
                     >
                       Clear all filters
                     </button>
@@ -1413,7 +1415,10 @@ const ProductList = ({ defaultCategory } = {}) => {
                     </div>
                     <Link
                       to="/"
-                      className="inline-block px-8 py-3 bg-gradient-to-r from-[#8B2BE2] to-[#FF1493] text-white rounded-xl hover:from-[#7A1BD1] hover:to-[#E01282] font-semibold transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+                      className="inline-block px-8 py-3 text-black rounded-xl border-2 border-black font-semibold transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+                      style={{ backgroundColor: '#FFD1DC' }}
+                      onMouseEnter={(e) => e.target.style.backgroundColor = '#FFB6C1'}
+                      onMouseLeave={(e) => e.target.style.backgroundColor = '#FFD1DC'}
                     >
                       Continue Shopping
                     </Link>
@@ -1485,7 +1490,10 @@ const ProductList = ({ defaultCategory } = {}) => {
                   <div className="flex justify-center mt-8 sm:mt-12">
                     <button
                       onClick={() => setDisplayCount(prev => prev + 20)}
-                      className="px-8 py-3 sm:px-12 sm:py-4 bg-gradient-to-r from-[#8B2BE2] to-[#FF1493] text-white font-bold rounded-xl hover:from-[#7A1BD1] hover:to-[#E01282] transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 text-sm sm:text-base"
+                      className="px-8 py-3 sm:px-12 sm:py-4 text-black font-bold rounded-xl border-2 border-black transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 text-sm sm:text-base"
+                      style={{ backgroundColor: '#FFD1DC' }}
+                      onMouseEnter={(e) => e.target.style.backgroundColor = '#FFB6C1'}
+                      onMouseLeave={(e) => e.target.style.backgroundColor = '#FFD1DC'}
                     >
                       Load More Products
                     </button>
@@ -1533,7 +1541,10 @@ const ProductList = ({ defaultCategory } = {}) => {
               </div>
               <button
                 onClick={() => setShowMobileFilters(false)}
-                className="w-full px-6 py-4 bg-gradient-to-r from-[#8B2BE2] to-[#FF1493] text-white font-bold rounded-xl hover:from-[#7A1BD1] hover:to-[#E01282] transition-all shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
+                className="w-full px-6 py-4 text-black font-bold rounded-xl border-2 border-black transition-all shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
+                style={{ backgroundColor: '#FFD1DC' }}
+                onMouseEnter={(e) => e.target.style.backgroundColor = '#FFB6C1'}
+                onMouseLeave={(e) => e.target.style.backgroundColor = '#FFD1DC'}
               >
                 Apply Filters
               </button>

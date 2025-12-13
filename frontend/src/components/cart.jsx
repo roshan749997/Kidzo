@@ -51,7 +51,10 @@ function Cart() {
           <p className="text-gray-600 mb-8 text-lg">Looks like you haven't added anything to your cart yet.</p>
           <button 
             onClick={() => navigate('/')}
-            className="bg-gradient-to-r from-teal-600 to-cyan-600 text-white px-8 py-3 rounded-xl hover:from-teal-700 hover:to-cyan-700 transition-all font-semibold shadow-lg transform hover:scale-105 active:scale-95 cursor-pointer"
+            className="text-black px-8 py-3 rounded-xl border-2 border-black transition-all font-semibold shadow-lg transform hover:scale-105 active:scale-95 cursor-pointer"
+            style={{ backgroundColor: '#FFD1DC' }}
+            onMouseEnter={(e) => e.target.style.backgroundColor = '#FFB6C1'}
+            onMouseLeave={(e) => e.target.style.backgroundColor = '#FFD1DC'}
           >
             Continue Shopping
           </button>
@@ -156,7 +159,10 @@ function Cart() {
               
               <button 
                 onClick={() => navigate('/checkout/address')}
-                className="w-full bg-gradient-to-r from-teal-600 to-cyan-600 text-white py-4 px-4 rounded-xl hover:from-teal-700 hover:to-cyan-700 transition-all font-bold shadow-lg transform hover:scale-105 active:scale-95 cursor-pointer text-lg"
+                className="w-full text-black py-4 px-4 rounded-xl border-2 border-black transition-all font-bold shadow-lg transform hover:scale-105 active:scale-95 cursor-pointer text-lg"
+                style={{ backgroundColor: '#FFD1DC' }}
+                onMouseEnter={(e) => e.target.style.backgroundColor = '#FFB6C1'}
+                onMouseLeave={(e) => e.target.style.backgroundColor = '#FFD1DC'}
               >
                 Proceed to Checkout
               </button>

@@ -18,7 +18,10 @@ const LoginModal = ({ isOpen, onClose }) => {
         <div className="flex gap-3">
           <Link
             to="/signin"
-            className="flex-1 bg-gradient-to-r from-[#8B2BE2] to-[#FF1493] text-white font-semibold px-6 py-3 rounded-lg text-center hover:from-[#7A1BD1] hover:to-[#E01282] transition-all"
+            className="flex-1 text-black font-semibold px-6 py-3 rounded-lg text-center border-2 border-black transition-all"
+            style={{ backgroundColor: '#FFD1DC' }}
+            onMouseEnter={(e) => e.target.style.backgroundColor = '#FFB6C1'}
+            onMouseLeave={(e) => e.target.style.backgroundColor = '#FFD1DC'}
           >
             Login
           </Link>
@@ -555,7 +558,10 @@ const ProductDetail = () => {
               <div className="flex flex-row gap-3">
                 <button 
                   onClick={handleAddToCart}
-                  className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-[#8B2BE2] to-[#FF1493] hover:from-[#7A1BD1] hover:to-[#E01282] text-white font-semibold px-6 py-3.5 rounded-lg transition-all shadow-lg hover:shadow-xl active:scale-[0.98] text-base"
+                  className="flex-1 flex items-center justify-center gap-2 text-black font-semibold px-6 py-3.5 rounded-lg transition-all shadow-lg hover:shadow-xl active:scale-[0.98] text-base border-2 border-black"
+                  style={{ backgroundColor: '#FFD1DC' }}
+                  onMouseEnter={(e) => e.target.style.backgroundColor = '#FFB6C1'}
+                  onMouseLeave={(e) => e.target.style.backgroundColor = '#FFD1DC'}
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -564,7 +570,10 @@ const ProductDetail = () => {
                 </button>
                 <button
                   onClick={handleBuyNow}
-                  className="flex-1 flex items-center justify-center gap-2 bg-white hover:bg-gray-50 text-black font-semibold px-6 py-3.5 rounded-lg transition-all shadow-md hover:shadow-lg active:scale-[0.98] text-base border-2 border-black"
+                  className="flex-1 flex items-center justify-center gap-2 text-black font-semibold px-6 py-3.5 rounded-lg transition-all shadow-md hover:shadow-lg active:scale-[0.98] text-base border-2 border-black"
+                  style={{ backgroundColor: '#FFD1DC' }}
+                  onMouseEnter={(e) => e.target.style.backgroundColor = '#FFB6C1'}
+                  onMouseLeave={(e) => e.target.style.backgroundColor = '#FFD1DC'}
                 >
                   <span>Buy Now</span>
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -929,7 +938,13 @@ const NotFoundState = () => (
   <div className="min-h-screen flex flex-col items-center justify-center px-4 text-center bg-white">
     <h1 className="text-2xl font-bold text-black mb-2">Product Not Found</h1>
     <p className="text-black mb-6">The product you are looking for doesn't exist or has been removed.</p>
-    <Link to="/" className="bg-gradient-to-r from-[#8B2BE2] to-[#FF1493] text-white px-8 py-3 rounded-lg font-medium hover:from-[#7A1BD1] hover:to-[#E01282] transition-all">
+    <Link 
+      to="/" 
+      className="text-black px-8 py-3 rounded-lg font-medium border-2 border-black transition-all"
+      style={{ backgroundColor: '#FFD1DC' }}
+      onMouseEnter={(e) => e.target.style.backgroundColor = '#FFB6C1'}
+      onMouseLeave={(e) => e.target.style.backgroundColor = '#FFD1DC'}
+    >
       Back to Home
     </Link>
   </div>

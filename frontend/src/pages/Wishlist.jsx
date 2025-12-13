@@ -71,7 +71,10 @@ const Wishlist = () => {
         <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">Unable to Load Wishlist</h2>
         <p className="text-gray-600 mb-6 text-base">{error}</p>
         <button
-          className="px-6 py-3 bg-gradient-to-r from-teal-600 to-cyan-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl hover:from-teal-700 hover:to-cyan-700 transition-all duration-300 transform hover:scale-105"
+          className="px-6 py-3 text-black rounded-xl border-2 border-black font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+          style={{ backgroundColor: '#FFD1DC' }}
+          onMouseEnter={(e) => e.target.style.backgroundColor = '#FFB6C1'}
+          onMouseLeave={(e) => e.target.style.backgroundColor = '#FFD1DC'}
           onClick={loadWishlist}
         >
           Try Again
@@ -91,7 +94,10 @@ const Wishlist = () => {
         <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">Your Wishlist is Empty</h2>
         <p className="text-gray-600 mb-6 text-base">Tap the heart on any product to save it here.</p>
         <button
-          className="px-6 py-3 bg-gradient-to-r from-teal-600 to-cyan-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl hover:from-teal-700 hover:to-cyan-700 transition-all duration-300 transform hover:scale-105"
+          className="px-6 py-3 text-black rounded-xl border-2 border-black font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+          style={{ backgroundColor: '#FFD1DC' }}
+          onMouseEnter={(e) => e.target.style.backgroundColor = '#FFB6C1'}
+          onMouseLeave={(e) => e.target.style.backgroundColor = '#FFD1DC'}
           onClick={() => navigate('/')}
         >
           Browse Products
