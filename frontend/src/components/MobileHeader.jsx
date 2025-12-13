@@ -102,7 +102,7 @@ const MobileHeader = () => {
       <div ref={headerRef} className="md:hidden w-full border-t border-gray-200 border-b border-gray-200 shadow-sm relative" style={{ backgroundColor: '#e7dacf', overflow: 'visible' }}>
         {/* Horizontal Scrollable Categories */}
         <div className="relative px-2 sm:px-3 pt-1.5 sm:pt-2 pb-1 sm:pb-1.5" ref={categoryRef} style={{ overflow: 'visible' }}>
-          <div className="flex items-center space-x-1.5 sm:space-x-2 overflow-x-auto hide-scrollbar" style={{ overflowY: 'visible' }}>
+          <div className="flex items-center space-x-1.5 sm:space-x-2 overflow-x-auto hide-scrollbar" style={{ overflowY: 'visible', scrollBehavior: 'smooth' }}>
             {categories.map((category) => (
               <div key={category.name} className="relative group shrink-0" style={{ zIndex: activeCategory === category.name ? 100 : 'auto' }}>
                 <div
@@ -238,15 +238,6 @@ const MobileHeader = () => {
         }
         .animate-in {
           animation: fade-in 0.2s ease-out;
-        }
-        .hide-scrollbar::-webkit-scrollbar {
-          display: none;
-          height: 0;
-        }
-        .hide-scrollbar {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-          scrollbar-height: none;
         }
         .custom-scrollbar::-webkit-scrollbar {
           width: 6px;
