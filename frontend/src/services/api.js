@@ -61,11 +61,10 @@ export const fetchSarees = async (category, subcategory = null) => {
       url = `${API_URL}${categoryEndpoint}`;
       const params = new URLSearchParams();
       
+      // Only pass subcategory parameter, not category
+      // Category is already identified by the endpoint path
       if (subcategory) {
         params.append('subcategory', subcategory);
-      } else if (category) {
-        // Also pass category for filtering
-        params.append('category', category);
       }
       
       if (params.toString()) {

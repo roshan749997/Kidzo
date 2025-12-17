@@ -1,4 +1,5 @@
 import { Toys } from '../models/Toys.js';
+import { Product } from '../models/product.js';
 
 // Helper function to normalize subcategory names
 const normalizeSubcategory = (subcategory) => {
@@ -57,7 +58,8 @@ const processImages = (productObj) => {
 // Get all toys products or filter by subcategory
 export const getToysProducts = async (req, res) => {
   try {
-    const rawSubcategory = (req.query.subcategory || req.query.category || '').toString();
+    // Only use subcategory parameter, not category (category is used to identify the endpoint)
+    const rawSubcategory = (req.query.subcategory || '').toString();
     const subcategory = normalizeSubcategory(rawSubcategory);
     
     // Base query: Match toys category OR toy-related terms
@@ -109,11 +111,46 @@ export const getToysProducts = async (req, res) => {
     }
     
     console.log('Toys query:', JSON.stringify(query, null, 2));
-    const products = await Toys.find(query).sort({ createdAt: -1 });
-    console.log(`Found ${products.length} products in Toys collection`);
+    
+    // Fetch from Toys collection
+    const toysProducts = await Toys.find(query).sort({ createdAt: -1 });
+    console.log(`Found ${toysProducts.length} products in Toys collection`);
+    
+    // Also fetch from legacy Product collection for backward compatibility
+    let legacyProducts = [];
+    const legacyQuery = {
+      $and: [
+        {
+          $or: [
+            { category: { $regex: /toys|toy|game|puzzle|doll|car|action figure/i } }
+          ]
+        }
+      ]
+    };
+    if (subcategory) {
+      legacyQuery.$and.push({
+        $or: [
+          { 'product_info.toyType': { $regex: new RegExp(subcategory, 'i') } },
+          { subcategory: { $regex: new RegExp(subcategory, 'i') } },
+          { category: { $regex: new RegExp(subcategory, 'i') } }
+        ]
+      });
+    }
+    legacyProducts = await Product.find(legacyQuery).sort({ createdAt: -1 });
+    console.log(`Found ${legacyProducts.length} products in legacy Product collection`);
+    
+    // Merge and remove duplicates
+    let allProducts = [...toysProducts];
+    const existingIds = new Set(toysProducts.map(p => String(p._id)));
+    legacyProducts.forEach(p => {
+      if (!existingIds.has(String(p._id))) {
+        allProducts.push(p);
+      }
+    });
+    console.log(`Total products after merge: ${allProducts.length}`);
     
     // Process images
-    const processedProducts = products.map(product => {
+    const processedProducts = allProducts.map(product => {
       const productObj = product.toObject();
       return processImages(productObj);
     });

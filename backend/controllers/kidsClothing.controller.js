@@ -1,4 +1,5 @@
 import { KidsClothing } from '../models/KidsClothing.js';
+import { Product } from '../models/product.js';
 
 // Helper function to normalize subcategory names
 const normalizeSubcategory = (subcategory) => {
@@ -57,7 +58,8 @@ const processImages = (productObj) => {
 // Get all kids clothing products or filter by subcategory
 export const getKidsClothingProducts = async (req, res) => {
   try {
-    const rawSubcategory = (req.query.subcategory || req.query.category || '').toString();
+    // Only use subcategory parameter, not category (category is used to identify the endpoint)
+    const rawSubcategory = (req.query.subcategory || '').toString();
     const subcategory = normalizeSubcategory(rawSubcategory);
     
     // Base query: Match kids-clothing category OR subcategory names in category field
@@ -111,11 +113,47 @@ export const getKidsClothingProducts = async (req, res) => {
     }
     
     console.log('KidsClothing query:', JSON.stringify(query, null, 2));
-    const products = await KidsClothing.find(query).sort({ createdAt: -1 });
-    console.log(`Found ${products.length} products in KidsClothing collection`);
+    
+    // Fetch from KidsClothing collection
+    const kidsClothingProducts = await KidsClothing.find(query).sort({ createdAt: -1 });
+    console.log(`Found ${kidsClothingProducts.length} products in KidsClothing collection`);
+    
+    // Also fetch from legacy Product collection for backward compatibility
+    let legacyProducts = [];
+    const legacyQuery = {
+      $and: [
+        {
+          $or: [
+            { category: { $regex: /kids-clothing|kids clothing|clothing/i } },
+            { category: { $regex: /girls cloth|boys cloth|winterwear|girl|boy/i } }
+          ]
+        }
+      ]
+    };
+    if (subcategory) {
+      legacyQuery.$and.push({
+        $or: [
+          { 'product_info.clothingType': { $regex: new RegExp(subcategory, 'i') } },
+          { subcategory: { $regex: new RegExp(subcategory, 'i') } },
+          { category: { $regex: new RegExp(subcategory, 'i') } }
+        ]
+      });
+    }
+    legacyProducts = await Product.find(legacyQuery).sort({ createdAt: -1 });
+    console.log(`Found ${legacyProducts.length} products in legacy Product collection`);
+    
+    // Merge and remove duplicates
+    let allProducts = [...kidsClothingProducts];
+    const existingIds = new Set(kidsClothingProducts.map(p => String(p._id)));
+    legacyProducts.forEach(p => {
+      if (!existingIds.has(String(p._id))) {
+        allProducts.push(p);
+      }
+    });
+    console.log(`Total products after merge: ${allProducts.length}`);
     
     // Process images
-    const processedProducts = products.map(product => {
+    const processedProducts = allProducts.map(product => {
       const productObj = product.toObject();
       return processImages(productObj);
     });
