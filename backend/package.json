@@ -12,7 +12,8 @@
   "scripts": {
     "start": "nodemon index.js",
     "dev": "nodemon --env-file=.env index.js",
-    "test": "echo \"no tests\" && exit 0"
+    "test": "echo \"no tests\" && exit 0",
+    "create-collections": "node scripts/create-collections.js"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"

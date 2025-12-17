@@ -3,6 +3,7 @@ import Collections from '../components/Collections';
 import MobileBottomNav from '../components/MobileBottomNav';
 import HeroSlider from '../components/HeroSlider';
 import KidzoSections from '../components/TickNTrackSections';
+import ScrollToTop from '../components/ScrollToTop';
 
 const Home = () => {
   return (
@@ -30,6 +31,9 @@ const Home = () => {
        
       {/* Mobile Bottom Navigation */}
       <MobileBottomNav />
+      
+      {/* Scroll to Top Button */}
+      <ScrollToTop />
     </div>
   );
 };

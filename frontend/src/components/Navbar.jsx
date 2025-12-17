@@ -274,16 +274,13 @@ const Navbar = () => {
               {categories.map((category) => (
                 <div key={category.name} className="relative group">
                   <div
-                    className={`flex items-center font-bold text-xs sm:text-sm uppercase transition-all duration-200 cursor-pointer whitespace-nowrap px-1.5 sm:px-2 py-1 rounded-md hover:bg-gray-50 active:bg-gray-100 touch-manipulation ${
+                    className={`flex items-center font-bold text-xs sm:text-sm uppercase transition-all duration-200 cursor-pointer whitespace-nowrap px-1.5 sm:px-2 py-1 rounded-md hover:bg-gray-50 active:bg-gray-100 touch-manipulation text-black ${
                       activeCategory === category.name ? 'bg-gray-50' : ''
                     }`}
                     style={{
                       fontFamily: "'Bebas Neue', sans-serif",
                       letterSpacing: '1px',
-                      background: 'linear-gradient(90deg, #8B2BE2 0%, #FF1493 100%)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      backgroundClip: 'text',
+                      color: '#000000',
                     }}
                     onClick={() => {
                       // If category has subcategories, toggle dropdown; otherwise navigate directly
@@ -317,14 +314,11 @@ const Navbar = () => {
                         <div className="bg-pink-50 border-b border-pink-200">
                           <button
                             type="button"
-                            className="w-full text-left block px-3 sm:px-5 py-2.5 sm:py-3.5 text-xs sm:text-sm font-bold transition-all duration-200 flex items-center gap-2 group touch-manipulation active:bg-pink-100"
+                            className="w-full text-left block px-3 sm:px-5 py-2.5 sm:py-3.5 text-xs sm:text-sm font-bold transition-all duration-200 flex items-center gap-2 group touch-manipulation active:bg-pink-100 text-black"
                             style={{
                               fontFamily: "'Bebas Neue', sans-serif",
                               letterSpacing: '1px',
-                              background: 'linear-gradient(90deg, #8B2BE2 0%, #FF1493 100%)',
-                              WebkitBackgroundClip: 'text',
-                              WebkitTextFillColor: 'transparent',
-                              backgroundClip: 'text',
+                              color: '#000000',
                             }}
                             onClick={(e) => {
                               e.preventDefault();
@@ -334,7 +328,7 @@ const Navbar = () => {
                             }}
                           >
                             <span className="uppercase">All {category.name}</span>
-                            <svg className="w-4 h-4 ml-auto opacity-60 group-hover:opacity-100 transition-all duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ WebkitTextFillColor: '#FF1493' }}>
+                            <svg className="w-4 h-4 ml-auto opacity-60 group-hover:opacity-100 transition-all duration-200 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                             </svg>
                           </button>
@@ -357,16 +351,16 @@ const Navbar = () => {
                               <div className="flex items-center gap-3">
                                 <div className="w-2 h-2 rounded-full bg-pink-400 group-hover:bg-pink-600 transition-colors"></div>
                                 <span 
-                                  className="font-bold flex-1"
+                                  className="font-bold flex-1 text-black"
                                   style={{
                                     fontFamily: "'Bebas Neue', sans-serif",
                                     letterSpacing: '0.5px',
-                                    color: '#6B21A8',
+                                    color: '#000000',
                                   }}
                                 >
                                   {subcategory.name}
                                 </span>
-                                <svg className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-all duration-200 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-all duration-200 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                 </svg>
                               </div>
@@ -403,15 +397,15 @@ const Navbar = () => {
                         value={searchQuery}
                         onChange={(e) => { const v = e.target.value; setSearchQuery(v); }}
                         onKeyPress={handleSearchKeyPress}
-                        className="w-full px-2 sm:px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400"
+                        className="w-full px-2 sm:px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400 text-black placeholder-gray-500"
                         autoFocus
                       />
                     </div>
                     {searchLoading && (
-                      <div className="px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-gray-500">Searching…</div>
+                      <div className="px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-black">Searching…</div>
                     )}
                     {!searchLoading && searchQuery.trim() && searchResults.length === 0 && (
-                      <div className="px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-gray-500">No products found</div>
+                      <div className="px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-black">No products found</div>
                     )}
                     {!searchLoading && searchResults.length > 0 && (
                       <ul className="max-h-[60vh] sm:max-h-80 overflow-auto divide-y divide-gray-100">
@@ -432,9 +426,9 @@ const Navbar = () => {
                                 onError={(e) => { e.target.onerror = null; e.target.src = placeholders.thumbnail; }}
                               />
                               <div className="min-w-0 flex-1">
-                                <p className="text-xs sm:text-sm font-medium text-gray-900 truncate">{p.title || p.name || 'Product'}</p>
+                                <p className="text-xs sm:text-sm font-medium text-black truncate">{p.title || p.name || 'Product'}</p>
                                 {p.price && (
-                                  <p className="text-[10px] sm:text-xs text-gray-600">₹{Number(p.price).toLocaleString()}</p>
+                                  <p className="text-[10px] sm:text-xs text-black">₹{Number(p.price).toLocaleString()}</p>
                                 )}
                               </div>
                             </button>
@@ -494,7 +488,7 @@ const Navbar = () => {
             <div className="flex items-center md:hidden ml-1">
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-gray-900 focus:outline-none touch-manipulation active:bg-gray-100"
+                className="inline-flex items-center justify-center p-2 rounded-md text-black hover:text-black focus:outline-none touch-manipulation active:bg-gray-100"
                 aria-expanded="false"
                 aria-label="Toggle menu"
               >
@@ -521,7 +515,7 @@ const Navbar = () => {
               <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 <Link
                   to="/"
-                  className="bg-white border border-gray-300 rounded-lg py-4 sm:py-5 px-3 sm:px-4 text-center font-bold text-xs sm:text-sm uppercase text-gray-800 hover:bg-gray-50 active:bg-gray-100 transition-all duration-200 touch-manipulation shadow-sm"
+                  className="bg-white border border-gray-300 rounded-lg py-4 sm:py-5 px-3 sm:px-4 text-center font-bold text-xs sm:text-sm uppercase text-black hover:bg-gray-50 active:bg-gray-100 transition-all duration-200 touch-manipulation shadow-sm"
                   onClick={() => {
                     setIsMobileMenuOpen(false);
                     window.scrollTo(0, 0);
@@ -531,7 +525,7 @@ const Navbar = () => {
                 </Link>
                 <Link
                   to="/about"
-                  className="bg-white border border-gray-300 rounded-lg py-4 sm:py-5 px-3 sm:px-4 text-center font-bold text-xs sm:text-sm uppercase text-gray-800 hover:bg-gray-50 active:bg-gray-100 transition-all duration-200 touch-manipulation shadow-sm"
+                  className="bg-white border border-gray-300 rounded-lg py-4 sm:py-5 px-3 sm:px-4 text-center font-bold text-xs sm:text-sm uppercase text-black hover:bg-gray-50 active:bg-gray-100 transition-all duration-200 touch-manipulation shadow-sm"
                   onClick={() => {
                     setIsMobileMenuOpen(false);
                     window.scrollTo(0, 0);
@@ -541,7 +535,7 @@ const Navbar = () => {
                 </Link>
                 <Link
                   to="/contact"
-                  className="bg-white border border-gray-300 rounded-lg py-4 sm:py-5 px-3 sm:px-4 text-center font-bold text-xs sm:text-sm uppercase text-gray-800 hover:bg-gray-50 active:bg-gray-100 transition-all duration-200 touch-manipulation shadow-sm col-span-2"
+                  className="bg-white border border-gray-300 rounded-lg py-4 sm:py-5 px-3 sm:px-4 text-center font-bold text-xs sm:text-sm uppercase text-black hover:bg-gray-50 active:bg-gray-100 transition-all duration-200 touch-manipulation shadow-sm col-span-2"
                   onClick={() => {
                     setIsMobileMenuOpen(false);
                     window.scrollTo(0, 0);

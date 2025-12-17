@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { FaTrash, FaRupeeSign } from 'react-icons/fa';
 import { placeholders, getProductImage } from '../utils/imagePlaceholder';
 import { getWishlist, removeFromWishlist } from '../services/api';
+import ScrollToTop from '../components/ScrollToTop';
 
 const Wishlist = () => {
   const [items, setItems] = useState([]);
@@ -170,6 +171,7 @@ const Wishlist = () => {
           ))}
         </div>
       </div>
+      <ScrollToTop />
     </div>
   );
 };

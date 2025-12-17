@@ -10,7 +10,35 @@ const AdminProducts = () => {
     description: '',
     category: '',
     images: { image1: '' },
-    product_info: { brand: '', manufacturer: '', SareeLength: '', SareeMaterial: '', SareeColor: '', IncludedComponents: '' },
+    product_info: { 
+      brand: '', 
+      manufacturer: '', 
+      // Kids Clothing
+      clothingType: '', 
+      gender: '', 
+      ageGroup: '', 
+      fabric: '', 
+      color: '', 
+      availableSizes: [],
+      // Footwear
+      footwearType: '', 
+      shoeMaterial: '', 
+      soleMaterial: '', 
+      // Kids Accessories
+      accessoryType: '', 
+      material: '', 
+      // Baby Care
+      babyCareType: '', 
+      ageRange: '', 
+      safetyStandard: '', 
+      quantity: '', 
+      // Toys
+      toyType: '', 
+      batteryRequired: false, 
+      batteryIncluded: false, 
+      // Universal
+      includedComponents: '' 
+    },
   });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
@@ -68,7 +96,37 @@ const AdminProducts = () => {
       };
       await api.admin.createProduct(payload);
       setToast({ show: true, text: 'Product created', type: 'success' });
-      setForm({ title: '', mrp: '', discountPercent: 0, description: '', category: '', images: { image1: '' }, product_info: { brand: '', manufacturer: '', SareeLength: '', SareeMaterial: '', SareeColor: '', IncludedComponents: '' } });
+      setForm({ 
+        title: '', 
+        mrp: '', 
+        discountPercent: 0, 
+        description: '', 
+        category: '', 
+        images: { image1: '' }, 
+        product_info: { 
+          brand: '', 
+          manufacturer: '', 
+          clothingType: '', 
+          gender: '', 
+          ageGroup: '', 
+          fabric: '', 
+          color: '', 
+          availableSizes: [],
+          footwearType: '', 
+          shoeMaterial: '', 
+          soleMaterial: '', 
+          accessoryType: '', 
+          material: '', 
+          babyCareType: '', 
+          ageRange: '', 
+          safetyStandard: '', 
+          quantity: '', 
+          toyType: '', 
+          batteryRequired: false, 
+          batteryIncluded: false, 
+          includedComponents: '' 
+        } 
+      });
       await load();
     } catch (e2) {
       setError(e2.message || 'Failed to create product');
@@ -182,13 +240,33 @@ const AdminProducts = () => {
             <div className="grid grid-cols-1 gap-2">
               <input value={form.images.image1} onChange={onChangeNested('images','image1')} placeholder="Image URL" className="w-full border rounded px-3 py-2" required />
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               <input value={form.product_info.brand} onChange={onChangeNested('product_info','brand')} placeholder="Brand" className="w-full border rounded px-3 py-2" />
               <input value={form.product_info.manufacturer} onChange={onChangeNested('product_info','manufacturer')} placeholder="Manufacturer" className="w-full border rounded px-3 py-2" />
-              <input value={form.product_info.SareeMaterial} onChange={onChangeNested('product_info','SareeMaterial')} placeholder="Material" className="w-full border rounded px-3 py-2" />
-              <input value={form.product_info.SareeColor} onChange={onChangeNested('product_info','SareeColor')} placeholder="Color" className="w-full border rounded px-3 py-2" />
-              <input value={form.product_info.SareeLength} onChange={onChangeNested('product_info','SareeLength')} placeholder="Length" className="w-full border rounded px-3 py-2" />
-              <input value={form.product_info.IncludedComponents} onChange={onChangeNested('product_info','IncludedComponents')} placeholder="Included" className="w-full border rounded px-3 py-2" />
+              <input value={form.product_info.clothingType} onChange={onChangeNested('product_info','clothingType')} placeholder="Clothing Type (T-shirt, Dress, etc.)" className="w-full border rounded px-3 py-2" />
+              <input value={form.product_info.gender} onChange={onChangeNested('product_info','gender')} placeholder="Gender (Boys, Girls, Unisex)" className="w-full border rounded px-3 py-2" />
+              <input value={form.product_info.ageGroup} onChange={onChangeNested('product_info','ageGroup')} placeholder="Age Group (0-1Y, 1-3Y, etc.)" className="w-full border rounded px-3 py-2" />
+              <input value={form.product_info.fabric} onChange={onChangeNested('product_info','fabric')} placeholder="Fabric" className="w-full border rounded px-3 py-2" />
+              <input value={form.product_info.color} onChange={onChangeNested('product_info','color')} placeholder="Color" className="w-full border rounded px-3 py-2" />
+              <input value={form.product_info.footwearType} onChange={onChangeNested('product_info','footwearType')} placeholder="Footwear Type (Shoes, Sandals, etc.)" className="w-full border rounded px-3 py-2" />
+              <input value={form.product_info.shoeMaterial} onChange={onChangeNested('product_info','shoeMaterial')} placeholder="Shoe Material" className="w-full border rounded px-3 py-2" />
+              <input value={form.product_info.soleMaterial} onChange={onChangeNested('product_info','soleMaterial')} placeholder="Sole Material" className="w-full border rounded px-3 py-2" />
+              <input value={form.product_info.accessoryType} onChange={onChangeNested('product_info','accessoryType')} placeholder="Accessory Type (Cap, Bag, etc.)" className="w-full border rounded px-3 py-2" />
+              <input value={form.product_info.material} onChange={onChangeNested('product_info','material')} placeholder="Material" className="w-full border rounded px-3 py-2" />
+              <input value={form.product_info.babyCareType} onChange={onChangeNested('product_info','babyCareType')} placeholder="Baby Care Type (Lotion, Diaper, etc.)" className="w-full border rounded px-3 py-2" />
+              <input value={form.product_info.ageRange} onChange={onChangeNested('product_info','ageRange')} placeholder="Age Range (0-6 months, etc.)" className="w-full border rounded px-3 py-2" />
+              <input value={form.product_info.safetyStandard} onChange={onChangeNested('product_info','safetyStandard')} placeholder="Safety Standard (BPA Free, etc.)" className="w-full border rounded px-3 py-2" />
+              <input value={form.product_info.quantity} onChange={onChangeNested('product_info','quantity')} placeholder="Quantity (200ml, 100 wipes, etc.)" className="w-full border rounded px-3 py-2" />
+              <input value={form.product_info.toyType} onChange={onChangeNested('product_info','toyType')} placeholder="Toy Type (Car, Puzzle, etc.)" className="w-full border rounded px-3 py-2" />
+              <div className="flex items-center gap-2">
+                <label className="text-sm">Battery Required:</label>
+                <input type="checkbox" checked={form.product_info.batteryRequired} onChange={(e) => setForm(prev => ({ ...prev, product_info: { ...prev.product_info, batteryRequired: e.target.checked } }))} />
+              </div>
+              <div className="flex items-center gap-2">
+                <label className="text-sm">Battery Included:</label>
+                <input type="checkbox" checked={form.product_info.batteryIncluded} onChange={(e) => setForm(prev => ({ ...prev, product_info: { ...prev.product_info, batteryIncluded: e.target.checked } }))} />
+              </div>
+              <input value={form.product_info.includedComponents} onChange={onChangeNested('product_info','includedComponents')} placeholder="Included Components" className="w-full border rounded px-3 py-2" />
             </div>
             <button type="submit" disabled={saving} className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded">{saving ? 'Saving...' : 'Create Product'}</button>
           </form>

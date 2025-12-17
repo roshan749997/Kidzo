@@ -1,4 +1,9 @@
 import { Product } from '../models/product.js';
+import { KidsAccessories } from '../models/KidsAccessories.js';
+import { KidsClothing } from '../models/KidsClothing.js';
+import { Footwear } from '../models/Footwear.js';
+import { BabyCare } from '../models/BabyCare.js';
+import { Toys } from '../models/Toys.js';
 
 const CATEGORY_GROUPS = {
   'Shoes': [
@@ -116,6 +121,16 @@ export const getProducts = async (req, res) => {
         { 'subcategory': { $regex: re } },
         { 'tags': { $regex: re } }
       ];
+      
+      // Special handling for kids-accessories - also match "Watches" category
+      if (category.toLowerCase().includes('kids-accessories') || category.toLowerCase().includes('kids accessories') || 
+          category.toLowerCase().includes('accessories')) {
+        orConditions.push(
+          { category: { $regex: /watch/i } },
+          { 'product_info.watchType': { $exists: true } },
+          { 'product_info.watchBrand': { $exists: true } }
+        );
+      }
 
       // Also add normalized category regex if different
       if (normalizedRe) {
@@ -192,9 +207,56 @@ export const getProducts = async (req, res) => {
       console.log('All categories in database:', categories);
     }
 
-    // Execute the query
+    // Execute the query - also check category-specific collections
     let products = await Product.find(query);
-    console.log(`Found ${products.length} matching products`);
+    console.log(`Found ${products.length} matching products from Product collection`);
+
+    // Also fetch from category-specific collections if category matches
+    const catLower = category.toLowerCase();
+    
+    // Kids Accessories - also check for watches
+    if (catLower.includes('kids-accessories') || catLower.includes('kids accessories') || 
+        catLower.includes('watch') || catLower.includes('accessories')) {
+      try {
+        let accessoriesQuery = { category: 'kids-accessories' };
+        if (category) {
+          const re = new RegExp(category, 'i');
+          accessoriesQuery.$or = [
+            { subcategory: { $regex: re } },
+            { 'product_info.accessoryType': { $regex: re } },
+            { title: { $regex: re } }
+          ];
+        }
+        const accessoriesProducts = await KidsAccessories.find(accessoriesQuery);
+        console.log(`Found ${accessoriesProducts.length} products from KidsAccessories collection`);
+        products = [...products, ...accessoriesProducts];
+      } catch (err) {
+        console.error('Error fetching from KidsAccessories:', err);
+      }
+    }
+    
+    // Also fetch watches from old Product collection
+    if (catLower.includes('watch') || catLower.includes('kids-accessories') || catLower.includes('kids accessories')) {
+      try {
+        const watchQuery = {
+          $or: [
+            { category: { $regex: /watch/i } },
+            { 'product_info.watchType': { $exists: true } },
+            { 'product_info.watchBrand': { $exists: true } }
+          ]
+        };
+        const watchProducts = await Product.find(watchQuery);
+        // Remove duplicates
+        const existingIds = new Set(products.map(p => String(p._id)));
+        const newWatchProducts = watchProducts.filter(p => !existingIds.has(String(p._id)));
+        console.log(`Found ${newWatchProducts.length} additional watch products from Product collection`);
+        products = [...products, ...newWatchProducts];
+      } catch (err) {
+        console.error('Error fetching watches:', err);
+      }
+    }
+    
+    console.log(`Total products found: ${products.length}`);
 
     // Process image URLs to ensure they're absolute
     products = products.map(product => {
@@ -273,7 +335,26 @@ export const getProducts = async (req, res) => {
 
 export const getProductById = async (req, res) => {
   try {
+    // Try Product collection first
     let product = await Product.findById(req.params.id);
+    
+    // If not found, try category-specific collections
+    if (!product) {
+      product = await KidsAccessories.findById(req.params.id);
+    }
+    if (!product) {
+      product = await KidsClothing.findById(req.params.id);
+    }
+    if (!product) {
+      product = await Footwear.findById(req.params.id);
+    }
+    if (!product) {
+      product = await BabyCare.findById(req.params.id);
+    }
+    if (!product) {
+      product = await Toys.findById(req.params.id);
+    }
+    
     if (!product) {
       return res.status(404).json({ message: 'Product not found' });
     }

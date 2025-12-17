@@ -8,6 +8,12 @@ import authRoutes from './routes/auth.routes.js';
 // OTP routes are already included in auth.routes.js, no need to import separately
 import headerRoutes from './routes/header.routes.js';
 import productRoutes from './routes/product.routes.js';
+// Category-specific routes for better performance
+import kidsClothingRoutes from './routes/kidsClothing.routes.js';
+import footwearRoutes from './routes/footwear.routes.js';
+import kidsAccessoriesRoutes from './routes/kidsAccessories.routes.js';
+import babyCareRoutes from './routes/babyCare.routes.js';
+import toysRoutes from './routes/toys.routes.js';
 import cartRoutes from './routes/cart.routes.js';
 import paymentRoutes from './routes/payment.routes.js';
 import addressRoutes from './routes/address.routes.js';
@@ -61,7 +67,13 @@ server.get('/api/me', cookieJwtAuth, (req, res) => {
 server.use('/api/auth', authRoutes);
 // OTP routes are already included in auth.routes.js
 server.use('/api/header', headerRoutes);
-server.use('/api/products', productRoutes);
+server.use('/api/products', productRoutes); // Legacy route - kept for backward compatibility
+// Category-specific routes for better performance
+server.use('/api/kids-clothing', kidsClothingRoutes);
+server.use('/api/footwear', footwearRoutes);
+server.use('/api/kids-accessories', kidsAccessoriesRoutes);
+server.use('/api/baby-care', babyCareRoutes);
+server.use('/api/toys', toysRoutes);
 server.use('/api/cart', cartRoutes);
 server.use('/api/payment', paymentRoutes);
 server.use('/api/address', addressRoutes);

@@ -1,3 +1,5 @@
+import ScrollToTop from '../components/ScrollToTop';
+
 const About = () => {
   return (
     <div className="min-h-screen bg-white">
@@ -101,6 +103,7 @@ const About = () => {
         </div>
 
       </div>
+      <ScrollToTop />
     </div>
   );
 };

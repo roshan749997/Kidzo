@@ -3,6 +3,7 @@ import { api } from '../utils/api';
 import { getMyAddress, getMyOrders } from '../services/api';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { FiSettings } from 'react-icons/fi';
+import ScrollToTop from '../components/ScrollToTop';
 
 export default function FlipkartAccountSettings() {
   const initialTab = (() => {
@@ -821,6 +822,7 @@ export default function FlipkartAccountSettings() {
           </div>
         </div>
       )}
+      <ScrollToTop />
     </div>
   );
 }

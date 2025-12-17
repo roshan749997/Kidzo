@@ -1,3 +1,5 @@
+import ScrollToTop from '../components/ScrollToTop';
+
 const Shop = () => {
   return (
     <div className="min-h-screen py-12 px-4">
@@ -14,6 +16,7 @@ const Shop = () => {
           <p className="text-xl text-gray-600">Shop page coming soon...</p>
         </div>
       </div>
+      <ScrollToTop />
     </div>
   );
 };

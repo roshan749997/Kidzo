@@ -1,3 +1,5 @@
+import ScrollToTop from '../components/ScrollToTop';
+
 const Contact = () => {
   return (
     <div className="min-h-screen bg-white">
@@ -67,6 +69,7 @@ const Contact = () => {
         </div>
 
       </div>
+      <ScrollToTop />
     </div>
   );
 };

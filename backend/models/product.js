@@ -16,20 +16,37 @@ const productSchema = new mongoose.Schema(
     product_info: {
       brand: { type: String },
       manufacturer: { type: String },
-      // For Shoes
-      availableSizes: { type: [String], default: [] }, // e.g., ["7", "8", "9", "10"] or ["EU 42", "US 9"]
-      shoeSize: { type: String }, // Legacy field - kept for backward compatibility
-      shoeMaterial: { type: String }, // e.g., "Leather", "Canvas", "Mesh"
-      shoeColor: { type: String },
-      shoeType: { type: String }, // e.g., "Sneakers", "Formal", "Sports", "Casual", "Boots"
-      // For Watches
-      watchBrand: { type: String },
-      movementType: { type: String }, // e.g., "Quartz", "Automatic", "Mechanical"
-      caseMaterial: { type: String }, // e.g., "Stainless Steel", "Titanium", "Ceramic"
-      bandMaterial: { type: String }, // e.g., "Leather", "Metal", "Rubber", "Fabric"
-      waterResistance: { type: String }, // e.g., "50m", "100m", "200m"
-      watchType: { type: String }, // e.g., "Analog", "Digital", "Smart Watch"
-      IncludedComponents: { type: String },
+
+      /* ---- Kids Clothing ---- */
+      clothingType: { type: String },          // T-shirt, Dress, Shorts
+      gender: { type: String },                // Boys, Girls, Unisex
+      ageGroup: { type: String },              // 0-1Y, 1-3Y, 3-5Y
+      availableSizes: { type: [String], default: [] },
+      fabric: { type: String },
+      color: { type: String },
+
+      /* ---- Footwear ---- */
+      footwearType: { type: String },           // Shoes, Sandals, Slippers
+      shoeMaterial: { type: String },
+      soleMaterial: { type: String },
+
+      /* ---- Kids Accessories ---- */
+      accessoryType: { type: String },          // Cap, Bag, Sunglasses
+      material: { type: String },
+
+      /* ---- Baby Care ---- */
+      babyCareType: { type: String },            // Lotion, Diaper, Shampoo
+      ageRange: { type: String },                // 0-6 months, 6-12 months
+      safetyStandard: { type: String },           // BPA Free, Dermatologically tested
+      quantity: { type: String },                 // 200ml, 100 wipes
+
+      /* ---- Toys ---- */
+      toyType: { type: String },                  // Car, Puzzle, Soft Toy
+      batteryRequired: { type: Boolean, default: false },
+      batteryIncluded: { type: Boolean, default: false },
+
+      /* ---- Universal ---- */
+      includedComponents: { type: String },
     },
 
     images: {

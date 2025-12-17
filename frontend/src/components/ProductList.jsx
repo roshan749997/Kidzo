@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { FaRupeeSign, FaSpinner, FaFilter, FaTimes, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { fetchSarees } from '../services/api';
 import { placeholders, getProductImage } from '../utils/imagePlaceholder';
+import ScrollToTop from './ScrollToTop';
 
 // Add CSS to hide scrollbar and loading animation
 const styles = `
@@ -248,7 +249,7 @@ const ProductList = ({ defaultCategory } = {}) => {
   const availableShoeMaterials = React.useMemo(() => {
     const materialSet = new Set();
     products.forEach(product => {
-      const material = product.product_info?.shoeMaterial || product.product_info?.SareeMaterial;
+      const material = product.product_info?.shoeMaterial || product.product_info?.material;
       if (material && typeof material === 'string') {
         material.split(',').forEach(m => {
           const trimmed = m.trim();
@@ -262,7 +263,7 @@ const ProductList = ({ defaultCategory } = {}) => {
   const availableShoeTypes = React.useMemo(() => {
     const typeSet = new Set();
     products.forEach(product => {
-      const type = product.product_info?.shoeType;
+      const type = product.product_info?.footwearType || product.product_info?.shoeType;
       if (type && typeof type === 'string') typeSet.add(type.trim());
     });
     return Array.from(typeSet).sort();
@@ -337,7 +338,7 @@ const ProductList = ({ defaultCategory } = {}) => {
     if (isShoesCategory || isWatchCategory) return [];
     const fabricSet = new Set();
     products.forEach(product => {
-      const material = product.product_info?.SareeMaterial || product.product_info?.fabric;
+      const material = product.product_info?.fabric || product.product_info?.material;
       if (material && typeof material === 'string') {
         material.split(',').forEach(m => {
           const trimmed = m.trim();
@@ -375,7 +376,20 @@ const ProductList = ({ defaultCategory } = {}) => {
         setDisplayCount(20); // Reset to initial 20 products when category changes
         
         // Use subcategory if available, otherwise use category
-        const data = await fetchSarees(effectiveCategory, effectiveSubCategory || null);
+        // Convert to lowercase with hyphens for API endpoint matching
+        const apiCategory = effectiveCategory ? effectiveCategory.toLowerCase().replace(/\s+/g, '-') : null;
+        const apiSubCategory = effectiveSubCategory || null;
+        
+        console.log('ProductList - Fetching products:', {
+          effectiveCategory,
+          effectiveSubCategory,
+          apiCategory,
+          apiSubCategory,
+          categoryName,
+          subCategoryName
+        });
+        const data = await fetchSarees(apiCategory || effectiveCategory, apiSubCategory);
+        console.log('ProductList - Received products:', data?.length || 0);
         setProducts(Array.isArray(data) ? data : []);
         setFilteredProducts(Array.isArray(data) ? data : []);
       } catch (err) {
@@ -421,7 +435,7 @@ const ProductList = ({ defaultCategory } = {}) => {
       // Filter by shoe material
       if (selectedShoeMaterials.length > 0) {
         result = result.filter(p => {
-          const material = (p.product_info?.shoeMaterial || '').toLowerCase();
+          const material = (p.product_info?.shoeMaterial || p.product_info?.material || '').toLowerCase();
           return selectedShoeMaterials.some(selectedMaterial => 
             material.includes(selectedMaterial.toLowerCase())
           );
@@ -431,7 +445,7 @@ const ProductList = ({ defaultCategory } = {}) => {
       // Filter by shoe type
       if (selectedShoeTypes.length > 0) {
         result = result.filter(p => {
-          const type = (p.product_info?.shoeType || '').trim();
+          const type = (p.product_info?.footwearType || p.product_info?.shoeType || '').trim();
           return selectedShoeTypes.some(selectedType => 
             type.toLowerCase() === selectedType.toLowerCase()
           );
@@ -495,7 +509,7 @@ const ProductList = ({ defaultCategory } = {}) => {
     // Filter by fabric (for non-shoe/watch products)
     if (!isShoesCategory && !isWatchCategory && selectedFabrics.length > 0) {
       result = result.filter(p => {
-        const material = (p.product_info?.SareeMaterial || p.product_info?.fabric || '').toLowerCase();
+        const material = (p.product_info?.fabric || p.product_info?.material || '').toLowerCase();
         return selectedFabrics.some(fabric => 
           material.includes(fabric.toLowerCase())
         );
@@ -1552,6 +1566,7 @@ const ProductList = ({ defaultCategory } = {}) => {
           </div>
         </div>
       )}
+      <ScrollToTop />
     </div>
   );
 };

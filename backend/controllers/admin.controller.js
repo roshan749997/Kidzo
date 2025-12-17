@@ -28,18 +28,47 @@ export async function createProduct(req, res) {
       product_info: {
         brand: product_info.brand || '',
         manufacturer: product_info.manufacturer || '',
-        SareeLength: product_info.SareeLength || '',
-        SareeMaterial: product_info.SareeMaterial || '',
-        SareeColor: product_info.SareeColor || '',
-        IncludedComponents: product_info.IncludedComponents || '',
-        // Shoe-related fields
+        
+        /* ---- Kids Clothing ---- */
+        clothingType: product_info.clothingType || '',
+        gender: product_info.gender || '',
+        ageGroup: product_info.ageGroup || '',
         availableSizes: Array.isArray(product_info.availableSizes) ? product_info.availableSizes : 
                        (product_info.availableSizes ? [product_info.availableSizes] : []),
-        shoeSize: product_info.shoeSize || product_info.availableSizes?.[0] || '',
+        fabric: product_info.fabric || '',
+        color: product_info.color || '',
+        
+        /* ---- Footwear ---- */
+        footwearType: product_info.footwearType || '',
         shoeMaterial: product_info.shoeMaterial || '',
-        shoeColor: product_info.shoeColor || '',
-        shoeType: product_info.shoeType || '',
-        // Watch-related fields
+        soleMaterial: product_info.soleMaterial || '',
+        
+        /* ---- Kids Accessories ---- */
+        accessoryType: product_info.accessoryType || '',
+        material: product_info.material || '',
+        
+        /* ---- Baby Care ---- */
+        babyCareType: product_info.babyCareType || '',
+        ageRange: product_info.ageRange || '',
+        safetyStandard: product_info.safetyStandard || '',
+        quantity: product_info.quantity || '',
+        
+        /* ---- Toys ---- */
+        toyType: product_info.toyType || '',
+        batteryRequired: product_info.batteryRequired || false,
+        batteryIncluded: product_info.batteryIncluded || false,
+        
+        /* ---- Universal ---- */
+        includedComponents: product_info.includedComponents || '',
+        
+        // Legacy fields for backward compatibility
+        SareeLength: product_info.SareeLength || '',
+        SareeMaterial: product_info.SareeMaterial || product_info.fabric || product_info.material || '',
+        SareeColor: product_info.SareeColor || product_info.color || '',
+        IncludedComponents: product_info.IncludedComponents || product_info.includedComponents || '',
+        shoeSize: product_info.shoeSize || product_info.availableSizes?.[0] || '',
+        shoeColor: product_info.shoeColor || product_info.color || '',
+        shoeType: product_info.shoeType || product_info.footwearType || '',
         watchBrand: product_info.watchBrand || '',
         movementType: product_info.movementType || '',
         caseMaterial: product_info.caseMaterial || '',

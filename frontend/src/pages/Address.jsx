@@ -2,6 +2,7 @@ import React, { useState, useContext, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { getMyAddress, saveMyAddress, deleteAddressById, createPaymentOrder, verifyPayment } from '../services/api';
+import ScrollToTop from '../components/ScrollToTop';
 
 const indianStates = [
   'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh',
@@ -720,6 +721,7 @@ export default function AddressForm() {
           </div>
         </div>
       </div>
+      <ScrollToTop />
     </div>
   );
 }

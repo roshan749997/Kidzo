@@ -60,9 +60,18 @@ export const searchProducts = async (req, res) => {
         { title: { $regex: query, $options: 'i' } },
         { description: { $regex: query, $options: 'i' } },
         { 'product_info.brand': { $regex: query, $options: 'i' } },
+        { 'product_info.manufacturer': { $regex: query, $options: 'i' } },
+        { 'product_info.clothingType': { $regex: query, $options: 'i' } },
+        { 'product_info.footwearType': { $regex: query, $options: 'i' } },
+        { 'product_info.accessoryType': { $regex: query, $options: 'i' } },
+        { 'product_info.babyCareType': { $regex: query, $options: 'i' } },
+        { 'product_info.toyType': { $regex: query, $options: 'i' } },
         { 'product_info.shoeMaterial': { $regex: query, $options: 'i' } },
-        { 'product_info.watchBrand': { $regex: query, $options: 'i' } },
+        { 'product_info.material': { $regex: query, $options: 'i' } },
+        { 'product_info.fabric': { $regex: query, $options: 'i' } },
+        // Legacy fields for backward compatibility
         { 'product_info.shoeType': { $regex: query, $options: 'i' } },
+        { 'product_info.watchBrand': { $regex: query, $options: 'i' } },
         { 'product_info.watchType': { $regex: query, $options: 'i' } }
       ]
     }).limit(10).select('title images price mrp discountPercent');

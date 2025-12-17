@@ -1,4 +1,5 @@
 import React from "react";
+import ScrollToTop from '../components/ScrollToTop';
 
 const TermsAndConditions = () => {
   const lastUpdated = new Date().toLocaleDateString("en-IN", {
@@ -241,6 +242,7 @@ const TermsAndConditions = () => {
           </section>
         </div>
       </div>
+      <ScrollToTop />
     </div>
   );
 };

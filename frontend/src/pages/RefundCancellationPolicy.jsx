@@ -1,4 +1,5 @@
 import React from "react";
+import ScrollToTop from '../components/ScrollToTop';
 
 const RefundCancellationPolicy = () => {
   const lastUpdated = new Date().toLocaleDateString("en-IN", {
@@ -325,6 +326,7 @@ const RefundCancellationPolicy = () => {
           </section>
         </div>
       </div>
+      <ScrollToTop />
     </div>
   );
 };

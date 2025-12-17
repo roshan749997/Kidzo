@@ -4,6 +4,7 @@ import { useCart } from '../context/CartContext';
 import { fetchSareeById, fetchSarees } from '../services/api';
 import { placeholders, getProductImage } from '../utils/imagePlaceholder';
 import { FaRupeeSign, FaSpinner, FaStar, FaRegStar } from 'react-icons/fa';
+import ScrollToTop from './ScrollToTop';
 
 const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
 
@@ -134,8 +135,8 @@ const ProductDetail = () => {
       if (data.product_info?.availableSizes?.length > 0) {
         setSelectedSize(data.product_info.availableSizes[0]);
       }
-      if (data.product_info?.SareeColor || data.color) {
-        setSelectedColor(data.product_info?.SareeColor || data.color);
+      if (data.product_info?.color || data.color) {
+        setSelectedColor(data.product_info?.color || data.color);
       }
       
       // Fetch related products
@@ -481,11 +482,11 @@ const ProductDetail = () => {
               )}
 
               {/* Color Swatches */}
-              {(product.product_info?.SareeColor || product.color) && (
+              {(product.product_info?.color || product.color) && (
                 <div>
                   <label className="block text-xs font-medium text-black mb-2">Select Color</label>
                   <div className="flex items-center gap-2 flex-wrap">
-                    {[product.product_info?.SareeColor || product.color || '#000000'].slice(0, 6).map((color, idx) => {
+                    {[product.product_info?.color || product.color || '#000000'].slice(0, 6).map((color, idx) => {
                       const isSelected = selectedColor === color || (!selectedColor && idx === 0);
                       return (
                         <button
@@ -626,10 +627,24 @@ const ProductDetail = () => {
                         <span className="text-black">{product.product_info.manufacturer}</span>
                       </div>
                     )}
-                    {(product.product_info?.SareeMaterial || product.product_info?.shoeMaterial) && (
+                    
+                    {/* Kids Clothing Fields */}
+                    {(product.product_info?.clothingType) && (
                       <div className="flex justify-between">
-                        <span className="font-medium text-black">Material:</span>
-                        <span className="text-black">{product.product_info.SareeMaterial || product.product_info.shoeMaterial}</span>
+                        <span className="font-medium text-black">Clothing Type:</span>
+                        <span className="text-black">{product.product_info.clothingType}</span>
+                      </div>
+                    )}
+                    {(product.product_info?.gender) && (
+                      <div className="flex justify-between">
+                        <span className="font-medium text-black">Gender:</span>
+                        <span className="text-black">{product.product_info.gender}</span>
+                      </div>
+                    )}
+                    {(product.product_info?.ageGroup) && (
+                      <div className="flex justify-between">
+                        <span className="font-medium text-black">Age Group:</span>
+                        <span className="text-black">{product.product_info.ageGroup}</span>
                       </div>
                     )}
                     {(product.product_info?.fabric) && (
@@ -638,66 +653,107 @@ const ProductDetail = () => {
                         <span className="text-black">{product.product_info.fabric}</span>
                       </div>
                     )}
-                    {(product.product_info?.SareeColor || product.product_info?.shoeColor || product.color) && (
+                    {(product.product_info?.color || product.color) && (
                       <div className="flex justify-between">
                         <span className="font-medium text-black">Color:</span>
-                        <span className="text-black capitalize">{product.product_info?.SareeColor || product.product_info?.shoeColor || product.color}</span>
+                        <span className="text-black capitalize">{product.product_info?.color || product.color}</span>
                       </div>
                     )}
-                    {(product.product_info?.SareeLength) && (
+                    
+                    {/* Footwear Fields */}
+                    {(product.product_info?.footwearType) && (
                       <div className="flex justify-between">
-                        <span className="font-medium text-black">Length:</span>
-                        <span className="text-black">{product.product_info.SareeLength}</span>
+                        <span className="font-medium text-black">Footwear Type:</span>
+                        <span className="text-black">{product.product_info.footwearType}</span>
                       </div>
                     )}
+                    {(product.product_info?.shoeMaterial) && (
+                      <div className="flex justify-between">
+                        <span className="font-medium text-black">Material:</span>
+                        <span className="text-black">{product.product_info.shoeMaterial}</span>
+                      </div>
+                    )}
+                    {(product.product_info?.soleMaterial) && (
+                      <div className="flex justify-between">
+                        <span className="font-medium text-black">Sole Material:</span>
+                        <span className="text-black">{product.product_info.soleMaterial}</span>
+                      </div>
+                    )}
+                    
+                    {/* Kids Accessories Fields */}
+                    {(product.product_info?.accessoryType) && (
+                      <div className="flex justify-between">
+                        <span className="font-medium text-black">Accessory Type:</span>
+                        <span className="text-black">{product.product_info.accessoryType}</span>
+                      </div>
+                    )}
+                    {(product.product_info?.material) && (
+                      <div className="flex justify-between">
+                        <span className="font-medium text-black">Material:</span>
+                        <span className="text-black">{product.product_info.material}</span>
+                      </div>
+                    )}
+                    
+                    {/* Baby Care Fields */}
+                    {(product.product_info?.babyCareType) && (
+                      <div className="flex justify-between">
+                        <span className="font-medium text-black">Baby Care Type:</span>
+                        <span className="text-black">{product.product_info.babyCareType}</span>
+                      </div>
+                    )}
+                    {(product.product_info?.ageRange) && (
+                      <div className="flex justify-between">
+                        <span className="font-medium text-black">Age Range:</span>
+                        <span className="text-black">{product.product_info.ageRange}</span>
+                      </div>
+                    )}
+                    {(product.product_info?.safetyStandard) && (
+                      <div className="flex justify-between">
+                        <span className="font-medium text-black">Safety Standard:</span>
+                        <span className="text-black">{product.product_info.safetyStandard}</span>
+                      </div>
+                    )}
+                    {(product.product_info?.quantity) && (
+                      <div className="flex justify-between">
+                        <span className="font-medium text-black">Quantity:</span>
+                        <span className="text-black">{product.product_info.quantity}</span>
+                      </div>
+                    )}
+                    
+                    {/* Toys Fields */}
+                    {(product.product_info?.toyType) && (
+                      <div className="flex justify-between">
+                        <span className="font-medium text-black">Toy Type:</span>
+                        <span className="text-black">{product.product_info.toyType}</span>
+                      </div>
+                    )}
+                    {(product.product_info?.batteryRequired !== undefined) && (
+                      <div className="flex justify-between">
+                        <span className="font-medium text-black">Battery Required:</span>
+                        <span className="text-black">{product.product_info.batteryRequired ? 'Yes' : 'No'}</span>
+                      </div>
+                    )}
+                    {(product.product_info?.batteryIncluded !== undefined) && (
+                      <div className="flex justify-between">
+                        <span className="font-medium text-black">Battery Included:</span>
+                        <span className="text-black">{product.product_info.batteryIncluded ? 'Yes' : 'No'}</span>
+                      </div>
+                    )}
+                    
+                    {/* Universal Fields */}
                     {(product.product_info?.availableSizes && product.product_info.availableSizes.length > 0) && (
                       <div className="flex justify-between">
                         <span className="font-medium text-black">Available Sizes:</span>
                         <span className="text-black">{product.product_info.availableSizes.join(', ')}</span>
                       </div>
                     )}
-                    {(product.product_info?.shoeType) && (
-                      <div className="flex justify-between">
-                        <span className="font-medium text-black">Type:</span>
-                        <span className="text-black">{product.product_info.shoeType}</span>
-                      </div>
-                    )}
-                    {(product.product_info?.watchType) && (
-                      <div className="flex justify-between">
-                        <span className="font-medium text-black">Watch Type:</span>
-                        <span className="text-black">{product.product_info.watchType}</span>
-                      </div>
-                    )}
-                    {(product.product_info?.movementType) && (
-                      <div className="flex justify-between">
-                        <span className="font-medium text-black">Movement:</span>
-                        <span className="text-black">{product.product_info.movementType}</span>
-                      </div>
-                    )}
-                    {(product.product_info?.caseMaterial) && (
-                      <div className="flex justify-between">
-                        <span className="font-medium text-black">Case Material:</span>
-                        <span className="text-black">{product.product_info.caseMaterial}</span>
-                      </div>
-                    )}
-                    {(product.product_info?.bandMaterial) && (
-                      <div className="flex justify-between">
-                        <span className="font-medium text-black">Band Material:</span>
-                        <span className="text-black">{product.product_info.bandMaterial}</span>
-                      </div>
-                    )}
-                    {(product.product_info?.waterResistance) && (
-                      <div className="flex justify-between">
-                        <span className="font-medium text-black">Water Resistance:</span>
-                        <span className="text-black">{product.product_info.waterResistance}</span>
-                      </div>
-                    )}
-                    {(product.product_info?.IncludedComponents) && (
+                    {(product.product_info?.includedComponents) && (
                       <div className="flex justify-between">
                         <span className="font-medium text-black">Included:</span>
-                        <span className="text-black">{product.product_info.IncludedComponents}</span>
+                        <span className="text-black">{product.product_info.includedComponents}</span>
                       </div>
                     )}
+                    
                     {product.category && (
                       <div className="flex justify-between">
                         <span className="font-medium text-black">Category:</span>
@@ -921,6 +977,7 @@ const ProductDetail = () => {
           scrollbar-width: none;
         }
       `}</style>
+      <ScrollToTop />
     </>
   );
 };

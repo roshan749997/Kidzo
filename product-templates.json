@@ -1,0 +1,136 @@
+{
+  "kids-clothing": {
+    "title": "Boys Cotton T-Shirt",
+    "mrp": 599,
+    "discountPercent": 20,
+    "description": "100% cotton t-shirt, perfect for daily wear",
+    "category": "kids-clothing",
+    "subcategory": "boys-cloth",
+    "images": {
+      "image1": "https://example.com/tshirt-front.jpg",
+      "image2": "https://example.com/tshirt-back.jpg"
+    },
+    "product_info": {
+      "brand": "Kidzo",
+      "manufacturer": "Kidzo Clothing Co.",
+      "clothingType": "T-shirt",
+      "gender": "Boys",
+      "ageGroup": "3-5Y",
+      "availableSizes": ["S", "M", "L"],
+      "fabric": "Cotton",
+      "color": "Blue",
+      "includedComponents": "1 T-shirt"
+    }
+  },
+  
+  "footwear": {
+    "title": "Kids Sports Shoes",
+    "mrp": 1299,
+    "discountPercent": 15,
+    "description": "Comfortable sports shoes for active kids",
+    "category": "footwear",
+    "subcategory": "boys-footwear",
+    "images": {
+      "image1": "https://example.com/shoe1.jpg",
+      "image2": "https://example.com/shoe2.jpg"
+    },
+    "product_info": {
+      "brand": "Kidzo",
+      "manufacturer": "Kidzo Footwear",
+      "footwearType": "Shoes",
+      "shoeMaterial": "Mesh",
+      "soleMaterial": "Rubber",
+      "availableSizes": ["7", "8", "9", "10"],
+      "color": "Black",
+      "includedComponents": "1 Pair of Shoes"
+    }
+  },
+  
+  "kids-accessories-watch": {
+    "title": "Vintage Field Men's Watch - Canvas Strap",
+    "mrp": 3899,
+    "discountPercent": 25,
+    "description": "A rugged, military-inspired analog watch",
+    "category": "Watches",
+    "subcategory": "watches",
+    "images": {
+      "image1": "https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765522263/page_2_img_26_mqglgf.jpg"
+    },
+    "product_info": {
+      "brand": "Trailblazer",
+      "manufacturer": "Heritage Clockworks",
+      "watchBrand": "Trailblazer",
+      "movementType": "Quartz",
+      "caseMaterial": "Brass/Brushed Steel Finish",
+      "bandMaterial": "Canvas",
+      "waterResistance": "50m",
+      "watchType": "Analog",
+      "IncludedComponents": "Watch, Small Repair Kit, Warranty Card"
+    }
+  },
+  
+  "kids-accessories-other": {
+    "title": "Kids Baseball Cap",
+    "mrp": 399,
+    "discountPercent": 10,
+    "description": "Stylish baseball cap for kids",
+    "category": "kids-accessories",
+    "subcategory": "caps",
+    "images": {
+      "image1": "https://example.com/cap1.jpg"
+    },
+    "product_info": {
+      "brand": "Kidzo",
+      "manufacturer": "Kidzo Accessories",
+      "accessoryType": "Cap",
+      "material": "Cotton",
+      "color": "Red",
+      "availableSizes": ["One Size"],
+      "includedComponents": "1 Cap"
+    }
+  },
+  
+  "baby-care": {
+    "title": "Baby Shampoo - Gentle Formula",
+    "mrp": 299,
+    "discountPercent": 5,
+    "description": "Gentle shampoo for baby's delicate hair",
+    "category": "baby-care",
+    "subcategory": "baby-gear",
+    "images": {
+      "image1": "https://example.com/shampoo1.jpg"
+    },
+    "product_info": {
+      "brand": "Kidzo",
+      "manufacturer": "Kidzo Baby Care",
+      "babyCareType": "Shampoo",
+      "ageRange": "0-12 months",
+      "safetyStandard": "Dermatologically tested",
+      "quantity": "200ml",
+      "includedComponents": "1 Bottle"
+    }
+  },
+  
+  "toys": {
+    "title": "Remote Control Car",
+    "mrp": 899,
+    "discountPercent": 25,
+    "description": "Fun remote control car for kids",
+    "category": "toys",
+    "images": {
+      "image1": "https://example.com/car1.jpg",
+      "image2": "https://example.com/car2.jpg"
+    },
+    "product_info": {
+      "brand": "Kidzo",
+      "manufacturer": "Kidzo Toys",
+      "toyType": "Car",
+      "batteryRequired": true,
+      "batteryIncluded": true,
+      "ageGroup": "5-8Y",
+      "color": "Red",
+      "includedComponents": "1 Car, 1 Remote Control, 2 AA Batteries"
+    }
+  }
+}
+

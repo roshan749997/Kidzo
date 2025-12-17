@@ -1,4 +1,5 @@
 import React from "react";
+import ScrollToTop from '../components/ScrollToTop';
 
 const PrivacyPolicy = () => {
   const lastUpdated = new Date().toLocaleDateString("en-IN", {
@@ -384,6 +385,7 @@ const PrivacyPolicy = () => {
           </section>
         </div>
       </div>
+      <ScrollToTop />
     </div>
   );
 };

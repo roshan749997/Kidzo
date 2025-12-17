@@ -22,8 +22,8 @@ export const CartProvider = ({ children }) => {
         id: p._id, // used by UI and for remove
         name: p.title,
         image: p.images?.image1,
-        material: p.product_info?.SareeMaterial || p.product_info?.shoeMaterial,
-        work: p.product_info?.IncludedComponents,
+        material: p.product_info?.fabric || p.product_info?.material || p.product_info?.shoeMaterial || p.product_info?.SareeMaterial,
+        work: p.product_info?.includedComponents || p.product_info?.IncludedComponents,
         price,
         originalPrice: p.mrp,
         quantity: i.quantity || 1,

@@ -14,22 +14,81 @@ const API_URL = `${getBackendUrl()}/api`;
 // PRODUCTS
 // ---------------------------------------------------------
 
+// Map category names to API endpoints
+const getCategoryEndpoint = (category) => {
+  if (!category) return null;
+  
+  const catLower = category.toLowerCase().replace(/\s+/g, '-');
+  
+  // Map category names to endpoints
+  const categoryMap = {
+    'kids-clothing': '/kids-clothing',
+    'kids-cloth': '/kids-clothing',
+    'clothing': '/kids-clothing',
+    'footwear': '/footwear',
+    'shoes': '/footwear',
+    'kids-accessories': '/kids-accessories',
+    'accessories': '/kids-accessories',
+    'baby-care': '/baby-care',
+    'babycare': '/baby-care',
+    'toys': '/toys',
+    'toy': '/toys',
+  };
+  
+  // Check exact match first
+  if (categoryMap[catLower]) {
+    return categoryMap[catLower];
+  }
+  
+  // Check partial match
+  for (const [key, endpoint] of Object.entries(categoryMap)) {
+    if (catLower.includes(key) || key.includes(catLower)) {
+      return endpoint;
+    }
+  }
+  
+  return null;
+};
+
 export const fetchSarees = async (category, subcategory = null) => {
   try {
-    let url = `${API_URL}/products`;
-    const params = new URLSearchParams();
+    // Determine which endpoint to use based on category
+    const categoryEndpoint = getCategoryEndpoint(category);
     
-    if (subcategory) {
-      params.append('subcategory', subcategory);
-    } else if (category) {
-      params.append('category', category);
-    }
-    
-    if (params.toString()) {
-      url += `?${params.toString()}`;
+    let url;
+    if (categoryEndpoint) {
+      // Use category-specific endpoint for faster loading
+      url = `${API_URL}${categoryEndpoint}`;
+      const params = new URLSearchParams();
+      
+      if (subcategory) {
+        params.append('subcategory', subcategory);
+      } else if (category) {
+        // Also pass category for filtering
+        params.append('category', category);
+      }
+      
+      if (params.toString()) {
+        url += `?${params.toString()}`;
+      }
+    } else {
+      // Fallback to legacy endpoint if category not recognized
+      url = `${API_URL}/products`;
+      const params = new URLSearchParams();
+      
+      if (subcategory) {
+        params.append('subcategory', subcategory);
+      } else if (category) {
+        params.append('category', category);
+      }
+      
+      if (params.toString()) {
+        url += `?${params.toString()}`;
+      }
     }
     
     console.log("Fetching products from:", url);
+    console.log("Category:", category, "Subcategory:", subcategory);
 
     const response = await fetch(url, {
       method: "GET",
@@ -50,6 +109,13 @@ export const fetchSarees = async (category, subcategory = null) => {
 
     const data = await response.json();
     console.log("Products fetched:", data?.length || 0);
+    if (data?.length > 0) {
+      console.log("Sample product:", {
+        title: data[0].title,
+        category: data[0].category,
+        subcategory: data[0].subcategory
+      });
+    }
     return Array.isArray(data) ? data : [];
   } catch (error) {
     console.error("Error fetching products:", error);
@@ -59,10 +125,34 @@ export const fetchSarees = async (category, subcategory = null) => {
 };
 
 
-export const fetchSareeById = async (id) => {
-  const response = await fetch(`${API_URL}/products/${id}`);
-  if (!response.ok) throw new Error("Failed to fetch saree details");
-  return response.json();
+export const fetchSareeById = async (id, category = null) => {
+  try {
+    // Try category-specific endpoint first if category is provided
+    const categoryEndpoint = category ? getCategoryEndpoint(category) : null;
+    
+    if (categoryEndpoint) {
+      try {
+        const response = await fetch(`${API_URL}${categoryEndpoint}/${id}`, {
+          credentials: "include",
+        });
+        if (response.ok) {
+          return await response.json();
+        }
+      } catch (err) {
+        console.log(`Category-specific endpoint failed, trying legacy endpoint:`, err);
+      }
+    }
+    
+    // Fallback to legacy endpoint
+    const response = await fetch(`${API_URL}/products/${id}`, {
+      credentials: "include",
+    });
+    if (!response.ok) throw new Error("Failed to fetch product details");
+    return response.json();
+  } catch (error) {
+    console.error("Error fetching product:", error);
+    throw error;
+  }
 };
 
 

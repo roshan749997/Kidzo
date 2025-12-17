@@ -3,6 +3,7 @@ import { useLocation, Link, useNavigate } from 'react-router-dom';
 import { FaRupeeSign, FaFilter, FaTimes, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { searchProducts } from '../services/api';
 import { placeholders, getProductImage } from '../utils/imagePlaceholder';
+import ScrollToTop from '../components/ScrollToTop';
 
 // Add CSS to hide scrollbar
 const styles = `
@@ -460,6 +461,7 @@ const Search = () => {
           </div>
         </div>
       )}
+      <ScrollToTop />
     </div>
   );
 };
