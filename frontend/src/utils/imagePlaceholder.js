@@ -44,33 +44,60 @@ export const placeholders = {
  * @returns {string} Image URL or placeholder
  */
 export const getProductImage = (product, imageKey = 'image1') => {
-  if (!product || !product.images) {
+  if (!product) {
+    return placeholders.productList;
+  }
+
+  // First check if product has direct image property (legacy support)
+  if (product.image && typeof product.image === 'string') {
+    return product.image;
+  }
+
+  if (!product.images) {
     return placeholders.productList;
   }
 
   // Handle object format: { image1: "url", image2: "url" }
   if (typeof product.images === 'object' && !Array.isArray(product.images)) {
+    // Try the requested image key first
     const imageUrl = product.images[imageKey];
-    if (imageUrl && typeof imageUrl === 'string') {
+    if (imageUrl && typeof imageUrl === 'string' && imageUrl.trim() !== '') {
       return imageUrl;
     }
     // Fallback to image1 if requested image doesn't exist
-    if (imageKey !== 'image1' && product.images.image1) {
+    if (imageKey !== 'image1' && product.images.image1 && typeof product.images.image1 === 'string' && product.images.image1.trim() !== '') {
       return product.images.image1;
+    }
+    // Try other image keys in order
+    const fallbackKeys = ['image2', 'image3'];
+    for (const key of fallbackKeys) {
+      if (product.images[key] && typeof product.images[key] === 'string' && product.images[key].trim() !== '') {
+        return product.images[key];
+      }
     }
   }
 
-  // Handle array format: [{ url: "url1" }, { url: "url2" }]
+  // Handle array format: [{ url: "url1" }, { url: "url2" }] or ["url1", "url2"]
   if (Array.isArray(product.images) && product.images.length > 0) {
     const imageIndex = imageKey === 'image1' ? 0 : imageKey === 'image2' ? 1 : imageKey === 'image3' ? 2 : 0;
-    const image = product.images[imageIndex];
+    const image = product.images[imageIndex] || product.images[0];
     if (image) {
       // Handle both { url: "..." } and direct string
-      return typeof image === 'string' ? image : (image.url || placeholders.productList);
+      if (typeof image === 'string' && image.trim() !== '') {
+        return image;
+      }
+      if (typeof image === 'object' && image.url && typeof image.url === 'string' && image.url.trim() !== '') {
+        return image.url;
+      }
     }
-    // Fallback to first image
-    if (product.images[0]) {
-      return typeof product.images[0] === 'string' ? product.images[0] : (product.images[0].url || placeholders.productList);
+    // Fallback to first available image
+    for (const img of product.images) {
+      if (typeof img === 'string' && img.trim() !== '') {
+        return img;
+      }
+      if (typeof img === 'object' && img.url && typeof img.url === 'string' && img.url.trim() !== '') {
+        return img.url;
+      }
     }
   }
 

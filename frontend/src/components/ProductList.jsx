@@ -1448,15 +1448,16 @@ const ProductList = ({ defaultCategory } = {}) => {
                     className="group bg-white overflow-hidden rounded-xl sm:rounded-2xl shadow-sm sm:shadow-md hover:shadow-xl sm:hover:shadow-2xl transition-all duration-500 cursor-pointer border border-gray-100 hover:border-pink-300 sm:hover:border-[#7A2A2A]/20 transform hover:-translate-y-1 sm:hover:-translate-y-2"
                     onClick={() => handleCardClick(p)}
                   >
-                    <div className="relative w-full aspect-[3/4] bg-gray-100 overflow-hidden">
+                    <div className="relative w-full aspect-[3/4] bg-gray-100 overflow-hidden flex items-center justify-center">
                       <img
                         src={getProductImage(p, 'image1')}
                         alt={p.title}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
                         onError={(e) => {
                           e.target.onerror = null;
                           e.target.src = placeholders.productList;
                         }}
+                        loading="lazy"
                       />
                       {(p.discountPercent > 0 || p.discount) && (
                         <span className="absolute top-2 right-2 sm:top-4 sm:right-4 bg-gradient-to-r from-[#8B2BE2] to-[#FF1493] text-white text-xs font-bold px-2 py-1 sm:px-3 sm:py-1.5 rounded-md sm:rounded-lg shadow-md sm:shadow-lg uppercase">

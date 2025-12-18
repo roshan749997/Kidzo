@@ -54,15 +54,16 @@ const ProductCard = ({ product }) => {
       onClick={() => navigate(`/product/${product._id || product.id}`)}
       className="group bg-white overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border border-gray-100 hover:border-pink-300 transform hover:-translate-y-1"
     >
-      <div className="relative w-full aspect-[3/4] bg-gray-100 overflow-hidden">
+      <div className="relative w-full aspect-[3/4] bg-gray-100 overflow-hidden flex items-center justify-center">
         <img
           src={imageUrl}
           alt={product.name || product.title || 'Product'}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
           onError={(e) => {
             e.target.onerror = null;
             e.target.src = placeholders.productList;
           }}
+          loading="lazy"
         />
         {discountPercent > 0 && (
           <span className="absolute top-2 right-2 bg-gradient-to-r from-[#8B2BE2] to-[#FF1493] text-white text-xs font-bold px-2 py-1 rounded-md shadow-md uppercase">
@@ -388,7 +389,7 @@ const ProductDetail = () => {
             <div className="relative lg:sticky lg:top-8 h-fit order-first lg:order-first">
               
               {/* Main Product Image */}
-              <div className="relative aspect-square bg-gray-100 rounded-xl sm:rounded-2xl overflow-hidden mb-4 sm:mb-6 shadow-lg max-w-md mx-auto lg:max-w-full">
+              <div className="relative aspect-square bg-gray-100 rounded-xl sm:rounded-2xl overflow-hidden mb-4 sm:mb-6 shadow-lg max-w-md mx-auto lg:max-w-full flex items-center justify-center">
                 {/* Best Seller Badge */}
                 <div className="absolute top-3 left-3 z-10 bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-full text-[10px] font-semibold text-black shadow-sm">
                   best seller
@@ -421,11 +422,12 @@ const ProductDetail = () => {
                 <img 
                   src={imageUrl} 
                   alt={product.name || product.title || 'Product'} 
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain"
                   onError={(e) => {
                     e.target.onerror = null;
                     e.target.src = placeholders.productDetail;
                   }}
+                  loading="lazy"
                 />
                 
                 {/* Interactive Labels */}
