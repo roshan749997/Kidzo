@@ -43,6 +43,18 @@ const JWT_SECRET = process.env.JWT_SECRET || 'dev_secret_change_me';
 // 🔹 Step 1: Google Login (Triggers Google Consent Screen)
 router.get(
   '/google',
+  (req, res, next) => {
+    // Check if Google OAuth is configured
+    const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+    const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+    
+    if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
+      console.error('[Google OAuth] Missing credentials');
+      return res.redirect(`${FRONTEND_URL}/auth/failure?error=${encodeURIComponent('Google OAuth is not configured. Please contact support.')}`);
+    }
+    
+    next();
+  },
   passport.authenticate('google', {
     scope: ['profile', 'email'],
     session: false,
@@ -71,13 +83,22 @@ router.get(
       const isProd =
         process.env.NODE_ENV === 'production' ||
         (process.env.BACKEND_URL || '').startsWith('https://');
+      
+      // Check COOKIE_SECURE env var (can be 'true', 'false', or undefined)
+      const cookieSecure = process.env.COOKIE_SECURE === 'true' ? true : 
+                           process.env.COOKIE_SECURE === 'false' ? false : 
+                           isProd;
+      
+      // For sameSite: 'none', secure must be true
+      const cookieSameSite = cookieSecure ? 'none' : 'lax';
 
       // Set Cookie for authentication
       res.cookie('jwt', token, {
         httpOnly: true,
-        sameSite: isProd ? 'none' : 'lax',
-        secure: isProd,
+        sameSite: cookieSameSite,
+        secure: cookieSecure,
         maxAge: 7 * 24 * 60 * 60 * 1000,
+        path: '/', // Ensure cookie is available across all paths
       });
 
       // 🔥 FINAL REDIRECT AFTER SUCCESSFUL GOOGLE LOGIN
@@ -85,24 +106,32 @@ router.get(
       return res.redirect(`${FRONTEND_URL}/auth/success`);
     } catch (e) {
       console.error("Google login error:", e);
-      return res.redirect(`${FRONTEND_URL}/auth/failure`);
+      const errorMessage = encodeURIComponent(e.message || 'Authentication failed');
+      return res.redirect(`${FRONTEND_URL}/auth/failure?error=${errorMessage}`);
     }
   }
 );
 
 // Logout
 router.post('/logout', (req, res) => {
-  res.clearCookie('jwt', {
-    httpOnly: true,
-    sameSite: 'lax',
-    secure: false,
+  // Clear cookie with all possible configurations to ensure it's cleared
+  const cookieOptions = [
+    { httpOnly: true, sameSite: 'lax', secure: false, path: '/' },
+    { httpOnly: true, sameSite: 'none', secure: true, path: '/' },
+    { httpOnly: true, sameSite: 'strict', secure: false, path: '/' },
+  ];
+  
+  cookieOptions.forEach(options => {
+    res.clearCookie('jwt', options);
   });
-  res.clearCookie('jwt', {
-    httpOnly: true,
-    sameSite: 'none',
-    secure: true,
+  
+  // Also clear token cookie (if it exists)
+  cookieOptions.forEach(options => {
+    res.clearCookie('token', options);
   });
-  return res.json({ message: 'Logged out' });
+  
+  console.log('[Logout] Cookies cleared');
+  return res.json({ message: 'Logged out successfully' });
 });
 
 export default router;

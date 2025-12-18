@@ -1,7 +1,7 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
-import { getMyAddress, saveMyAddress, deleteAddressById, createPaymentOrder, verifyPayment } from '../services/api';
+import { getMyAddress, saveMyAddress, deleteAddressById, createPaymentOrder, verifyPayment, createCodOrder } from '../services/api';
 import ScrollToTop from '../components/ScrollToTop';
 
 const indianStates = [
@@ -66,6 +66,7 @@ export default function AddressForm() {
 
   const [showSuccess, setShowSuccess] = useState(false);
   const [showForm, setShowForm] = useState(true);
+  const [paymentMethod, setPaymentMethod] = useState('online'); // 'online' or 'cod'
   const { cart, cartTotal: total, loadCart } = useCart();
 
   // Calculate price details
@@ -96,6 +97,28 @@ export default function AddressForm() {
       alert('Please save your delivery address first.');
       return;
     }
+    
+    // Handle Cash on Delivery
+    if (paymentMethod === 'cod') {
+      try {
+        const result = await createCodOrder();
+        if (result && result.success) {
+          await loadCart();
+          alert('Order placed successfully! You will pay when the order is delivered.');
+          navigate('/profile?tab=orders');
+        } else {
+          const errorMsg = result?.error || 'Failed to place COD order. Please try again.';
+          alert(errorMsg);
+        }
+      } catch (e) {
+        console.error('COD order error:', e);
+        const errorMsg = e?.message || e?.response?.error || 'Failed to place COD order. Please try again.';
+        alert(errorMsg);
+      }
+      return;
+    }
+    
+    // Handle Online Payment
     try {
       if (!window.Razorpay) {
         await new Promise((resolve, reject) => {
@@ -116,11 +139,11 @@ export default function AddressForm() {
         key,
         amount: order.amount,
         currency: order.currency,
-        name: 'SareeSansaar',
+        name: 'Kidzo',
         description: 'Order Payment',
         order_id: order.id,
         prefill: { name: formData.name || '', contact: formData.mobile || '' },
-        theme: { color: '#14b8a6' },
+        theme: { color: '#FF1493' },
         handler: async function (response) {
           try {
             const r = await verifyPayment(response);
@@ -700,6 +723,58 @@ export default function AddressForm() {
               <span className="text-[#FF1493]">₹{priceDetails.total.toLocaleString()}</span>
             </div>
 
+            {/* Payment Method Selection */}
+            {hasSavedAddress && (
+              <div className="mb-4 pb-4 border-b-2 border-pink-200">
+                <h4 className="text-gray-900 font-semibold mb-3 text-sm">Select Payment Method</h4>
+                <div className="space-y-2">
+                  <label className={`flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer transition-all ${
+                    paymentMethod === 'online' 
+                      ? 'border-[#FF1493] bg-pink-50' 
+                      : 'border-gray-200 hover:border-pink-200'
+                  }`}>
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      value="online"
+                      checked={paymentMethod === 'online'}
+                      onChange={(e) => setPaymentMethod(e.target.value)}
+                      className="w-4 h-4 text-[#FF1493] focus:ring-[#FF1493]"
+                    />
+                    <div className="flex-1">
+                      <div className="font-medium text-gray-900">Online Payment</div>
+                      <div className="text-xs text-gray-600">Pay securely with Razorpay</div>
+                    </div>
+                    <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                    </svg>
+                  </label>
+                  
+                  <label className={`flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer transition-all ${
+                    paymentMethod === 'cod' 
+                      ? 'border-[#FF1493] bg-pink-50' 
+                      : 'border-gray-200 hover:border-pink-200'
+                  }`}>
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      value="cod"
+                      checked={paymentMethod === 'cod'}
+                      onChange={(e) => setPaymentMethod(e.target.value)}
+                      className="w-4 h-4 text-[#FF1493] focus:ring-[#FF1493]"
+                    />
+                    <div className="flex-1">
+                      <div className="font-medium text-gray-900">Cash on Delivery</div>
+                      <div className="text-xs text-gray-600">Pay when you receive your order</div>
+                    </div>
+                    <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                  </label>
+                </div>
+              </div>
+            )}
+
             <button 
               onClick={handlePayment}
               disabled={!hasSavedAddress}
@@ -716,7 +791,7 @@ export default function AddressForm() {
                 if (hasSavedAddress) e.target.style.backgroundColor = '#FFD1DC';
               }}
             >
-              PROCEED TO PAYMENT
+              {paymentMethod === 'cod' ? 'PLACE ORDER (COD)' : 'PROCEED TO PAYMENT'}
             </button>
           </div>
         </div>

@@ -68,7 +68,8 @@ export function setupPassport() {
           }
           return done(null, user);
         } catch (err) {
-          return done(err);
+          console.error('[GoogleStrategy] Error during authentication:', err);
+          return done(err, null);
         }
       }
     )

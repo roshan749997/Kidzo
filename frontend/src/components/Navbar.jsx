@@ -20,6 +20,7 @@ const Navbar = () => {
   const [wishlistCount, setWishlistCount] = useState(0);
   const [bannerIndex, setBannerIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
+  const [userInitial, setUserInitial] = useState('');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -75,16 +76,46 @@ const Navbar = () => {
     };
   }, []);
 
-  // Check authentication status - Using in-memory state instead of localStorage
+  // Check authentication status and get user initial
   useEffect(() => {
-    // You can integrate this with your authentication context/provider
-    // For now, derive auth from localStorage token to keep Navbar in sync with Router guards
-    const checkAuth = () => {
+    const checkAuth = async () => {
       try {
         const token = localStorage.getItem('auth_token');
-        setIsAuthenticated(Boolean(token));
+        const authenticated = Boolean(token);
+        setIsAuthenticated(authenticated);
+        
+        if (authenticated) {
+          // Try to get user data from localStorage or API
+          try {
+            const userData = localStorage.getItem('user_data');
+            if (userData) {
+              const parsed = JSON.parse(userData);
+              const name = parsed.name || parsed.user?.name || '';
+              const email = parsed.email || parsed.user?.email || '';
+              const initial = name ? name.charAt(0).toUpperCase() : (email ? email.charAt(0).toUpperCase() : 'U');
+              setUserInitial(initial);
+            } else {
+              // Try to fetch from API
+              try {
+                const { api } = await import('../utils/api');
+                const data = await api.me();
+                const userName = data?.user?.name || '';
+                const userEmail = data?.user?.email || '';
+                const initial = userName ? userName.charAt(0).toUpperCase() : (userEmail ? userEmail.charAt(0).toUpperCase() : 'U');
+                setUserInitial(initial);
+              } catch (err) {
+                setUserInitial('U');
+              }
+            }
+          } catch (err) {
+            setUserInitial('U');
+          }
+        } else {
+          setUserInitial('');
+        }
       } catch {
         setIsAuthenticated(false);
+        setUserInitial('');
       }
     };
 
@@ -92,7 +123,7 @@ const Navbar = () => {
     
     // Listen for storage events (from other tabs/windows)
     const onStorage = (e) => {
-      if (!e || e.key === 'auth_token') {
+      if (!e || e.key === 'auth_token' || e.key === 'user_data') {
         checkAuth();
       }
     };
@@ -111,14 +142,48 @@ const Navbar = () => {
     };
   }, []);
 
-  const handleLogout = () => {
-    // Handle logout logic here
-    // Example: authContext.logout();
+  const handleLogout = async () => {
     try {
+      // Call backend logout endpoint to clear cookies
+      const { api } = await import('../utils/api');
+      const API_BASE_URL = import.meta.env.VITE_BACKEND_URL ?? 'http://localhost:5000';
+      try {
+        await fetch(`${API_BASE_URL}/api/auth/logout`, {
+          method: 'POST',
+          credentials: 'include', // Include cookies
+        });
+      } catch (err) {
+        console.error('Logout API error:', err);
+        // Continue with local logout even if API fails
+      }
+      
+      // Clear localStorage
       localStorage.removeItem('auth_token');
-    } catch {}
-    setIsAuthenticated(false);
-    navigate('/signin');
+      localStorage.removeItem('auth_is_admin');
+      localStorage.removeItem('user_data');
+      
+      // Update state
+      setIsAuthenticated(false);
+      setUserInitial('');
+      
+      // Dispatch events to notify other components
+      window.dispatchEvent(new Event('storage'));
+      window.dispatchEvent(new CustomEvent('authStateChanged', { detail: { authenticated: false } }));
+      
+      // Navigate to sign in
+      navigate('/signin');
+    } catch (err) {
+      console.error('Logout error:', err);
+      // Fallback: clear local storage and navigate
+      try {
+        localStorage.removeItem('auth_token');
+        localStorage.removeItem('auth_is_admin');
+        localStorage.removeItem('user_data');
+      } catch {}
+      setIsAuthenticated(false);
+      setUserInitial('');
+      navigate('/signin');
+    }
   };
 
   const handleLogin = () => {
@@ -374,9 +439,9 @@ const Navbar = () => {
               ))}
             </div>
 
-            {/* Icons - Right (Search, Wishlist, Cart) */}
+            {/* Icons - Right (Search, Cart on Mobile; All icons on Desktop) */}
             <div className="flex items-center space-x-1.5 sm:space-x-2 md:space-x-3 ml-auto md:ml-0">
-              {/* Search Icon */}
+              {/* Search Icon - Always Visible */}
               <div className="relative" ref={searchWrapRefDesktop}>
                 <button
                   onClick={() => setSearchOpen(!searchOpen)}
@@ -440,8 +505,8 @@ const Navbar = () => {
                 )}
               </div>
 
-              {/* Wishlist Icon */}
-              <Link to="/wishlist" className="p-1.5 sm:p-2 md:p-2.5 rounded-full bg-pink-100 hover:bg-pink-200 text-pink-600 hover:text-pink-700 relative transition-all duration-200 hover:scale-110 group touch-manipulation">
+              {/* Wishlist Icon - Hidden on Mobile, Visible on Desktop */}
+              <Link to="/wishlist" className="hidden md:flex p-1.5 sm:p-2 md:p-2.5 rounded-full bg-pink-100 hover:bg-pink-200 text-pink-600 hover:text-pink-700 relative transition-all duration-200 hover:scale-110 group touch-manipulation">
                 <svg className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.312-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
                 </svg>
@@ -452,7 +517,7 @@ const Navbar = () => {
                 )}
               </Link>
 
-              {/* Cart Icon */}
+              {/* Cart Icon - Always Visible */}
               <Link to="/cart" className="p-1.5 sm:p-2 md:p-2.5 rounded-full bg-purple-100 hover:bg-purple-200 text-purple-600 hover:text-purple-700 relative transition-all duration-200 hover:scale-110 group touch-manipulation">
                 <svg className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.25 10.5a.75.75 0 01-.75.75H5.25a.75.75 0 010-1.5h2.25a.75.75 0 01.75.75zm6.75 0a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5h2.25a.75.75 0 01.75.75z" />
@@ -464,18 +529,20 @@ const Navbar = () => {
                 )}
               </Link>
 
-              {/* My Account Icon */}
-              {isAuthenticated ? (
-                <Link to="/profile" className="p-1.5 sm:p-2 md:p-2.5 rounded-full bg-pink-100 hover:bg-pink-200 text-pink-600 hover:text-pink-700 transition-all duration-200 hover:scale-110 group touch-manipulation">
-                  <svg className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-                  </svg>
+              {/* My Account Icon / User Initial - Hidden on Mobile, Visible on Desktop */}
+              {isAuthenticated && userInitial ? (
+                <Link 
+                  to="/profile" 
+                  className="hidden md:flex w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-pink-500 to-pink-600 text-white font-bold text-sm sm:text-base md:text-lg items-center justify-center shadow-md hover:shadow-lg transition-all duration-200 hover:scale-110 group touch-manipulation ring-2 ring-pink-200 hover:ring-pink-300"
+                  title="My Profile"
+                >
+                  {userInitial}
                 </Link>
               ) : (
                 <button 
                   onClick={handleLogin} 
-                  className="p-1.5 sm:p-2 md:p-2.5 rounded-full bg-pink-100 hover:bg-pink-200 text-pink-600 hover:text-pink-700 transition-all duration-200 hover:scale-110 group touch-manipulation"
-                  aria-label="My Account"
+                  className="hidden md:flex p-1.5 sm:p-2 md:p-2.5 rounded-full bg-pink-100 hover:bg-pink-200 text-pink-600 hover:text-pink-700 transition-all duration-200 hover:scale-110 group touch-manipulation items-center justify-center"
+                  aria-label="Sign In"
                 >
                   <svg className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
@@ -546,6 +613,55 @@ const Navbar = () => {
               </div>
             </nav>
 
+            {/* Mobile Menu Icons Section */}
+            <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 px-3 sm:px-4 border-t border-gray-200">
+              <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                {/* Wishlist - Mobile Only */}
+                <Link
+                  to="/wishlist"
+                  className="bg-white border border-gray-300 rounded-lg py-3 sm:py-4 px-3 sm:px-4 flex items-center justify-center space-x-2 hover:bg-gray-50 active:bg-gray-100 transition-all duration-200 touch-manipulation shadow-sm"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <svg className="w-5 h-5 sm:w-6 sm:h-6 text-pink-600" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.312-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                  </svg>
+                  <span className="font-bold text-xs sm:text-sm text-black">Wishlist</span>
+                  {wishlistCount > 0 && (
+                    <span className="bg-pink-500 text-white text-[10px] sm:text-xs rounded-full h-5 w-5 sm:h-6 sm:w-6 flex items-center justify-center font-bold">
+                      {wishlistCount > 9 ? '9+' : wishlistCount}
+                    </span>
+                  )}
+                </Link>
+
+                {/* Profile - Mobile Only */}
+                {isAuthenticated && userInitial ? (
+                  <Link
+                    to="/profile"
+                    className="bg-white border border-gray-300 rounded-lg py-3 sm:py-4 px-3 sm:px-4 flex items-center justify-center space-x-2 hover:bg-gray-50 active:bg-gray-100 transition-all duration-200 touch-manipulation shadow-sm"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-gradient-to-br from-pink-500 to-pink-600 text-white font-bold text-sm sm:text-base flex items-center justify-center">
+                      {userInitial}
+                    </div>
+                    <span className="font-bold text-xs sm:text-sm text-black">Profile</span>
+                  </Link>
+                ) : (
+                  <button
+                    onClick={() => {
+                      handleLogin();
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="bg-white border border-gray-300 rounded-lg py-3 sm:py-4 px-3 sm:px-4 flex items-center justify-center space-x-2 hover:bg-gray-50 active:bg-gray-100 transition-all duration-200 touch-manipulation shadow-sm"
+                  >
+                    <svg className="w-5 h-5 sm:w-6 sm:h-6 text-pink-600" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                    </svg>
+                    <span className="font-bold text-xs sm:text-sm text-black">Sign In</span>
+                  </button>
+                )}
+              </div>
+            </div>
+
             {/* Auth Section in Mobile Menu */}
             <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 px-3 sm:px-4 border-t border-gray-200">
               {isAuthenticated ? (
@@ -561,20 +677,7 @@ const Navbar = () => {
                   </svg>
                   <span>Logout</span>
                 </button>
-              ) : (
-                <button
-                  onClick={() => {
-                    handleLogin();
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className="w-full flex items-center justify-center space-x-2 py-2.5 sm:py-3 px-3 sm:px-4 bg-gray-800 text-white rounded-lg font-medium hover:bg-gray-700 active:bg-gray-900 transition-colors duration-200 touch-manipulation text-sm sm:text-base"
-                >
-                  <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                  </svg>
-                  <span>Sign In</span>
-                </button>
-              )}
+              ) : null}
             </div>
           </div>
         )}

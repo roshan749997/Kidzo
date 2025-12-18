@@ -34,6 +34,7 @@ export const placeholders = {
   productDetail: getPlaceholderImage(600, 800, 'Image Not Available'),
   thumbnail: getPlaceholderImage(60, 80, 'No Image'),
   wishlist: getPlaceholderImage(600, 800, 'Image Not Available'),
+  product: getPlaceholderImage(300, 400, 'Image Not Available'), // Alias for productList
 };
 
 /**

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { FiGrid, FiBox, FiShoppingBag, FiLogOut, FiSearch, FiUser, FiHome } from 'react-icons/fi';
+import { FiGrid, FiBox, FiShoppingBag, FiLogOut, FiUser, FiHome, FiMenu, FiX, FiMapPin } from 'react-icons/fi';
 
 const Title = () => {
   const { pathname } = useLocation();
@@ -14,93 +14,208 @@ const Title = () => {
 const AdminLayout = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [userName, setUserName] = useState('Admin');
+
+  // Check admin status on mount
+  useEffect(() => {
+    const checkAdmin = () => {
+      const isAuth = localStorage.getItem('auth_token');
+      const isAdmin = localStorage.getItem('auth_is_admin') === 'true';
+      console.log('[AdminLayout] Admin check:', { isAuth: !!isAuth, isAdmin });
+      
+      if (!isAuth) {
+        console.warn('[AdminLayout] No auth token, redirecting to signin');
+        navigate('/signin', { replace: true });
+      } else if (!isAdmin) {
+        console.warn('[AdminLayout] User is not admin, redirecting to home');
+        navigate('/', { replace: true });
+      } else {
+        // Try to get user name from localStorage or API
+        try {
+          const userData = localStorage.getItem('user_data');
+          if (userData) {
+            const parsed = JSON.parse(userData);
+            if (parsed.name) setUserName(parsed.name);
+          }
+        } catch (e) {
+          console.error('Error parsing user data:', e);
+        }
+      }
+    };
+    
+    checkAdmin();
+  }, [navigate]);
 
   const logout = () => {
-    try {
-      localStorage.removeItem('auth_token');
-      localStorage.removeItem('auth_is_admin');
-    } catch {}
-    navigate('/signin', { replace: true });
+    if (window.confirm('Are you sure you want to logout?')) {
+      try {
+        localStorage.removeItem('auth_token');
+        localStorage.removeItem('auth_is_admin');
+        localStorage.removeItem('user_data');
+      } catch {}
+      navigate('/signin', { replace: true });
+    }
   };
 
-  const navItem = (to, label, Icon) => (
+  const navItem = (to, label, Icon, description) => (
     <NavLink
       to={to}
       end={to === '/admin'}
       onClick={() => setOpen(false)}
       className={({ isActive }) =>
-        'flex items-center gap-3 px-4 py-2 rounded-md transition-colors ' +
+        'group flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-200 ' +
         (isActive
-          ? 'bg-white/15 text-white'
-          : 'text-blue-100 hover:bg-white/10 hover:text-white')
+          ? 'bg-gradient-to-r from-pink-600 to-rose-600 text-white shadow-lg transform scale-105'
+          : 'text-gray-700 hover:bg-gradient-to-r hover:from-pink-50 hover:to-rose-50 hover:text-pink-700')
       }
     >
-      <Icon className="w-4 h-4" />
-      <span className="text-sm">{label}</span>
+      {({ isActive }) => (
+        <>
+          <Icon className={`w-5 h-5 ${isActive ? 'text-white' : ''}`} />
+          <div className="flex-1">
+            <div className="text-sm font-semibold">{label}</div>
+            {description && <div className={`text-xs ${isActive ? 'opacity-90' : 'opacity-75'}`}>{description}</div>}
+          </div>
+        </>
+      )}
     </NavLink>
   );
 
   return (
-    <div className="h-screen overflow-hidden bg-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
       <div className="flex">
-        {/* Sidebar */}
-        <aside className="hidden md:flex fixed inset-y-0 left-0 w-64 flex-col bg-gradient-to-b from-blue-900 to-blue-700 text-white p-4 space-y-2 shadow-xl">
-          <div className="text-lg font-semibold px-2 py-3">Admin</div>
-          {navItem('/admin', 'Dashboard', FiGrid)}
-          {navItem('/admin/products', 'Products', FiBox)}
-          {navItem('/admin/orders', 'Orders', FiShoppingBag)}
-          {navItem('/admin/addresses', 'Addresses', FiHome)}
-          <button
-            onClick={logout}
-            className="mt-auto flex items-center gap-3 px-4 py-2 rounded-md text-blue-100 hover:bg-white/10 hover:text-white"
-          >
-            <FiLogOut className="w-4 h-4" />
-            <span className="text-sm">Logout</span>
-          </button>
+        {/* Sidebar - Desktop */}
+        <aside className="hidden lg:flex fixed inset-y-0 left-0 w-72 flex-col bg-white border-r-2 border-gray-200 shadow-xl z-30">
+          {/* Logo/Brand */}
+          <div className="p-6 border-b-2 border-gray-200">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-pink-600 to-rose-600 flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                A
+              </div>
+              <div>
+                <div className="text-lg font-bold text-gray-900">Admin Panel</div>
+                <div className="text-xs text-gray-500">Kidzoo Management</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Navigation */}
+          <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
+            {navItem('/admin', 'Dashboard', FiGrid, 'Overview & stats')}
+            {navItem('/admin/products', 'Products', FiBox, 'Manage catalog')}
+            {navItem('/admin/orders', 'Orders', FiShoppingBag, 'Track orders')}
+            {navItem('/admin/addresses', 'Addresses', FiMapPin, 'User addresses')}
+          </nav>
+
+          {/* User Section */}
+          <div className="p-4 border-t-2 border-gray-200">
+            <div className="flex items-center gap-3 mb-3 p-3 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center text-white font-bold shadow-md">
+                {userName[0].toUpperCase()}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-sm font-semibold text-gray-900 truncate">{userName}</div>
+                <div className="text-xs text-gray-500">Administrator</div>
+              </div>
+            </div>
+            <button
+              onClick={logout}
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-600 hover:bg-red-50 transition-all duration-200 font-semibold group"
+            >
+              <FiLogOut className="w-5 h-5 group-hover:transform group-hover:rotate-12 transition-transform" />
+              <span className="text-sm">Logout</span>
+            </button>
+          </div>
         </aside>
 
+        {/* Mobile Sidebar Overlay */}
         {open && (
-          <div className="md:hidden fixed inset-0 z-50">
-            <div className="absolute inset-0 bg-black/40" onClick={() => setOpen(false)} />
-            <aside className="absolute inset-y-0 left-0 w-64 flex flex-col bg-gradient-to-b from-blue-900 to-blue-700 text-white p-4 space-y-2 shadow-xl">
-              <div className="text-lg font-semibold px-2 py-3">Admin</div>
-              {navItem('/admin', 'Dashboard', FiGrid)}
-              {navItem('/admin/products', 'Products', FiBox)}
-              {navItem('/admin/orders', 'Orders', FiShoppingBag)}
-              {navItem('/admin/addresses', 'Addresses', FiHome)}
-              <button
-                onClick={logout}
-                className="mt-auto flex items-center gap-3 px-4 py-2 rounded-md text-blue-100 hover:bg-white/10 hover:text-white"
-              >
-                <FiLogOut className="w-4 h-4" />
-                <span className="text-sm">Logout</span>
-              </button>
+          <div className="lg:hidden fixed inset-0 z-50">
+            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setOpen(false)} />
+            <aside className="absolute inset-y-0 left-0 w-72 flex flex-col bg-white shadow-2xl">
+              {/* Mobile Header */}
+              <div className="p-6 border-b-2 border-gray-200 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-pink-600 to-rose-600 flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                    A
+                  </div>
+                  <div>
+                    <div className="text-lg font-bold text-gray-900">Admin Panel</div>
+                    <div className="text-xs text-gray-500">Kidzoo Management</div>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setOpen(false)}
+                  className="p-2 rounded-lg hover:bg-gray-100 text-gray-600"
+                >
+                  <FiX className="w-6 h-6" />
+                </button>
+              </div>
+
+              {/* Mobile Navigation */}
+              <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
+                {navItem('/admin', 'Dashboard', FiGrid, 'Overview & stats')}
+                {navItem('/admin/products', 'Products', FiBox, 'Manage catalog')}
+                {navItem('/admin/orders', 'Orders', FiShoppingBag, 'Track orders')}
+                {navItem('/admin/addresses', 'Addresses', FiMapPin, 'User addresses')}
+              </nav>
+
+              {/* Mobile User Section */}
+              <div className="p-4 border-t-2 border-gray-200">
+                <div className="flex items-center gap-3 mb-3 p-3 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center text-white font-bold shadow-md">
+                    {userName[0].toUpperCase()}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-semibold text-gray-900 truncate">{userName}</div>
+                    <div className="text-xs text-gray-500">Administrator</div>
+                  </div>
+                </div>
+                <button
+                  onClick={logout}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-600 hover:bg-red-50 transition-all duration-200 font-semibold"
+                >
+                  <FiLogOut className="w-5 h-5" />
+                  <span className="text-sm">Logout</span>
+                </button>
+              </div>
             </aside>
           </div>
         )}
 
-        {/* Main */}
-        <div className="flex-1 min-w-0 md:ml-64 h-screen flex flex-col">
+        {/* Main Content */}
+        <div className="flex-1 min-w-0 lg:ml-72">
           {/* Header */}
-          <header className="sticky top-0 z-10 bg-white/80 backdrop-blur border-b px-4 sm:px-6 py-3 flex items-center gap-3">
-            <button className="md:hidden p-2 rounded bg-gray-100 text-gray-700" onClick={() => setOpen(true)}>
-              <span className="sr-only">Menu</span>
-              <div className="w-5 h-0.5 bg-gray-700 mb-1" />
-              <div className="w-4 h-0.5 bg-gray-700 mb-1" />
-              <div className="w-3 h-0.5 bg-gray-700" />
-            </button>
-            <h1 className="text-lg font-semibold mr-auto">{<Title />}</h1>
-            <div className="hidden sm:flex items-center bg-gray-100 rounded-md px-2">
-              <FiSearch className="text-gray-500" />
-              <input className="bg-transparent px-2 py-1 outline-none text-sm" placeholder="Search..." />
-            </div>
-            <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600">
-              <FiUser />
+          <header className="sticky top-0 z-20 bg-white/80 backdrop-blur-lg border-b-2 border-gray-200 shadow-sm">
+            <div className="px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <button
+                  className="lg:hidden p-2 rounded-lg hover:bg-gray-100 text-gray-700 transition-colors"
+                  onClick={() => setOpen(true)}
+                >
+                  <FiMenu className="w-6 h-6" />
+                </button>
+                <div>
+                  <h1 className="text-2xl font-bold text-gray-900"><Title /></h1>
+                  <div className="text-sm text-gray-500 mt-0.5">
+                    {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-lg border-2 border-gray-200">
+                  <FiUser className="w-4 h-4 text-gray-400" />
+                  <span className="text-sm font-semibold text-gray-700">{userName}</span>
+                </div>
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center text-white font-bold shadow-md cursor-pointer hover:shadow-lg transition-shadow">
+                  {userName[0].toUpperCase()}
+                </div>
+              </div>
             </div>
           </header>
 
-          {/* Content */}
-          <main className="flex-1 overflow-y-auto p-4 sm:p-6">
+          {/* Content Area */}
+          <main className="p-4 sm:p-6 lg:p-8">
             <Outlet />
           </main>
         </div>

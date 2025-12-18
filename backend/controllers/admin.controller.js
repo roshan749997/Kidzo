@@ -1,4 +1,9 @@
 import { Product } from '../models/product.js';
+import { KidsClothing } from '../models/KidsClothing.js';
+import { Footwear } from '../models/Footwear.js';
+import { KidsAccessories } from '../models/KidsAccessories.js';
+import { BabyCare } from '../models/BabyCare.js';
+import { Toys } from '../models/Toys.js';
 import Order from '../models/Order.js';
 import { Address } from '../models/Address.js';
 
@@ -85,7 +90,25 @@ export async function createProduct(req, res) {
 
     if (categoryId) payload.categoryId = categoryId;
 
-    const product = await Product.create(payload);
+    // Determine which collection to use based on category
+    const categoryLower = (category || '').toLowerCase().replace(/\s+/g, '-');
+    let product;
+    
+    if (categoryLower.includes('kids-clothing') || categoryLower.includes('clothing')) {
+      product = await KidsClothing.create(payload);
+    } else if (categoryLower.includes('footwear') || categoryLower.includes('shoe')) {
+      product = await Footwear.create(payload);
+    } else if (categoryLower.includes('kids-accessories') || categoryLower.includes('accessories') || categoryLower.includes('watch') || categoryLower.includes('sunglass')) {
+      product = await KidsAccessories.create(payload);
+    } else if (categoryLower.includes('baby-care') || categoryLower.includes('babycare') || categoryLower.includes('diaper') || categoryLower.includes('lotion')) {
+      product = await BabyCare.create(payload);
+    } else if (categoryLower.includes('toy')) {
+      product = await Toys.create(payload);
+    } else {
+      // Default to Product collection for unknown categories
+      product = await Product.create(payload);
+    }
+    
     return res.status(201).json(product);
   } catch (err) {
     return res.status(500).json({ message: 'Failed to create product', error: err.message });
@@ -121,8 +144,31 @@ export async function updateOrderStatus(req, res) {
 
 export async function adminListProducts(req, res) {
   try {
-    const products = await Product.find({}).sort({ createdAt: -1 });
-    return res.json(products);
+    // Fetch products from all category collections
+    const [products, kidsClothing, footwear, kidsAccessories, babyCare, toys] = await Promise.all([
+      Product.find({}).sort({ createdAt: -1 }).lean(),
+      KidsClothing.find({}).sort({ createdAt: -1 }).lean(),
+      Footwear.find({}).sort({ createdAt: -1 }).lean(),
+      KidsAccessories.find({}).sort({ createdAt: -1 }).lean(),
+      BabyCare.find({}).sort({ createdAt: -1 }).lean(),
+      Toys.find({}).sort({ createdAt: -1 }).lean(),
+    ]);
+    
+    // Combine all products
+    const allProducts = [
+      ...products,
+      ...kidsClothing,
+      ...footwear,
+      ...kidsAccessories,
+      ...babyCare,
+      ...toys,
+    ].sort((a, b) => {
+      const dateA = new Date(a.createdAt || 0);
+      const dateB = new Date(b.createdAt || 0);
+      return dateB - dateA; // Sort by newest first
+    });
+    
+    return res.json(allProducts);
   } catch (err) {
     return res.status(500).json({ message: 'Failed to list products', error: err.message });
   }
@@ -171,7 +217,19 @@ export async function adminStats(req, res) {
     ]);
     const totalRevenue = revenueAgg?.total || 0;
     const totalOrders = revenueAgg?.count || 0;
-    const totalProducts = await Product.countDocuments();
+    
+    // Count products from all collections
+    const [productCount, kidsClothingCount, footwearCount, kidsAccessoriesCount, babyCareCount, toysCount] = await Promise.all([
+      Product.countDocuments(),
+      KidsClothing.countDocuments(),
+      Footwear.countDocuments(),
+      KidsAccessories.countDocuments(),
+      BabyCare.countDocuments(),
+      Toys.countDocuments(),
+    ]);
+    
+    const totalProducts = productCount + kidsClothingCount + footwearCount + kidsAccessoriesCount + babyCareCount + toysCount;
+    
     return res.json({ totalRevenue, totalOrders, totalProducts });
   } catch (err) {
     return res.status(500).json({ message: 'Failed to load stats', error: err.message });
@@ -204,17 +262,39 @@ export async function updateProduct(req, res) {
       updates.discountPercent = Number(discountPercent) || 0;
     }
 
-    const product = await Product.findByIdAndUpdate(
-      id,
-      { $set: updates },
-      { new: true, runValidators: true }
-    );
+    // Try to update in all collections
+    const collections = [
+      { model: Product, name: 'Product' },
+      { model: KidsClothing, name: 'KidsClothing' },
+      { model: Footwear, name: 'Footwear' },
+      { model: KidsAccessories, name: 'KidsAccessories' },
+      { model: BabyCare, name: 'BabyCare' },
+      { model: Toys, name: 'Toys' },
+    ];
+    
+    let updatedProduct = null;
+    for (const { model } of collections) {
+      try {
+        const result = await model.findByIdAndUpdate(
+          id,
+          { $set: updates },
+          { new: true, runValidators: true }
+        );
+        if (result) {
+          updatedProduct = result;
+          break;
+        }
+      } catch (err) {
+        // Continue to next collection
+        continue;
+      }
+    }
 
-    if (!product) {
+    if (!updatedProduct) {
       return res.status(404).json({ message: 'Product not found' });
     }
 
-    return res.json(product);
+    return res.json(updatedProduct);
   } catch (err) {
     return res.status(500).json({ message: 'Failed to update product', error: err.message });
   }

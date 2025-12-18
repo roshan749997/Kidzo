@@ -16,6 +16,20 @@ function Cart() {
   } = useCart();
 
   console.log('Cart component rendered with:', { cart, cartTotal, cartCount }); // Debug log
+  
+  // Debug: Log cart items structure
+  useEffect(() => {
+    if (cart.length > 0) {
+      console.log('Cart items structure:', cart.map(item => ({
+        id: item.id,
+        name: item.name,
+        image: item.image,
+        images: item.images,
+        hasImage: !!item.image,
+        hasImages: !!item.images
+      })));
+    }
+  }, [cart]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -65,18 +79,50 @@ function Cart() {
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
           <div className="lg:col-span-2 space-y-3 sm:space-y-4">
-            {cart.map((item) => (
+             {cart.map((item) => {
+               // Debug logging
+               console.log('Cart item rendering:', {
+                 id: item.id,
+                 name: item.name,
+                 image: item.image,
+                 imageType: typeof item.image,
+                 hasImage: !!item.image
+               });
+               
+               // Get image URL - handle both string URL and object format
+               let imageUrl = placeholders.productList;
+               if (item.image) {
+                 if (typeof item.image === 'string' && item.image.trim() !== '') {
+                   // Direct URL string
+                   imageUrl = item.image.trim();
+                 } else if (typeof item.image === 'object') {
+                   // Object format - use getProductImage
+                   imageUrl = getProductImage({ images: item.image }, 'image1') || placeholders.productList;
+                 } else {
+                   // Try getProductImage as fallback
+                   imageUrl = getProductImage({ images: { image1: item.image } }, 'image1') || placeholders.productList;
+                 }
+               }
+               
+               return (
               <div key={item.id} className="bg-white rounded-lg sm:rounded-xl shadow-md p-3 sm:p-4 md:p-5 flex flex-col sm:flex-row items-start gap-3 sm:gap-4 border-2 border-pink-100 hover:border-pink-300 transition-all hover:shadow-lg">
-                <div className="w-full sm:w-24 md:w-28 h-48 sm:h-24 md:h-28 flex items-center justify-center overflow-hidden rounded-lg cursor-pointer border-2 border-pink-100 hover:border-pink-400 transition-all self-center sm:self-start">
+                <div className="w-full sm:w-24 md:w-28 h-48 sm:h-24 md:h-28 flex items-center justify-center overflow-hidden rounded-lg cursor-pointer border-2 border-pink-100 hover:border-pink-400 transition-all self-center sm:self-start bg-gray-50">
                   <img
-                    src={getProductImage({ images: { image1: item.image } }, 'image1') || placeholders.product}
-                    alt={item.name}
+                    src={imageUrl}
+                    alt={item.name || 'Product'}
                     className="w-full h-full object-contain"
                     onClick={() => navigate(`/product/${item.id}`)}
                     onError={(e) => {
+                      console.error('Cart image error:', {
+                        itemId: item.id,
+                        itemName: item.name,
+                        attemptedUrl: e.target.src,
+                        originalImage: item.image
+                      });
                       e.currentTarget.onerror = null;
-                      e.currentTarget.src = placeholders.product;
+                      e.currentTarget.src = placeholders.productList;
                     }}
+                    loading="lazy"
                   />
                 </div>
                 <div className="flex-1 w-full sm:w-auto">
@@ -135,9 +181,10 @@ function Cart() {
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
-            ))}
+                 </div>
+               </div>
+             );
+             })}
           </div>
           
           {/* Order Summary */}

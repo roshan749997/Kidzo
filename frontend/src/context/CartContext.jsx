@@ -15,17 +15,67 @@ export const CartProvider = ({ children }) => {
     const items = data?.items || [];
     return items.map((i) => {
       const p = i.product || {};
+      
+      // Debug: Log product structure
+      console.log('Cart product mapping:', {
+        productId: p._id || p.id,
+        productTitle: p.title,
+        hasImages: !!p.images,
+        imagesType: typeof p.images,
+        imagesValue: p.images,
+        hasImage: !!p.image,
+        imageValue: p.image,
+        productKeys: Object.keys(p)
+      });
+      
       const price = typeof p.price === 'number'
         ? p.price
         : (typeof p.mrp === 'number' ? Math.round(p.mrp - (p.mrp * (p.discountPercent || 0) / 100)) : 0);
+      
+      // Get image URL - prefer image1, fallback to image2, image3, or legacy image field
+      let imageUrl = null;
+      
+      // Check images object format: { image1: "url", image2: "url" }
+      if (p.images && typeof p.images === 'object' && !Array.isArray(p.images)) {
+        imageUrl = p.images.image1 || p.images.image2 || p.images.image3 || null;
+        // Clean up the URL - remove any whitespace
+        if (imageUrl && typeof imageUrl === 'string') {
+          imageUrl = imageUrl.trim();
+          if (imageUrl === '') imageUrl = null;
+        }
+      }
+      
+      // Check images array format: [{ url: "..." }] or ["url1", "url2"]
+      if (!imageUrl && Array.isArray(p.images) && p.images.length > 0) {
+        const firstImg = p.images[0];
+        if (typeof firstImg === 'string' && firstImg.trim() !== '') {
+          imageUrl = firstImg.trim();
+        } else if (firstImg?.url && typeof firstImg.url === 'string' && firstImg.url.trim() !== '') {
+          imageUrl = firstImg.url.trim();
+        }
+      }
+      
+      // Fallback to legacy image field
+      if (!imageUrl && p.image) {
+        if (typeof p.image === 'string' && p.image.trim() !== '') {
+          imageUrl = p.image.trim();
+        }
+      }
+      
+      console.log('Extracted image URL:', { 
+        productId: p._id || p.id, 
+        imageUrl,
+        finalImageUrl: imageUrl || 'NO IMAGE FOUND'
+      });
+      
       return {
-        id: p._id, // used by UI and for remove
-        name: p.title,
-        image: p.images?.image1,
+        id: p._id || p.id, // used by UI and for remove
+        name: p.title || p.name || 'Untitled Product',
+        image: imageUrl, // Store the image URL string
         material: p.product_info?.fabric || p.product_info?.material || p.product_info?.shoeMaterial || p.product_info?.SareeMaterial,
         work: p.product_info?.includedComponents || p.product_info?.IncludedComponents,
         price,
-        originalPrice: p.mrp,
+        originalPrice: p.mrp || p.originalPrice || price,
         quantity: i.quantity || 1,
         size: i.size || null, // Include size from cart item
       };

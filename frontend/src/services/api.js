@@ -261,6 +261,21 @@ export const verifyPayment = async (payload) => {
   return res.json();
 };
 
+export const createCodOrder = async () => {
+  const res = await fetch(`${API_URL}/payment/cod`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...authHeaders() },
+    credentials: "include",
+  });
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    const error = new Error(errorData.error || "Failed to create COD order");
+    error.response = errorData;
+    throw error;
+  }
+  return res.json();
+};
+
 
 // ---------------------------------------------------------
 // ORDERS

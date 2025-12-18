@@ -60,16 +60,6 @@ const SignUp = () => {
     >
       <div className="w-full max-w-lg sm:max-w-xl md:max-w-2xl lg:max-w-3xl px-3 sm:px-4 md:px-6 lg:px-8 relative z-10 max-h-[95vh] overflow-y-auto custom-scrollbar" style={{ scrollbarWidth: 'thin', scrollbarColor: '#FFD1DC transparent' }}>
 
-            {/* Form Header */}
-            <div className="text-center mb-3 sm:mb-4">
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1 tracking-tight">
-                Create Account
-              </h2>
-              <p className="text-gray-600 text-xs sm:text-sm">
-                Join us to discover exclusive offers
-              </p>
-            </div>
-
             {/* Sign Up Form */}
             <div className="bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl p-4 sm:p-6 border border-gray-200/50 transition-all duration-300 relative">
               {error && (
@@ -283,7 +273,8 @@ const SignUp = () => {
                 <button
                   type="button"
                   onClick={() => {
-                    const SERVER_BASE = import.meta.env.VITE_BACKEND_BASE || "http://localhost:5000";
+                    let SERVER_BASE = import.meta.env.VITE_BACKEND_URL || import.meta.env.VITE_BACKEND_BASE || 'http://localhost:5000';
+                    SERVER_BASE = SERVER_BASE.replace(/\/+$/, '');
                     window.location.href = `${SERVER_BASE}/api/auth/google`;
                   }}
                   className="flex items-center justify-center w-full px-3 sm:px-4 py-2 sm:py-2.5 border-2 border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-all duration-300 transform active:scale-95 font-medium text-xs sm:text-sm"

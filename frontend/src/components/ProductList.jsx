@@ -70,9 +70,11 @@ const ProductList = ({ defaultCategory } = {}) => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState(null);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [displayCount, setDisplayCount] = useState(20); // Initial products to show
+  const loadMoreRef = useRef(null);
   
   // Filter states
   const [selectedPriceRange, setSelectedPriceRange] = useState(null);
@@ -571,6 +573,42 @@ const ProductList = ({ defaultCategory } = {}) => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }, 100);
   }, [categoryName, subCategoryName, mainCategory]);
+
+  // Infinite scroll with Intersection Observer
+  useEffect(() => {
+    if (loading || filteredProducts.length === 0 || displayCount >= filteredProducts.length) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const firstEntry = entries[0];
+        if (firstEntry.isIntersecting && !loadingMore && displayCount < filteredProducts.length) {
+          setLoadingMore(true);
+          // Simulate a small delay for smooth loading
+          setTimeout(() => {
+            setDisplayCount(prev => Math.min(prev + 20, filteredProducts.length));
+            setLoadingMore(false);
+          }, 300);
+        }
+      },
+      {
+        root: null,
+        rootMargin: '100px', // Start loading 100px before reaching the bottom
+        threshold: 0.1,
+      }
+    );
+
+    if (loadMoreRef.current) {
+      observer.observe(loadMoreRef.current);
+    }
+
+    return () => {
+      if (loadMoreRef.current) {
+        observer.unobserve(loadMoreRef.current);
+      }
+    };
+  }, [loading, filteredProducts.length, displayCount, loadingMore]);
 
   const handleCardClick = (product) => {
     navigate(`/product/${product._id}`);
@@ -1500,18 +1538,30 @@ const ProductList = ({ defaultCategory } = {}) => {
                 ))}
                 </div>
                 
-                {/* Load More Button */}
+                {/* Infinite Scroll Sentinel & Loading Indicator */}
                 {filteredProducts.length > displayCount && (
-                  <div className="flex justify-center mt-8 sm:mt-12">
-                    <button
-                      onClick={() => setDisplayCount(prev => prev + 20)}
-                      className="px-8 py-3 sm:px-12 sm:py-4 text-black font-bold rounded-xl border-2 border-black transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 text-sm sm:text-base"
-                      style={{ backgroundColor: '#FFD1DC' }}
-                      onMouseEnter={(e) => e.target.style.backgroundColor = '#FFB6C1'}
-                      onMouseLeave={(e) => e.target.style.backgroundColor = '#FFD1DC'}
-                    >
-                      Load More Products
-                    </button>
+                  <div ref={loadMoreRef} className="flex justify-center items-center py-8 sm:py-12">
+                    {loadingMore && (
+                      <div className="flex flex-col items-center justify-center space-y-4">
+                        <div className="relative">
+                          <div className="w-12 h-12 border-4 border-gray-200 rounded-full"></div>
+                          <div className="w-12 h-12 border-4 border-[#FF1493] border-t-transparent rounded-full animate-spin absolute top-0 left-0"></div>
+                        </div>
+                        <p className="text-gray-600 font-medium text-sm">Loading more products...</p>
+                      </div>
+                    )}
+                  </div>
+                )}
+                
+                {/* End of products indicator */}
+                {displayCount >= filteredProducts.length && filteredProducts.length > 0 && (
+                  <div className="flex justify-center items-center py-8 sm:py-12">
+                    <div className="text-center">
+                      <p className="text-gray-500 text-sm font-medium">
+                        You've reached the end of the products
+                      </p>
+                      <div className="w-24 h-0.5 bg-gradient-to-r from-transparent via-[#FF1493] to-transparent mx-auto mt-2"></div>
+                    </div>
                   </div>
                 )}
               </>
