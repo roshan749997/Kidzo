@@ -47,35 +47,68 @@ export const createOrder = async (req, res) => {
 
 export const verifyPayment = async (req, res) => {
   try {
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body || {};
-    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
-      return res.status(400).json({ error: 'Missing fields' });
+    // Handle both snake_case and camelCase field names from Razorpay
+    const {
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature,
+      razorpayOrderId,
+      razorpayPaymentId,
+      razorpaySignature
+    } = req.body || {};
+    
+    // Use snake_case first, fallback to camelCase
+    const orderId = razorpay_order_id || razorpayOrderId;
+    const paymentId = razorpay_payment_id || razorpayPaymentId;
+    const signature = razorpay_signature || razorpaySignature;
+    
+    console.log('[verifyPayment] Received payment data:', {
+      has_order_id: !!orderId,
+      has_payment_id: !!paymentId,
+      has_signature: !!signature,
+      body_keys: Object.keys(req.body || {}),
+    });
+    
+    if (!orderId || !paymentId || !signature) {
+      console.error('[verifyPayment] Missing required fields. Received:', req.body);
+      return res.status(400).json({ error: 'Missing required payment fields (order_id, payment_id, signature)' });
     }
+    
     const ctx = getClient();
     if (!ctx) {
+      console.error('[verifyPayment] Razorpay keys not configured');
       return res.status(500).json({ error: 'Server secret missing' });
     }
 
-    const payload = `${razorpay_order_id}|${razorpay_payment_id}`;
+    const payload = `${orderId}|${paymentId}`;
     const expected = crypto.createHmac('sha256', ctx.key_secret).update(payload).digest('hex');
 
-    if (expected !== razorpay_signature) {
-      return res.status(400).json({ success: false, error: 'Invalid signature' });
+    if (expected !== signature) {
+      console.error('[verifyPayment] Invalid signature. Expected:', expected.substring(0, 20) + '...', 'Received:', signature.substring(0, 20) + '...');
+      return res.status(400).json({ success: false, error: 'Invalid payment signature' });
     }
 
     const userId = req.userId;
-    if (!userId) return res.status(401).json({ error: 'Unauthorized' });
+    if (!userId) {
+      console.error('[verifyPayment] No userId found');
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
 
+    console.log('[verifyPayment] User ID:', userId);
     const cart = await Cart.findOne({ user: userId });
     if (!cart || !Array.isArray(cart.items) || cart.items.length === 0) {
+      console.error('[verifyPayment] Cart is empty for user:', userId);
       return res.status(400).json({ error: 'Cart is empty' });
     }
+
+    console.log('[verifyPayment] Cart items count:', cart.items.length);
 
     // Manually populate products from all collections
     const items = await Promise.all(
       cart.items.map(async (i) => {
         const product = await findProductInAllCollections(i.product);
         if (!product) {
+          console.error('[verifyPayment] Product not found:', i.product);
           throw new Error(`Product ${i.product} not found`);
         }
         
@@ -98,6 +131,7 @@ export const verifyPayment = async (req, res) => {
     );
     
     const amount = items.reduce((sum, it) => sum + (it.price * it.quantity), 0);
+    console.log('[verifyPayment] Order amount:', amount);
 
     // Load user's current address to snapshot into the order
     let shippingAddress = null;
@@ -115,19 +149,21 @@ export const verifyPayment = async (req, res) => {
       amount,
       currency: 'INR',
       status: 'paid',
-      razorpayOrderId: razorpay_order_id,
-      razorpayPaymentId: razorpay_payment_id,
-      razorpaySignature: razorpay_signature,
+      razorpayOrderId: orderId,
+      razorpayPaymentId: paymentId,
+      razorpaySignature: signature,
       shippingAddress,
     });
 
     cart.items = [];
     await cart.save();
 
+    console.log('[verifyPayment] Order created successfully:', order._id);
     return res.json({ success: true, order });
   } catch (err) {
-    console.error('Razorpay verifyPayment error:', err?.message || err);
-    return res.status(500).json({ error: 'Verification failed' });
+    console.error('[verifyPayment] Error:', err?.message || err);
+    console.error('[verifyPayment] Stack:', err?.stack);
+    return res.status(500).json({ error: err.message || 'Verification failed' });
   }
 };
 

@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { api } from '../utils/api';
-import { getMyAddress, getMyOrders, updateAddressById, saveMyAddress } from '../services/api';
+import { getMyAddress, getMyOrders, updateAddressById, saveMyAddress, getOrderById } from '../services/api';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { FiSettings, FiPackage, FiUser, FiMapPin, FiLogOut, FiMenu, FiX, FiEdit, FiEye, FiShoppingBag, FiDollarSign, FiClock, FiCheckCircle, FiTrendingUp, FiHeart, FiHome, FiBriefcase, FiTrash2, FiSave } from 'react-icons/fi';
+import { FiSettings, FiPackage, FiUser, FiMapPin, FiLogOut, FiMenu, FiX, FiEdit, FiEye, FiShoppingBag, FiDollarSign, FiClock, FiCheckCircle, FiTrendingUp, FiHeart, FiHome, FiBriefcase, FiTrash2, FiSave, FiFileText, FiTruck, FiCreditCard, FiMap } from 'react-icons/fi';
 import ScrollToTop from '../components/ScrollToTop';
+import { getProductImage } from '../utils/imagePlaceholder';
+import Invoice from '../components/Invoice';
 
 const indianStates = [
   'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh',
@@ -45,6 +47,10 @@ export default function FlipkartAccountSettings() {
   const [editingAddress, setEditingAddress] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [savingAddress, setSavingAddress] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [showInvoiceModal, setShowInvoiceModal] = useState(false);
+  const [loadingInvoice, setLoadingInvoice] = useState(false);
+  const [expandedOrders, setExpandedOrders] = useState(new Set());
   const [addressFormData, setAddressFormData] = useState({
     fullName: '',
     mobileNumber: '',
@@ -365,6 +371,88 @@ export default function FlipkartAccountSettings() {
   const recentOrders = orders.slice(0, 3);
 
   const formatINR = (n) => `₹${Number(n || 0).toLocaleString('en-IN')}`;
+
+  const toggleOrderExpansion = (orderId) => {
+    setExpandedOrders(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(orderId)) {
+        newSet.delete(orderId);
+      } else {
+        newSet.add(orderId);
+      }
+      return newSet;
+    });
+  };
+
+  const handleViewInvoice = async (orderId) => {
+    setLoadingInvoice(true);
+    setShowInvoiceModal(true);
+    try {
+      const orderData = await getOrderById(orderId);
+      setSelectedOrder(orderData);
+    } catch (error) {
+      console.error('Error fetching order for invoice:', error);
+      alert('Failed to load invoice. Please try again.');
+      setShowInvoiceModal(false);
+    } finally {
+      setLoadingInvoice(false);
+    }
+  };
+
+  const getOrderStatusInfo = (status) => {
+    const s = String(status || '').toLowerCase();
+    const statusInfo = {
+      created: { 
+        label: 'Order Placed', 
+        description: 'Your order has been placed successfully',
+        color: 'text-blue-600',
+        bgColor: 'bg-blue-50',
+        borderColor: 'border-blue-200'
+      },
+      confirmed: { 
+        label: 'Confirmed', 
+        description: 'Order confirmed and being prepared',
+        color: 'text-green-600',
+        bgColor: 'bg-green-50',
+        borderColor: 'border-green-200'
+      },
+      on_the_way: { 
+        label: 'On the Way', 
+        description: 'Your order is out for delivery',
+        color: 'text-purple-600',
+        bgColor: 'bg-purple-50',
+        borderColor: 'border-purple-200'
+      },
+      delivered: { 
+        label: 'Delivered', 
+        description: 'Order has been delivered',
+        color: 'text-pink-600',
+        bgColor: 'bg-pink-50',
+        borderColor: 'border-pink-200'
+      },
+      paid: { 
+        label: 'Paid', 
+        description: 'Payment received',
+        color: 'text-green-600',
+        bgColor: 'bg-green-50',
+        borderColor: 'border-green-200'
+      },
+      failed: { 
+        label: 'Failed', 
+        description: 'Order could not be processed',
+        color: 'text-red-600',
+        bgColor: 'bg-red-50',
+        borderColor: 'border-red-200'
+      },
+    };
+    return statusInfo[s] || { 
+      label: 'Unknown', 
+      description: 'Status information not available',
+      color: 'text-gray-600',
+      bgColor: 'bg-gray-50',
+      borderColor: 'border-gray-200'
+    };
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-pink-50">
@@ -781,43 +869,209 @@ export default function FlipkartAccountSettings() {
                     </div>
                   ) : orders.length > 0 ? (
                     <div className="space-y-6">
-                      {orders.map((order) => (
-                        <div key={order._id} className="border-2 border-pink-200 rounded-xl p-4 sm:p-5 hover:border-pink-400 hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-white to-pink-50">
-                          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-3">
-                            <div>
-                              <div className="text-sm text-gray-600 mb-1">Order ID: <span className="font-mono font-semibold text-pink-700">{String(order._id).slice(-8)}</span></div>
-                              <div className="text-xs text-gray-500 flex items-center gap-2">
-                                <FiClock className="w-3 h-3" />
-                                {new Date(order.createdAt).toLocaleString()}
-                              </div>
-                            </div>
-                            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-                              <StatusBadge status={order.status} />
-                              <div className="text-lg font-bold text-gray-900">{formatINR(order.amount)}</div>
-                            </div>
-                          </div>
-                          <div className="mt-4 space-y-3">
-                            {order.items?.map((it, idx) => (
-                              <div key={idx} className="flex items-center gap-3 p-3 bg-white rounded-lg hover:bg-pink-50 transition-colors border border-pink-100">
-                                <img 
-                                  src={it.product?.images?.image1 || it.product?.image || 'https://via.placeholder.com/150'} 
-                                  alt={it.product?.title || ''} 
-                                  className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-lg border-2 border-pink-200" 
-                                  onError={(e) => { e.target.src = 'https://via.placeholder.com/150'; }}
-                                />
-                                <div className="flex-1 min-w-0">
-                                  <div className="text-sm sm:text-base font-semibold text-gray-800 mb-1 truncate">{it.product?.title || 'Product'}</div>
-                                  <div className="text-xs text-gray-600 flex items-center gap-2 flex-wrap">
-                                    <span className="bg-pink-100 text-pink-700 px-2 py-0.5 rounded font-semibold">Qty: {it.quantity}</span>
-                                    {it.size && <span className="bg-pink-200 text-pink-800 px-2 py-0.5 rounded font-semibold">Size: {it.size}</span>}
+                      {orders.map((order) => {
+                        const isExpanded = expandedOrders.has(order._id);
+                        const statusInfo = getOrderStatusInfo(order.status);
+                        const orderDate = new Date(order.createdAt);
+                        const estimatedDelivery = new Date(orderDate);
+                        estimatedDelivery.setDate(estimatedDelivery.getDate() + 7);
+                        
+                        return (
+                          <div key={order._id} className="border-2 border-pink-200 rounded-xl overflow-hidden hover:border-pink-400 hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-white to-pink-50">
+                            {/* Order Header */}
+                            <div className="p-4 sm:p-5">
+                              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
+                                <div className="flex-1">
+                                  <div className="flex items-center gap-3 mb-2">
+                                    <div className="text-sm font-semibold text-gray-700">Order ID:</div>
+                                    <span className="font-mono font-bold text-pink-700 text-base">#{String(order._id).slice(-8).toUpperCase()}</span>
+                                  </div>
+                                  <div className="text-xs text-gray-500 flex items-center gap-2 mb-2">
+                                    <FiClock className="w-3 h-3" />
+                                    <span>Placed on {orderDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                                    <span className="text-gray-300">•</span>
+                                    <span>{orderDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</span>
+                                  </div>
+                                  <div className="flex items-center gap-2 flex-wrap">
+                                    <StatusBadge status={order.status} />
+                                    {order.paymentMethod && (
+                                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${
+                                        order.paymentMethod === 'COD' 
+                                          ? 'bg-orange-100 text-orange-800 border border-orange-300' 
+                                          : 'bg-green-100 text-green-800 border border-green-300'
+                                      }`}>
+                                        <FiCreditCard className="w-3 h-3" />
+                                        {order.paymentMethod === 'COD' ? 'Cash on Delivery' : 'Online Payment'}
+                                      </span>
+                                    )}
                                   </div>
                                 </div>
-                                <div className="text-sm sm:text-base font-bold text-gray-900">{formatINR((it.price || it.product?.price || 0) * (it.quantity || 1))}</div>
+                                <div className="text-right">
+                                  <div className="text-lg sm:text-xl font-bold text-gray-900 mb-1">{formatINR(order.amount)}</div>
+                                  <div className="text-xs text-gray-500">{order.items?.length || 0} item{(order.items?.length || 0) !== 1 ? 's' : ''}</div>
+                                </div>
                               </div>
-                            ))}
+
+                              {/* Order Status Info */}
+                              <div className={`${statusInfo.bgColor} ${statusInfo.borderColor} border-2 rounded-lg p-3 mb-4`}>
+                                <div className="flex items-center gap-2 mb-1">
+                                  <div className={`w-2 h-2 rounded-full ${statusInfo.color.replace('text-', 'bg-')}`}></div>
+                                  <span className={`font-semibold ${statusInfo.color}`}>{statusInfo.label}</span>
+                                </div>
+                                <p className="text-xs text-gray-600 ml-4">{statusInfo.description}</p>
+                              </div>
+
+                              {/* Order Items Preview */}
+                              <div className="space-y-2 mb-4">
+                                {order.items?.slice(0, isExpanded ? order.items.length : 2).map((it, idx) => {
+                                  const productImage = getProductImage(it.product, 'image1');
+                                  const productTitle = it.product?.title || it.product?.name || 'Product';
+                                  const productPrice = it.price || it.product?.price || it.product?.mrp || 0;
+                                  
+                                  return (
+                                    <div key={idx} className="flex items-center gap-3 p-3 bg-white rounded-lg hover:bg-pink-50 transition-colors border border-pink-100">
+                                      <img 
+                                        src={productImage} 
+                                        alt={productTitle} 
+                                        className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-lg border-2 border-pink-200 flex-shrink-0" 
+                                        onError={(e) => { e.target.src = getProductImage(null); }}
+                                      />
+                                      <div className="flex-1 min-w-0">
+                                        <div className="text-sm sm:text-base font-semibold text-gray-800 mb-1 truncate">{productTitle}</div>
+                                        <div className="text-xs text-gray-600 flex items-center gap-2 flex-wrap">
+                                          <span className="bg-pink-100 text-pink-700 px-2 py-0.5 rounded font-semibold">Qty: {it.quantity}</span>
+                                          {it.size && <span className="bg-pink-200 text-pink-800 px-2 py-0.5 rounded font-semibold">Size: {it.size}</span>}
+                                        </div>
+                                      </div>
+                                      <div className="text-sm sm:text-base font-bold text-gray-900">{formatINR(productPrice * (it.quantity || 1))}</div>
+                                    </div>
+                                  );
+                                })}
+                                {order.items?.length > 2 && !isExpanded && (
+                                  <div className="text-center py-2">
+                                    <button
+                                      onClick={() => toggleOrderExpansion(order._id)}
+                                      className="text-sm text-pink-600 hover:text-pink-700 font-semibold"
+                                    >
+                                      +{order.items.length - 2} more item{(order.items.length - 2) !== 1 ? 's' : ''}
+                                    </button>
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Expanded Details */}
+                              {isExpanded && (
+                                <div className="border-t-2 border-pink-200 pt-4 mt-4 space-y-4">
+                                  {/* Shipping Address */}
+                                  {order.shippingAddress && (
+                                    <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                                      <div className="flex items-center gap-2 mb-2">
+                                        <FiMap className="w-4 h-4 text-pink-600" />
+                                        <span className="font-semibold text-gray-900 text-sm">Delivery Address</span>
+                                      </div>
+                                      <div className="text-sm text-gray-700 space-y-1 ml-6">
+                                        <p className="font-medium">{order.shippingAddress.fullName}</p>
+                                        <p>{order.shippingAddress.address || order.shippingAddress.addressLine1}</p>
+                                        {order.shippingAddress.addressLine2 && <p>{order.shippingAddress.addressLine2}</p>}
+                                        {order.shippingAddress.locality && <p>{order.shippingAddress.locality}</p>}
+                                        <p>
+                                          {order.shippingAddress.city}, {order.shippingAddress.state} - {order.shippingAddress.pincode}
+                                        </p>
+                                        {order.shippingAddress.mobileNumber && (
+                                          <p className="mt-2 flex items-center gap-2">
+                                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                              <path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/>
+                                            </svg>
+                                            {order.shippingAddress.mobileNumber}
+                                          </p>
+                                        )}
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  {/* Order Timeline */}
+                                  <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                                    <div className="flex items-center gap-2 mb-3">
+                                      <FiTruck className="w-4 h-4 text-pink-600" />
+                                      <span className="font-semibold text-gray-900 text-sm">Order Timeline</span>
+                                    </div>
+                                    <div className="space-y-2 ml-6">
+                                      <div className="flex items-center gap-2">
+                                        <div className={`w-2 h-2 rounded-full ${['created', 'paid', 'confirmed'].includes(order.status?.toLowerCase()) ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+                                        <span className="text-xs text-gray-600">Order Placed</span>
+                                        <span className="text-xs text-gray-400 ml-auto">{orderDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+                                      </div>
+                                      <div className="flex items-center gap-2">
+                                        <div className={`w-2 h-2 rounded-full ${['confirmed', 'paid'].includes(order.status?.toLowerCase()) ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+                                        <span className="text-xs text-gray-600">Confirmed</span>
+                                        <span className="text-xs text-gray-400 ml-auto">Within 24hrs</span>
+                                      </div>
+                                      <div className="flex items-center gap-2">
+                                        <div className={`w-2 h-2 rounded-full ${order.status?.toLowerCase() === 'on_the_way' ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+                                        <span className="text-xs text-gray-600">Shipped</span>
+                                        <span className="text-xs text-gray-400 ml-auto">2-3 days</span>
+                                      </div>
+                                      <div className="flex items-center gap-2">
+                                        <div className={`w-2 h-2 rounded-full ${order.status?.toLowerCase() === 'delivered' ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+                                        <span className="text-xs text-gray-600">Delivered</span>
+                                        <span className="text-xs text-gray-400 ml-auto">{estimatedDelivery.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  {/* Order Summary */}
+                                  <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                                    <div className="flex items-center gap-2 mb-3">
+                                      <FiDollarSign className="w-4 h-4 text-pink-600" />
+                                      <span className="font-semibold text-gray-900 text-sm">Order Summary</span>
+                                    </div>
+                                    <div className="space-y-2 ml-6 text-sm">
+                                      <div className="flex justify-between">
+                                        <span className="text-gray-600">Subtotal ({order.items?.length || 0} items)</span>
+                                        <span className="font-medium text-gray-900">{formatINR(order.amount)}</span>
+                                      </div>
+                                      <div className="flex justify-between">
+                                        <span className="text-gray-600">Shipping</span>
+                                        <span className="font-medium text-green-600">Free</span>
+                                      </div>
+                                      <div className="flex justify-between pt-2 border-t border-gray-300">
+                                        <span className="font-bold text-gray-900">Total Amount</span>
+                                        <span className="font-bold text-lg text-gray-900">{formatINR(order.amount)}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* Action Buttons */}
+                              <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t-2 border-pink-200">
+                                <button
+                                  onClick={() => toggleOrderExpansion(order._id)}
+                                  className="px-4 py-2 rounded-lg text-sm font-semibold bg-white text-pink-600 border-2 border-pink-300 hover:bg-pink-50 transition-all"
+                                >
+                                  <FiEye className="w-4 h-4 inline mr-2" />
+                                  {isExpanded ? 'Show Less' : 'View Details'}
+                                </button>
+                                <button
+                                  onClick={() => handleViewInvoice(order._id)}
+                                  className="px-4 py-2 rounded-lg text-sm font-semibold bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 transition-all shadow-md hover:shadow-lg"
+                                >
+                                  <FiFileText className="w-4 h-4 inline mr-2" />
+                                  View Invoice
+                                </button>
+                                {order.status?.toLowerCase() === 'delivered' && (
+                                  <button
+                                    onClick={() => navigate(`/product/${order.items?.[0]?.product?._id || order.items?.[0]?.product?.id}`)}
+                                    className="px-4 py-2 rounded-lg text-sm font-semibold bg-white text-pink-600 border-2 border-pink-300 hover:bg-pink-50 transition-all"
+                                  >
+                                    Buy Again
+                                  </button>
+                                )}
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   ) : (
                     <div className="text-center py-12 sm:py-16">
@@ -1124,6 +1378,41 @@ export default function FlipkartAccountSettings() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Invoice Modal */}
+      {showInvoiceModal && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4 overflow-y-auto" onClick={() => setShowInvoiceModal(false)}>
+          <div className="bg-white rounded-lg max-w-4xl w-full my-8 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center shadow-sm">
+              <h2 className="text-xl font-bold text-gray-900">Invoice</h2>
+              <button
+                onClick={() => setShowInvoiceModal(false)}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <FiX className="w-6 h-6" />
+              </button>
+            </div>
+            <div className="p-6">
+              {loadingInvoice ? (
+                <div className="text-center py-12">
+                  <div className="animate-spin rounded-full h-12 w-12 border-4 border-pink-500 border-t-transparent mx-auto mb-4"></div>
+                  <p className="text-gray-600">Loading invoice...</p>
+                </div>
+              ) : selectedOrder ? (
+                <Invoice 
+                  order={selectedOrder} 
+                  user={user}
+                  onPrint={() => window.print()}
+                />
+              ) : (
+                <div className="text-center py-12">
+                  <p className="text-gray-600">Order details not available</p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}

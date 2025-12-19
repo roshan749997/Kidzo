@@ -103,9 +103,12 @@ export default function AddressForm() {
       try {
         const result = await createCodOrder();
         if (result && result.success) {
+          // Store order total before clearing cart
+          localStorage.setItem('lastOrderTotal', priceDetails.total.toString());
           await loadCart();
-          alert('Order placed successfully! You will pay when the order is delivered.');
-          navigate('/profile?tab=orders');
+          // Redirect to order success page
+          const orderId = result.order?._id || result.order?.id || '';
+          navigate(`/order-success?method=COD&orderId=${orderId}`);
         } else {
           const errorMsg = result?.error || 'Failed to place COD order. Please try again.';
           alert(errorMsg);
@@ -146,15 +149,38 @@ export default function AddressForm() {
         theme: { color: '#FF1493' },
         handler: async function (response) {
           try {
-            const r = await verifyPayment(response);
+            console.log('[Razorpay] Payment response received:', response);
+            
+            // Ensure we send the correct field names
+            const paymentData = {
+              razorpay_order_id: response.razorpay_order_id || response.razorpayOrderId,
+              razorpay_payment_id: response.razorpay_payment_id || response.razorpayPaymentId,
+              razorpay_signature: response.razorpay_signature || response.razorpaySignature,
+            };
+            
+            console.log('[Razorpay] Sending to backend:', paymentData);
+            
+            const r = await verifyPayment(paymentData);
             if (r && r.success) {
+              // Store order total before clearing cart
+              localStorage.setItem('lastOrderTotal', amount.toString());
               await loadCart();
-              navigate('/profile?tab=orders');
+              // Redirect to order success page
+              const orderId = r.order?._id || r.order?.id || '';
+              navigate(`/order-success?method=online&orderId=${orderId}`);
             } else {
-              alert('Payment verification failed');
+              const errorMsg = r?.error || 'Payment verification failed';
+              alert(errorMsg);
             }
           } catch (e) {
-            alert('Payment verification failed');
+            console.error('[Razorpay] Payment verification error:', e);
+            console.error('[Razorpay] Error details:', {
+              message: e?.message,
+              response: e?.response,
+              stack: e?.stack,
+            });
+            const errorMsg = e?.message || e?.response?.error || 'Payment verification failed. Please contact support if amount was deducted.';
+            alert(errorMsg);
           }
         },
       };

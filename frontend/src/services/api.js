@@ -257,7 +257,12 @@ export const verifyPayment = async (payload) => {
     body: JSON.stringify(payload),
     credentials: "include",
   });
-  if (!res.ok) throw new Error("Failed to verify payment");
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    const error = new Error(errorData.error || "Failed to verify payment");
+    error.response = errorData;
+    throw error;
+  }
   return res.json();
 };
 
@@ -287,6 +292,20 @@ export const getMyOrders = async () => {
     credentials: "include",
   });
   if (!res.ok) throw new Error("Failed to fetch orders");
+  return res.json();
+};
+
+export const getOrderById = async (orderId) => {
+  const res = await fetch(`${API_URL}/orders/${orderId}`, {
+    headers: { "Content-Type": "application/json", ...authHeaders() },
+    credentials: "include",
+  });
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    const error = new Error(errorData.message || "Failed to fetch order");
+    error.response = errorData;
+    throw error;
+  }
   return res.json();
 };
 
