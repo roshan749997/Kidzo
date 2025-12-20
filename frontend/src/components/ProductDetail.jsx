@@ -122,6 +122,11 @@ const ProductDetail = () => {
   const [loadingTrending, setLoadingTrending] = useState(false);
   const [loadingSale, setLoadingSale] = useState(false);
 
+  // Scroll to top when product ID changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, [id]);
+
   useEffect(() => {
     fetchProduct();
   }, [id, category]);

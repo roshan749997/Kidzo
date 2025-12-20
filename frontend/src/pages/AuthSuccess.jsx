@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { api } from '../utils/api';
+import ScrollToTop from '../components/ScrollToTop';
 
 export default function AuthSuccess() {
   const navigate = useNavigate();
@@ -67,6 +68,7 @@ export default function AuthSuccess() {
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-rose-600 mx-auto mb-4"></div>
         <div className="text-gray-700">Signing you in…</div>
       </div>
+      <ScrollToTop />
     </div>
   );
 }

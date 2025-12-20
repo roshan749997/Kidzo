@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { api } from '../utils/api';
+import ScrollToTop from '../components/ScrollToTop';
 
 const SignIn = () => {
   const [loginMode, setLoginMode] = useState('email'); // 'email' or 'mobile'
@@ -714,6 +715,7 @@ const SignIn = () => {
           animation: shake 0.5s;
         }
       `}</style>
+      <ScrollToTop />
     </div>
   );
 };

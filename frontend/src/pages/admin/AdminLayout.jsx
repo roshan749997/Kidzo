@@ -21,13 +21,10 @@ const AdminLayout = () => {
     const checkAdmin = () => {
       const isAuth = localStorage.getItem('auth_token');
       const isAdmin = localStorage.getItem('auth_is_admin') === 'true';
-      console.log('[AdminLayout] Admin check:', { isAuth: !!isAuth, isAdmin });
       
       if (!isAuth) {
-        console.warn('[AdminLayout] No auth token, redirecting to signin');
         navigate('/signin', { replace: true });
       } else if (!isAdmin) {
-        console.warn('[AdminLayout] User is not admin, redirecting to home');
         navigate('/', { replace: true });
       } else {
         // Try to get user name from localStorage or API

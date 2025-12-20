@@ -45,7 +45,6 @@ const isAdmin = () => {
   try {
     const adminFlag = localStorage.getItem('auth_is_admin');
     const isAdminUser = adminFlag === 'true';
-    console.log('[Router] Admin check:', { adminFlag, isAdminUser });
     return isAdminUser;
   } catch (err) {
     console.error('[Router] Admin check error:', err);
@@ -66,20 +65,10 @@ const RequireAdmin = ({ children }) => {
   const isAuth = isAuthenticated();
   const admin = isAdmin();
   
-  console.log('[RequireAdmin] Check:', { 
-    isAuth, 
-    admin, 
-    pathname: location.pathname,
-    authToken: localStorage.getItem('auth_token') ? 'present' : 'missing',
-    adminFlag: localStorage.getItem('auth_is_admin')
-  });
-  
   if (!isAuth) {
-    console.log('[RequireAdmin] Not authenticated, redirecting to signin');
     return <Navigate to="/signin" state={{ from: location }} replace />;
   }
   if (!admin) {
-    console.log('[RequireAdmin] Not admin, redirecting to home');
     return <Navigate to="/" replace />;
   }
   return children;

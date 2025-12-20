@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { FaTrash, FaPlus, FaMinus, FaArrowLeft, FaShoppingCart } from 'react-icons/fa';
 import { useCart } from '../context/CartContext';
 import { getProductImage, placeholders } from '../utils/imagePlaceholder';
+import ScrollToTop from './ScrollToTop';
 
 function Cart() {
   const navigate = useNavigate();
@@ -245,6 +246,7 @@ function Cart() {
         </div>
       )}
       </div>
+      <ScrollToTop />
     </div>
   );
 }

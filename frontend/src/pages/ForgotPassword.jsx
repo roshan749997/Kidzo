@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../utils/api';
+import ScrollToTop from '../components/ScrollToTop';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
@@ -84,6 +85,7 @@ const ForgotPassword = () => {
             </div>
           </div>
         </div>
+        <ScrollToTop />
       </div>
     );
   }
@@ -171,6 +173,7 @@ const ForgotPassword = () => {
             </div>
           </div>
         </div>
+        <ScrollToTop />
       </div>
     </div>
   );

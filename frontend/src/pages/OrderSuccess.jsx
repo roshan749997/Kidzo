@@ -5,6 +5,7 @@ import { api } from '../utils/api';
 import { getOrderById } from '../services/api';
 import { CheckCircle, Package, Calendar, Receipt, Truck, FileText } from 'lucide-react';
 import Invoice from '../components/Invoice';
+import ScrollToTop from '../components/ScrollToTop';
 
 const OrderSuccess = () => {
   const navigate = useNavigate();
@@ -426,6 +427,7 @@ const OrderSuccess = () => {
           }
         }
       `}</style>
+      <ScrollToTop />
     </div>
   );
 };

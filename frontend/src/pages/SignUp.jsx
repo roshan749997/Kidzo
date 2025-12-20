@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../utils/api';
+import ScrollToTop from '../components/ScrollToTop';
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -319,6 +320,7 @@ const SignUp = () => {
           background: #FFB6C1;
         }
       `}</style>
+      <ScrollToTop />
     </div>
   );
 };

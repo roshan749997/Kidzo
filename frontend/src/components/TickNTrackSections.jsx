@@ -179,6 +179,12 @@ const KidzoSections = () => {
               OFFER ZONE
             </h2>
             <p className="text-gray-600 text-sm sm:text-base mt-2">Limited time offers - Don't miss out!</p>
+            <button
+              onClick={() => handleCategoryClick('/shop')}
+              className="mt-4 px-6 py-2 bg-gradient-to-r from-pink-500 to-rose-600 text-white font-semibold rounded-lg hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+            >
+              View All Offers →
+            </button>
           </div>
 
           <div className="grid grid-cols-2 gap-3 sm:gap-4 md:gap-5 lg:gap-6 px-2 sm:px-4">
@@ -337,11 +343,20 @@ const KidzoSections = () => {
               SPECIAL COLLECTION
             </h2>
             <p className="text-gray-600 text-sm sm:text-base mt-2">Discover our exclusive range of premium products</p>
+            <button
+              onClick={() => handleCategoryClick('/collections')}
+              className="mt-4 px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-600 text-white font-semibold rounded-lg hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+            >
+              Explore Collection →
+            </button>
           </div>
 
           <div className="w-full px-2 sm:px-4">
             {/* Mobile Banner */}
-            <div className="relative overflow-hidden rounded-2xl shadow-xl md:hidden">
+            <div 
+              onClick={() => handleCategoryClick('/collections')}
+              className="relative overflow-hidden rounded-2xl shadow-xl md:hidden cursor-pointer hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02]"
+            >
               <div className="w-full">
                 <img
                   src="https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765548837/Beige_Kids_Fashion_Sale_Ad_Instagram_Story_gwokfq.svg"
@@ -355,7 +370,10 @@ const KidzoSections = () => {
               </div>
             </div>
             {/* Desktop Banner */}
-            <div className="relative overflow-hidden rounded-2xl md:rounded-3xl shadow-xl hidden md:block">
+            <div 
+              onClick={() => handleCategoryClick('/collections')}
+              className="relative overflow-hidden rounded-2xl md:rounded-3xl shadow-xl hidden md:block cursor-pointer hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.01]"
+            >
               <div className="w-full">
               <img 
                   src="https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765541014/White_and_Pink_Fashion_Kids_Edition_Banner_1920_x_600_mm_jpmhbs.svg"
@@ -500,6 +518,12 @@ const KidzoSections = () => {
               SPECIAL OFFERS
             </h2>
             <p className="text-gray-600 text-sm sm:text-base mt-2">Check out our latest promotions and deals</p>
+            <button
+              onClick={() => handleCategoryClick('/shop')}
+              className="mt-4 px-6 py-2 bg-gradient-to-r from-orange-500 to-red-600 text-white font-semibold rounded-lg hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+            >
+              View All Deals →
+            </button>
           </div>
 
           {/* Mobile Only Banner */}

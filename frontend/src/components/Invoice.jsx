@@ -165,3 +165,4 @@ const Invoice = ({ order, user, onPrint }) => {
 
 export default Invoice;
 
+

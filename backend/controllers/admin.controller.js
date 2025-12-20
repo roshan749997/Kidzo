@@ -6,6 +6,81 @@ import { BabyCare } from '../models/BabyCare.js';
 import { Toys } from '../models/Toys.js';
 import Order from '../models/Order.js';
 import { Address } from '../models/Address.js';
+import User from '../models/User.js';
+
+// Helper function to find product in any collection
+async function findProductInAllCollections(productId) {
+  if (!productId) {
+    return null;
+  }
+  
+  // Convert to string if it's an ObjectId
+  const idString = productId.toString ? productId.toString() : productId;
+  
+  const collections = [
+    { model: Product, name: 'Product' },
+    { model: KidsClothing, name: 'KidsClothing' },
+    { model: Footwear, name: 'Footwear' },
+    { model: KidsAccessories, name: 'KidsAccessories' },
+    { model: BabyCare, name: 'BabyCare' },
+    { model: Toys, name: 'Toys' },
+  ];
+  
+  for (const { model, name } of collections) {
+    try {
+      const product = await model.findById(idString).lean();
+      if (product) {
+        return product;
+      }
+    } catch (err) {
+      console.error(`[findProductInAllCollections] Error checking ${name}:`, err.message);
+    }
+  }
+  
+  return null;
+}
+
+// Helper function to populate order items with products from all collections
+async function populateOrderItems(items) {
+  if (!Array.isArray(items) || items.length === 0) {
+    return [];
+  }
+  
+  return Promise.all(
+    items.map(async (item) => {
+      try {
+        // Handle both ObjectId and string product IDs
+        const productId = item.product?.toString ? item.product.toString() : item.product;
+        
+        if (!productId) {
+          console.warn(`[populateOrderItems] Item missing product ID:`, item);
+          return {
+            ...item,
+            product: { _id: null, title: 'Product not found' },
+          };
+        }
+        
+        const product = await findProductInAllCollections(productId);
+        
+        if (!product) {
+          console.warn(`[populateOrderItems] Product not found for ID: ${productId}`);
+        }
+        
+        // item is already a plain object from .lean(), so just spread it
+        return {
+          ...item,
+          product: product || { _id: productId, title: 'Product not found' },
+        };
+      } catch (err) {
+        console.error(`[populateOrderItems] Error processing item:`, err);
+        return {
+          ...item,
+          product: { _id: item.product, title: 'Error loading product' },
+        };
+      }
+    })
+  );
+}
 
 export async function createProduct(req, res) {
   try {
@@ -186,25 +261,62 @@ export async function deleteProductById(req, res) {
 
 export async function adminListOrders(req, res) {
   try {
+    console.log('[adminListOrders] Fetching all orders...');
+    
     const orders = await Order.find({})
       .sort({ createdAt: -1 })
-      .populate('user', 'name email')
       .lean();
 
-    const userIds = Array.from(new Set(orders.map(o => String(o.user?._id)).filter(Boolean)));
-    let addrMap = {};
-    if (userIds.length > 0) {
-      const addrs = await Address.find({ userId: { $in: userIds } }).lean();
-      addrMap = Object.fromEntries(addrs.map(a => [String(a.userId), a]));
-    }
+    console.log(`[adminListOrders] Found ${orders.length} orders`);
 
-    const enriched = orders.map(o => ({
-      ...o,
-      address: o.shippingAddress || (o.user?._id ? (addrMap[String(o.user._id)] || null) : null),
-    }));
+    // Get unique user IDs
+    const userIds = Array.from(new Set(orders.map(o => String(o.user)).filter(Boolean)));
+    
+    // Fetch users and addresses
+    const [users, addresses] = await Promise.all([
+      userIds.length > 0 ? User.find({ _id: { $in: userIds } }).select('name email').lean() : [],
+      userIds.length > 0 ? Address.find({ userId: { $in: userIds } }).lean() : [],
+    ]);
 
+    // Create maps for quick lookup
+    const userMap = Object.fromEntries(users.map(u => [String(u._id), u]));
+    const addrMap = Object.fromEntries(addresses.map(a => [String(a.userId), a]));
+
+    // Populate orders with user data, addresses, and products
+    const enriched = await Promise.all(
+      orders.map(async (order) => {
+        try {
+          // Populate user
+          const user = order.user ? userMap[String(order.user)] : null;
+          
+          // Populate order items with products
+          const populatedItems = await populateOrderItems(order.items || []);
+          
+          // Get address (prefer shippingAddress, fallback to user's address)
+          const address = order.shippingAddress || (order.user ? (addrMap[String(order.user)] || null) : null);
+          
+          return {
+            ...order,
+            user: user || { _id: order.user, name: 'Unknown', email: '' },
+            items: populatedItems,
+            address: address,
+          };
+        } catch (err) {
+          console.error(`[adminListOrders] Error processing order ${order._id}:`, err);
+          return {
+            ...order,
+            user: order.user ? userMap[String(order.user)] : { _id: order.user, name: 'Unknown', email: '' },
+            items: order.items || [],
+            address: order.shippingAddress || null,
+          };
+        }
+      })
+    );
+
+    console.log(`[adminListOrders] Successfully processed ${enriched.length} orders`);
     return res.json(enriched);
   } catch (err) {
+    console.error('[adminListOrders] Error:', err);
     return res.status(500).json({ message: 'Failed to list orders', error: err.message });
   }
 }

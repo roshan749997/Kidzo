@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import ScrollToTop from '../components/ScrollToTop';
 
 export default function AuthFailure() {
   const navigate = useNavigate();
@@ -35,6 +36,7 @@ export default function AuthFailure() {
           Go to Sign In
         </button>
       </div>
+      <ScrollToTop />
     </div>
   );
 }
