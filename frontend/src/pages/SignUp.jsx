@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../utils/api';
 import ScrollToTop from '../components/ScrollToTop';
+import { useHeaderColor } from '../utils/useHeaderColor';
 
 const SignUp = () => {
+  const headerColor = useHeaderColor();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -233,9 +235,7 @@ const SignUp = () => {
                     type="submit"
                     disabled={loading}
                     className="w-full text-black py-2.5 sm:py-3 rounded-lg font-semibold shadow-md hover:shadow-lg transition-all duration-300 disabled:opacity-60 transform active:scale-[0.98] flex items-center justify-center gap-2 border-2 border-black text-sm sm:text-base"
-                    style={{ backgroundColor: '#FFD1DC' }}
-                    onMouseEnter={(e) => !e.target.disabled && (e.target.style.backgroundColor = '#FFB6C1')}
-                    onMouseLeave={(e) => e.target.style.backgroundColor = '#FFD1DC'}
+                    style={{ backgroundColor: headerColor }}
                   >
                     {loading ? (
                       <>

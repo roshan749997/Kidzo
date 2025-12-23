@@ -4,6 +4,7 @@ import { FaRupeeSign, FaSpinner, FaFilter, FaTimes, FaChevronDown, FaChevronUp }
 import { fetchSarees } from '../services/api';
 import { placeholders, getProductImage } from '../utils/imagePlaceholder';
 import ScrollToTop from './ScrollToTop';
+import { useHeaderColor } from '../utils/useHeaderColor';
 
 // Add CSS to hide scrollbar and loading animation
 const styles = `
@@ -41,11 +42,11 @@ const styles = `
     border-radius: 10px;
   }
   .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #FF1493;
+    background: #000000;
     border-radius: 10px;
   }
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #8B2BE2;
+    background: #000000;
   }
   /* Ensure sticky positioning works */
   .filter-sticky-container {
@@ -61,6 +62,7 @@ const styles = `
 const ProductList = ({ defaultCategory } = {}) => {
   const { categoryName, subCategoryName, mainCategory } = useParams();
   const navigate = useNavigate();
+  const headerColor = useHeaderColor();
   const navbarRef = useRef(null);
   const filterSidebarRef = useRef(null);
   const filterContainerRef = useRef(null);
@@ -630,17 +632,15 @@ const ProductList = ({ defaultCategory } = {}) => {
   const FilterContent = () => (
     <div className="space-y-6">
       <div className="flex justify-between items-center pb-4 border-b border-gray-200">
-        <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-          <FaFilter className="text-[#FF1493]" />
+        <h3 className="text-xl font-bold text-black flex items-center gap-2">
+          <FaFilter className="text-black" />
           Filters
         </h3>
         {activeFilterCount > 0 && (
           <button 
             onClick={resetFilters}
             className="text-sm text-black px-4 py-1.5 rounded-lg border-2 border-black font-medium transition-all shadow-sm"
-            style={{ backgroundColor: '#FFD1DC' }}
-            onMouseEnter={(e) => e.target.style.backgroundColor = '#FFB6C1'}
-            onMouseLeave={(e) => e.target.style.backgroundColor = '#FFD1DC'}
+            style={{ backgroundColor: headerColor }}
           >
             Clear all
           </button>
@@ -653,17 +653,17 @@ const ProductList = ({ defaultCategory } = {}) => {
           onClick={() => toggleSection('price')}
           className="flex justify-between items-center w-full mb-4 group"
         >
-          <h4 className="text-base font-semibold text-gray-900 group-hover:text-[#FF1493] transition-colors">Price Range</h4>
+          <h4 className="text-base font-semibold text-black transition-colors">Price Range</h4>
           <div className="flex items-center gap-2">
             {selectedPriceRange && (
-              <span className="inline-flex items-center justify-center h-5 w-5 bg-gradient-to-r from-[#8B2BE2] to-[#FF1493] text-white text-xs font-bold rounded-full">
+              <span className="inline-flex items-center justify-center h-5 w-5 bg-black text-white text-xs font-bold rounded-full">
                 ✓
               </span>
             )}
             {openSections.price ? (
-              <FaChevronUp className="text-[#FF1493] transition-transform" />
+              <FaChevronUp className="text-black transition-transform" />
             ) : (
-              <FaChevronDown className="text-gray-400 group-hover:text-[#FF1493] transition-colors" />
+              <FaChevronDown className="text-gray-400 group-hover:text-black transition-colors" />
             )}
           </div>
         </button>
@@ -678,14 +678,14 @@ const ProductList = ({ defaultCategory } = {}) => {
                   name="priceRange"
                   checked={selectedPriceRange === range.id}
                   onChange={() => setSelectedPriceRange(range.id)}
-                  className="h-4 w-4 text-[#FF1493] focus:ring-[#FF1493] border-gray-300 cursor-pointer"
+                  className="h-4 w-4 text-black focus:ring-black border-gray-300 cursor-pointer"
                 />
                 <label 
                   htmlFor={`price-${range.id}`} 
                   className={`ml-3 text-sm cursor-pointer flex-1 py-1.5 px-3 rounded-md transition-all ${
                     selectedPriceRange === range.id 
-                      ? 'bg-pink-50 text-[#FF1493] font-medium' 
-                      : 'text-gray-700 hover:bg-gray-50'
+                      ? 'bg-gray-100 text-black font-medium' 
+                      : 'text-black hover:bg-gray-50'
                   }`}
                 >
                   {range.label}
@@ -703,17 +703,17 @@ const ProductList = ({ defaultCategory } = {}) => {
             onClick={() => toggleSection('brand')}
             className="flex justify-between items-center w-full mb-4 group"
           >
-            <h4 className="text-base font-semibold text-gray-900 group-hover:text-[#FF1493] transition-colors">Brand</h4>
+            <h4 className="text-base font-semibold text-black transition-colors">Brand</h4>
             <div className="flex items-center gap-2">
               {selectedBrands.length > 0 && (
-                <span className="inline-flex items-center justify-center h-6 w-6 bg-gradient-to-r from-[#8B2BE2] to-[#FF1493] text-white text-xs font-bold rounded-full shadow-sm">
+                <span className="inline-flex items-center justify-center h-6 w-6 bg-black text-white text-xs font-bold rounded-full shadow-sm">
                   {selectedBrands.length}
                 </span>
               )}
               {openSections.brand ? (
-                <FaChevronUp className="text-[#FF1493] transition-transform" />
+                <FaChevronUp className="text-black transition-transform" />
               ) : (
-                <FaChevronDown className="text-gray-400 group-hover:text-[#FF1493] transition-colors" />
+                <FaChevronDown className="text-gray-400 group-hover:text-black transition-colors" />
               )}
             </div>
           </button>
@@ -729,14 +729,14 @@ const ProductList = ({ defaultCategory } = {}) => {
                     onChange={() => setSelectedBrands(prev => 
                       prev.includes(brand) ? prev.filter(b => b !== brand) : [...prev, brand]
                     )}
-                    className="h-4 w-4 text-[#FF1493] focus:ring-[#FF1493] border-gray-300 rounded cursor-pointer"
+                    className="h-4 w-4 text-black focus:ring-black border-gray-300 rounded cursor-pointer"
                   />
                   <label 
                     htmlFor={`brand-${brand}`} 
                     className={`ml-3 text-sm cursor-pointer flex-1 py-1.5 px-3 rounded-md transition-all ${
                       selectedBrands.includes(brand)
-                        ? 'bg-pink-50 text-[#FF1493] font-medium'
-                        : 'text-gray-700 hover:bg-gray-50'
+                        ? 'bg-gray-100 text-black font-medium'
+                        : 'text-black hover:bg-gray-50'
                     }`}
                   >
                     {brand}
@@ -758,17 +758,17 @@ const ProductList = ({ defaultCategory } = {}) => {
                 onClick={() => toggleSection('material')}
                 className="flex justify-between items-center w-full mb-4 group"
               >
-                <h4 className="text-base font-semibold text-gray-900 group-hover:text-[#FF1493] transition-colors">Material</h4>
+                <h4 className="text-base font-semibold text-black transition-colors">Material</h4>
                 <div className="flex items-center gap-2">
                   {selectedShoeMaterials.length > 0 && (
-                    <span className="inline-flex items-center justify-center h-6 w-6 bg-gradient-to-r from-[#8B2BE2] to-[#FF1493] text-white text-xs font-bold rounded-full shadow-sm">
+                    <span className="inline-flex items-center justify-center h-6 w-6 bg-black text-white text-xs font-bold rounded-full shadow-sm">
                       {selectedShoeMaterials.length}
                     </span>
                   )}
                   {openSections.material ? (
-                    <FaChevronUp className="text-[#FF1493] transition-transform" />
+                    <FaChevronUp className="text-black transition-transform" />
                   ) : (
-                    <FaChevronDown className="text-gray-400 group-hover:text-[#FF1493] transition-colors" />
+                    <FaChevronDown className="text-gray-400 group-hover:text-black transition-colors" />
                   )}
                 </div>
               </button>
@@ -784,14 +784,14 @@ const ProductList = ({ defaultCategory } = {}) => {
                         onChange={() => setSelectedShoeMaterials(prev => 
                           prev.includes(material) ? prev.filter(m => m !== material) : [...prev, material]
                         )}
-                        className="h-4 w-4 text-[#FF1493] focus:ring-[#FF1493] border-gray-300 rounded cursor-pointer"
+                        className="h-4 w-4 text-black focus:ring-black border-gray-300 rounded cursor-pointer"
                       />
                       <label 
                         htmlFor={`shoe-material-${material}`} 
                         className={`ml-3 text-sm cursor-pointer flex-1 py-1.5 px-3 rounded-md transition-all ${
                           selectedShoeMaterials.includes(material)
-                            ? 'bg-pink-50 text-[#FF1493] font-medium'
-                            : 'text-gray-700 hover:bg-gray-50'
+                            ? 'bg-gray-100 text-black font-medium'
+                            : 'text-black hover:bg-gray-50'
                         }`}
                       >
                         {material}
@@ -810,17 +810,17 @@ const ProductList = ({ defaultCategory } = {}) => {
                 onClick={() => toggleSection('type')}
                 className="flex justify-between items-center w-full mb-4 group"
               >
-                <h4 className="text-base font-semibold text-gray-900 group-hover:text-[#FF1493] transition-colors">Type</h4>
+                <h4 className="text-base font-semibold text-black transition-colors">Type</h4>
                 <div className="flex items-center gap-2">
                   {selectedShoeTypes.length > 0 && (
-                    <span className="inline-flex items-center justify-center h-6 w-6 bg-gradient-to-r from-[#8B2BE2] to-[#FF1493] text-white text-xs font-bold rounded-full shadow-sm">
+                    <span className="inline-flex items-center justify-center h-6 w-6 bg-black text-white text-xs font-bold rounded-full shadow-sm">
                       {selectedShoeTypes.length}
                     </span>
                   )}
                   {openSections.type ? (
-                    <FaChevronUp className="text-[#FF1493] transition-transform" />
+                    <FaChevronUp className="text-black transition-transform" />
                   ) : (
-                    <FaChevronDown className="text-gray-400 group-hover:text-[#FF1493] transition-colors" />
+                    <FaChevronDown className="text-gray-400 group-hover:text-black transition-colors" />
                   )}
                 </div>
               </button>
@@ -836,14 +836,14 @@ const ProductList = ({ defaultCategory } = {}) => {
                         onChange={() => setSelectedShoeTypes(prev => 
                           prev.includes(type) ? prev.filter(t => t !== type) : [...prev, type]
                         )}
-                        className="h-4 w-4 text-[#FF1493] focus:ring-[#FF1493] border-gray-300 rounded cursor-pointer"
+                        className="h-4 w-4 text-black focus:ring-black border-gray-300 rounded cursor-pointer"
                       />
                       <label 
                         htmlFor={`shoe-type-${type}`} 
                         className={`ml-3 text-sm cursor-pointer flex-1 py-1.5 px-3 rounded-md transition-all ${
                           selectedShoeTypes.includes(type)
-                            ? 'bg-pink-50 text-[#FF1493] font-medium'
-                            : 'text-gray-700 hover:bg-gray-50'
+                            ? 'bg-gray-100 text-black font-medium'
+                            : 'text-black hover:bg-gray-50'
                         }`}
                       >
                         {type}
@@ -862,17 +862,17 @@ const ProductList = ({ defaultCategory } = {}) => {
                 onClick={() => toggleSection('size')}
                 className="flex justify-between items-center w-full mb-4 group"
               >
-                <h4 className="text-base font-semibold text-gray-900 group-hover:text-[#FF1493] transition-colors">Size</h4>
+                <h4 className="text-base font-semibold text-black transition-colors">Size</h4>
                 <div className="flex items-center gap-2">
                   {selectedSizes.length > 0 && (
-                    <span className="inline-flex items-center justify-center h-6 w-6 bg-gradient-to-r from-[#8B2BE2] to-[#FF1493] text-white text-xs font-bold rounded-full shadow-sm">
+                    <span className="inline-flex items-center justify-center h-6 w-6 bg-black text-white text-xs font-bold rounded-full shadow-sm">
                       {selectedSizes.length}
                     </span>
                   )}
                   {openSections.size ? (
-                    <FaChevronUp className="text-[#FF1493] transition-transform" />
+                    <FaChevronUp className="text-black transition-transform" />
                   ) : (
-                    <FaChevronDown className="text-gray-400 group-hover:text-[#FF1493] transition-colors" />
+                    <FaChevronDown className="text-gray-400 group-hover:text-black transition-colors" />
                   )}
                 </div>
               </button>
@@ -888,14 +888,14 @@ const ProductList = ({ defaultCategory } = {}) => {
                         onChange={() => setSelectedSizes(prev => 
                           prev.includes(size) ? prev.filter(s => s !== size) : [...prev, size]
                         )}
-                        className="h-4 w-4 text-[#FF1493] focus:ring-[#FF1493] border-gray-300 rounded cursor-pointer"
+                        className="h-4 w-4 text-black focus:ring-black border-gray-300 rounded cursor-pointer"
                       />
                       <label 
                         htmlFor={`size-${size}`} 
                         className={`ml-3 text-sm cursor-pointer flex-1 py-1.5 px-3 rounded-md transition-all ${
                           selectedSizes.includes(size)
-                            ? 'bg-pink-50 text-[#FF1493] font-medium'
-                            : 'text-gray-700 hover:bg-gray-50'
+                            ? 'bg-gray-100 text-black font-medium'
+                            : 'text-black hover:bg-gray-50'
                         }`}
                       >
                         {size}
@@ -919,17 +919,17 @@ const ProductList = ({ defaultCategory } = {}) => {
                 onClick={() => toggleSection('movement')}
                 className="flex justify-between items-center w-full mb-4 group"
               >
-                <h4 className="text-base font-semibold text-gray-900 group-hover:text-[#FF1493] transition-colors">Movement Type</h4>
+                <h4 className="text-base font-semibold text-black transition-colors">Movement Type</h4>
                 <div className="flex items-center gap-2">
                   {selectedWatchMovements.length > 0 && (
-                    <span className="inline-flex items-center justify-center h-6 w-6 bg-gradient-to-r from-[#8B2BE2] to-[#FF1493] text-white text-xs font-bold rounded-full shadow-sm">
+                    <span className="inline-flex items-center justify-center h-6 w-6 bg-black text-white text-xs font-bold rounded-full shadow-sm">
                       {selectedWatchMovements.length}
                     </span>
                   )}
                   {openSections.movement ? (
-                    <FaChevronUp className="text-[#FF1493] transition-transform" />
+                    <FaChevronUp className="text-black transition-transform" />
                   ) : (
-                    <FaChevronDown className="text-gray-400 group-hover:text-[#FF1493] transition-colors" />
+                    <FaChevronDown className="text-gray-400 group-hover:text-black transition-colors" />
                   )}
                 </div>
               </button>
@@ -945,14 +945,14 @@ const ProductList = ({ defaultCategory } = {}) => {
                         onChange={() => setSelectedWatchMovements(prev => 
                           prev.includes(movement) ? prev.filter(m => m !== movement) : [...prev, movement]
                         )}
-                        className="h-4 w-4 text-[#FF1493] focus:ring-[#FF1493] border-gray-300 rounded cursor-pointer"
+                        className="h-4 w-4 text-black focus:ring-black border-gray-300 rounded cursor-pointer"
                       />
                       <label 
                         htmlFor={`movement-${movement}`} 
                         className={`ml-3 text-sm cursor-pointer flex-1 py-1.5 px-3 rounded-md transition-all ${
                           selectedWatchMovements.includes(movement)
-                            ? 'bg-pink-50 text-[#FF1493] font-medium'
-                            : 'text-gray-700 hover:bg-gray-50'
+                            ? 'bg-gray-100 text-black font-medium'
+                            : 'text-black hover:bg-gray-50'
                         }`}
                       >
                         {movement}
@@ -971,17 +971,17 @@ const ProductList = ({ defaultCategory } = {}) => {
                 onClick={() => toggleSection('caseMaterial')}
                 className="flex justify-between items-center w-full mb-4 group"
               >
-                <h4 className="text-base font-semibold text-gray-900 group-hover:text-[#FF1493] transition-colors">Case Material</h4>
+                <h4 className="text-base font-semibold text-black transition-colors">Case Material</h4>
                 <div className="flex items-center gap-2">
                   {selectedWatchCaseMaterials.length > 0 && (
-                    <span className="inline-flex items-center justify-center h-6 w-6 bg-gradient-to-r from-[#8B2BE2] to-[#FF1493] text-white text-xs font-bold rounded-full shadow-sm">
+                    <span className="inline-flex items-center justify-center h-6 w-6 bg-black text-white text-xs font-bold rounded-full shadow-sm">
                       {selectedWatchCaseMaterials.length}
                     </span>
                   )}
                   {openSections.caseMaterial ? (
-                    <FaChevronUp className="text-[#FF1493] transition-transform" />
+                    <FaChevronUp className="text-black transition-transform" />
                   ) : (
-                    <FaChevronDown className="text-gray-400 group-hover:text-[#FF1493] transition-colors" />
+                    <FaChevronDown className="text-gray-400 group-hover:text-black transition-colors" />
                   )}
                 </div>
               </button>
@@ -997,14 +997,14 @@ const ProductList = ({ defaultCategory } = {}) => {
                         onChange={() => setSelectedWatchCaseMaterials(prev => 
                           prev.includes(material) ? prev.filter(m => m !== material) : [...prev, material]
                         )}
-                        className="h-4 w-4 text-[#FF1493] focus:ring-[#FF1493] border-gray-300 rounded cursor-pointer"
+                        className="h-4 w-4 text-black focus:ring-black border-gray-300 rounded cursor-pointer"
                       />
                       <label 
                         htmlFor={`case-material-${material}`} 
                         className={`ml-3 text-sm cursor-pointer flex-1 py-1.5 px-3 rounded-md transition-all ${
                           selectedWatchCaseMaterials.includes(material)
-                            ? 'bg-pink-50 text-[#FF1493] font-medium'
-                            : 'text-gray-700 hover:bg-gray-50'
+                            ? 'bg-gray-100 text-black font-medium'
+                            : 'text-black hover:bg-gray-50'
                         }`}
                       >
                         {material}
@@ -1023,17 +1023,17 @@ const ProductList = ({ defaultCategory } = {}) => {
                 onClick={() => toggleSection('bandMaterial')}
                 className="flex justify-between items-center w-full mb-4 group"
               >
-                <h4 className="text-base font-semibold text-gray-900 group-hover:text-[#FF1493] transition-colors">Band Material</h4>
+                <h4 className="text-base font-semibold text-black transition-colors">Band Material</h4>
                 <div className="flex items-center gap-2">
                   {selectedWatchBandMaterials.length > 0 && (
-                    <span className="inline-flex items-center justify-center h-6 w-6 bg-gradient-to-r from-[#8B2BE2] to-[#FF1493] text-white text-xs font-bold rounded-full shadow-sm">
+                    <span className="inline-flex items-center justify-center h-6 w-6 bg-black text-white text-xs font-bold rounded-full shadow-sm">
                       {selectedWatchBandMaterials.length}
                     </span>
                   )}
                   {openSections.bandMaterial ? (
-                    <FaChevronUp className="text-[#FF1493] transition-transform" />
+                    <FaChevronUp className="text-black transition-transform" />
                   ) : (
-                    <FaChevronDown className="text-gray-400 group-hover:text-[#FF1493] transition-colors" />
+                    <FaChevronDown className="text-gray-400 group-hover:text-black transition-colors" />
                   )}
                 </div>
               </button>
@@ -1049,14 +1049,14 @@ const ProductList = ({ defaultCategory } = {}) => {
                         onChange={() => setSelectedWatchBandMaterials(prev => 
                           prev.includes(material) ? prev.filter(m => m !== material) : [...prev, material]
                         )}
-                        className="h-4 w-4 text-[#FF1493] focus:ring-[#FF1493] border-gray-300 rounded cursor-pointer"
+                        className="h-4 w-4 text-black focus:ring-black border-gray-300 rounded cursor-pointer"
                       />
                       <label 
                         htmlFor={`band-material-${material}`} 
                         className={`ml-3 text-sm cursor-pointer flex-1 py-1.5 px-3 rounded-md transition-all ${
                           selectedWatchBandMaterials.includes(material)
-                            ? 'bg-pink-50 text-[#FF1493] font-medium'
-                            : 'text-gray-700 hover:bg-gray-50'
+                            ? 'bg-gray-100 text-black font-medium'
+                            : 'text-black hover:bg-gray-50'
                         }`}
                       >
                         {material}
@@ -1075,17 +1075,17 @@ const ProductList = ({ defaultCategory } = {}) => {
                 onClick={() => toggleSection('waterResistance')}
                 className="flex justify-between items-center w-full mb-4 group"
               >
-                <h4 className="text-base font-semibold text-gray-900 group-hover:text-[#FF1493] transition-colors">Water Resistance</h4>
+                <h4 className="text-base font-semibold text-black transition-colors">Water Resistance</h4>
                 <div className="flex items-center gap-2">
                   {selectedWaterResistance.length > 0 && (
-                    <span className="inline-flex items-center justify-center h-6 w-6 bg-gradient-to-r from-[#8B2BE2] to-[#FF1493] text-white text-xs font-bold rounded-full shadow-sm">
+                    <span className="inline-flex items-center justify-center h-6 w-6 bg-black text-white text-xs font-bold rounded-full shadow-sm">
                       {selectedWaterResistance.length}
                     </span>
                   )}
                   {openSections.waterResistance ? (
-                    <FaChevronUp className="text-[#FF1493] transition-transform" />
+                    <FaChevronUp className="text-black transition-transform" />
                   ) : (
-                    <FaChevronDown className="text-gray-400 group-hover:text-[#FF1493] transition-colors" />
+                    <FaChevronDown className="text-gray-400 group-hover:text-black transition-colors" />
                   )}
                 </div>
               </button>
@@ -1101,14 +1101,14 @@ const ProductList = ({ defaultCategory } = {}) => {
                         onChange={() => setSelectedWaterResistance(prev => 
                           prev.includes(wr) ? prev.filter(w => w !== wr) : [...prev, wr]
                         )}
-                        className="h-4 w-4 text-[#FF1493] focus:ring-[#FF1493] border-gray-300 rounded cursor-pointer"
+                        className="h-4 w-4 text-black focus:ring-black border-gray-300 rounded cursor-pointer"
                       />
                       <label 
                         htmlFor={`water-resistance-${wr}`} 
                         className={`ml-3 text-sm cursor-pointer flex-1 py-1.5 px-3 rounded-md transition-all ${
                           selectedWaterResistance.includes(wr)
-                            ? 'bg-pink-50 text-[#FF1493] font-medium'
-                            : 'text-gray-700 hover:bg-gray-50'
+                            ? 'bg-gray-100 text-black font-medium'
+                            : 'text-black hover:bg-gray-50'
                         }`}
                       >
                         {wr}
@@ -1129,17 +1129,17 @@ const ProductList = ({ defaultCategory } = {}) => {
             onClick={() => toggleSection('material')}
             className="flex justify-between items-center w-full mb-4 group"
           >
-            <h4 className="text-base font-semibold text-gray-900 group-hover:text-[#FF1493] transition-colors">Fabric</h4>
+            <h4 className="text-base font-semibold text-black transition-colors">Fabric</h4>
             <div className="flex items-center gap-2">
               {selectedFabrics.length > 0 && (
-                <span className="inline-flex items-center justify-center h-6 w-6 bg-gradient-to-r from-[#8B2BE2] to-[#FF1493] text-white text-xs font-bold rounded-full shadow-sm">
+                <span className="inline-flex items-center justify-center h-6 w-6 bg-black text-white text-xs font-bold rounded-full shadow-sm">
                   {selectedFabrics.length}
                 </span>
               )}
               {openSections.material ? (
-                <FaChevronUp className="text-[#FF1493] transition-transform" />
+                <FaChevronUp className="text-black transition-transform" />
               ) : (
-                <FaChevronDown className="text-gray-400 group-hover:text-[#FF1493] transition-colors" />
+                <FaChevronDown className="text-gray-400 group-hover:text-black transition-colors" />
               )}
             </div>
           </button>
@@ -1153,14 +1153,14 @@ const ProductList = ({ defaultCategory } = {}) => {
                     id={`material-${material}`}
                     checked={selectedFabrics.includes(material)}
                     onChange={() => toggleFabric(material)}
-                    className="h-4 w-4 text-[#FF1493] focus:ring-[#FF1493] border-gray-300 rounded cursor-pointer"
+                    className="h-4 w-4 text-black focus:ring-black border-gray-300 rounded cursor-pointer"
                   />
                   <label 
                     htmlFor={`material-${material}`} 
                     className={`ml-3 text-sm cursor-pointer flex-1 py-1.5 px-3 rounded-md transition-all ${
                       selectedFabrics.includes(material)
-                        ? 'bg-pink-50 text-[#FF1493] font-medium'
-                        : 'text-gray-700 hover:bg-gray-50'
+                        ? 'bg-gray-100 text-black font-medium'
+                        : 'text-black hover:bg-gray-50'
                     }`}
                   >
                     {material}
@@ -1188,7 +1188,7 @@ const ProductList = ({ defaultCategory } = {}) => {
       <style>{styles}</style>
       {loading && (
         <div className="fixed left-0 right-0 top-0 z-50">
-          <div className="h-1 bg-gradient-to-r from-[#8B2BE2] via-[#FF1493] to-[#8B2BE2] relative overflow-hidden">
+          <div className="h-1 bg-black relative overflow-hidden">
             <div className="absolute top-0 left-0 h-full w-1/2 bg-gradient-to-r from-transparent via-white/50 to-transparent animate-[shimmer_1.5s_infinite]"></div>
           </div>
         </div>
@@ -1211,7 +1211,7 @@ const ProductList = ({ defaultCategory } = {}) => {
                     ? effectiveCategory
                     : 'All Products')}
             </h1>
-            <div className="w-24 sm:w-32 h-1 sm:h-1.5 bg-gradient-to-r from-[#8B2BE2] via-[#FF1493] to-[#8B2BE2] rounded-full shadow-sm"></div>
+            <div className="w-24 sm:w-32 h-1 sm:h-1.5 bg-black rounded-full shadow-sm"></div>
             <p className="text-gray-600 mt-1 sm:mt-2 text-xs sm:text-sm md:text-base hidden sm:block">
               Discover our premium collection
             </p>
@@ -1242,12 +1242,12 @@ const ProductList = ({ defaultCategory } = {}) => {
             <div className="lg:hidden mb-3 space-y-2">
               <button 
                 onClick={() => setShowMobileFilters(true)}
-                className="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-white border-2 border-gray-200 rounded-lg text-gray-700 hover:border-[#FF1493] hover:bg-pink-50 shadow-sm hover:shadow-md transition-all text-sm"
+                className="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-white border-2 border-gray-200 rounded-lg text-black hover:border-black hover:bg-gray-100 shadow-sm hover:shadow-md transition-all text-sm"
               >
-                <FaFilter className="text-[#FF1493] text-sm" />
+                <FaFilter className="text-black text-sm" />
                 <span className="font-medium">Filters</span>
                 {activeFilterCount > 0 && (
-                  <span className="ml-1 px-2 py-0.5 bg-gradient-to-r from-[#8B2BE2] to-[#FF1493] text-white text-xs font-bold rounded-full shadow-sm">
+                  <span className="ml-1 px-2 py-0.5 bg-black text-white text-xs font-bold rounded-full shadow-sm">
                     {activeFilterCount}
                   </span>
                 )}
@@ -1257,7 +1257,7 @@ const ProductList = ({ defaultCategory } = {}) => {
               {activeFilterCount > 0 && (
                 <div className="flex flex-wrap gap-1.5 max-h-20 overflow-y-auto">
                   {selectedPriceRange && (
-                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-pink-50 text-[#FF1493] border border-pink-200">
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-white text-black border border-black">
                       {priceRanges.find(r => r.id === selectedPriceRange)?.label}
                       <button 
                         onClick={() => setSelectedPriceRange(null)}
@@ -1269,7 +1269,7 @@ const ProductList = ({ defaultCategory } = {}) => {
                   )}
                   
                   {(customPriceFrom || customPriceTo) && (
-                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-pink-50 text-[#FF1493] border border-pink-200">
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-white text-black border border-black">
                       ₹{customPriceFrom || '0'}-₹{customPriceTo || '∞'}
                       <button 
                         onClick={() => {
@@ -1284,7 +1284,7 @@ const ProductList = ({ defaultCategory } = {}) => {
                   )}
                   
                   {selectedBrands.map(brand => (
-                    <span key={brand} className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-pink-50 text-[#FF1493] border border-pink-200">
+                    <span key={brand} className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-white text-black border border-black">
                       {brand}
                       <button 
                         onClick={() => setSelectedBrands(prev => prev.filter(b => b !== brand))}
@@ -1295,7 +1295,7 @@ const ProductList = ({ defaultCategory } = {}) => {
                     </span>
                   ))}
                   {selectedShoeMaterials.map(material => (
-                    <span key={material} className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-pink-50 text-[#FF1493] border border-pink-200">
+                    <span key={material} className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-white text-black border border-black">
                       {material}
                       <button 
                         onClick={() => setSelectedShoeMaterials(prev => prev.filter(m => m !== material))}
@@ -1306,7 +1306,7 @@ const ProductList = ({ defaultCategory } = {}) => {
                     </span>
                   ))}
                   {selectedShoeTypes.map(type => (
-                    <span key={type} className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-pink-50 text-[#FF1493] border border-pink-200">
+                    <span key={type} className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-white text-black border border-black">
                       {type}
                       <button 
                         onClick={() => setSelectedShoeTypes(prev => prev.filter(t => t !== type))}
@@ -1317,7 +1317,7 @@ const ProductList = ({ defaultCategory } = {}) => {
                     </span>
                   ))}
                   {selectedSizes.map(size => (
-                    <span key={size} className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-pink-50 text-[#FF1493] border border-pink-200">
+                    <span key={size} className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-white text-black border border-black">
                       Size {size}
                       <button 
                         onClick={() => setSelectedSizes(prev => prev.filter(s => s !== size))}
@@ -1328,7 +1328,7 @@ const ProductList = ({ defaultCategory } = {}) => {
                     </span>
                   ))}
                   {selectedWatchMovements.map(movement => (
-                    <span key={movement} className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-pink-50 text-[#FF1493] border border-pink-200">
+                    <span key={movement} className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-white text-black border border-black">
                       {movement}
                       <button 
                         onClick={() => setSelectedWatchMovements(prev => prev.filter(m => m !== movement))}
@@ -1339,7 +1339,7 @@ const ProductList = ({ defaultCategory } = {}) => {
                     </span>
                   ))}
                   {selectedWatchCaseMaterials.map(material => (
-                    <span key={material} className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-pink-50 text-[#FF1493] border border-pink-200">
+                    <span key={material} className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-white text-black border border-black">
                       {material}
                       <button 
                         onClick={() => setSelectedWatchCaseMaterials(prev => prev.filter(m => m !== material))}
@@ -1350,7 +1350,7 @@ const ProductList = ({ defaultCategory } = {}) => {
                     </span>
                   ))}
                   {selectedWatchBandMaterials.map(material => (
-                    <span key={material} className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-pink-50 text-[#FF1493] border border-pink-200">
+                    <span key={material} className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-white text-black border border-black">
                       {material}
                       <button 
                         onClick={() => setSelectedWatchBandMaterials(prev => prev.filter(m => m !== material))}
@@ -1361,7 +1361,7 @@ const ProductList = ({ defaultCategory } = {}) => {
                     </span>
                   ))}
                   {selectedWaterResistance.map(wr => (
-                    <span key={wr} className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-pink-50 text-[#FF1493] border border-pink-200">
+                    <span key={wr} className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-white text-black border border-black">
                       {wr}
                       <button 
                         onClick={() => setSelectedWaterResistance(prev => prev.filter(w => w !== wr))}
@@ -1372,7 +1372,7 @@ const ProductList = ({ defaultCategory } = {}) => {
                     </span>
                   ))}
                   {selectedFabrics.map(fabric => (
-                    <span key={fabric} className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-pink-50 text-[#FF1493] border border-pink-200">
+                    <span key={fabric} className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-white text-black border border-black">
                       {fabric}
                       <button 
                         onClick={() => toggleFabric(fabric)}
@@ -1395,7 +1395,7 @@ const ProductList = ({ defaultCategory } = {}) => {
                 <label htmlFor="sort" className="text-xs sm:text-sm font-medium text-gray-700 whitespace-nowrap">Sort:</label>
                 <select 
                   id="sort" 
-                  className="text-xs sm:text-sm border-2 border-gray-200 rounded-lg px-3 sm:px-4 py-1.5 sm:py-2 focus:ring-2 focus:ring-[#FF1493] focus:border-[#FF1493] bg-white font-medium text-gray-700 cursor-pointer transition-all hover:border-[#FF1493]/50"
+                  className="text-xs sm:text-sm border-2 border-gray-200 rounded-lg px-3 sm:px-4 py-1.5 sm:py-2 focus:ring-2 focus:ring-black focus:border-black bg-white font-medium text-black cursor-pointer transition-all hover:border-black"
                   onChange={(e) => {
                     const sorted = [...filteredProducts];
                     switch(e.target.value) {
@@ -1427,9 +1427,9 @@ const ProductList = ({ defaultCategory } = {}) => {
               <div className="relative min-h-[500px] flex items-center justify-center">
                 {/* Modern Loading Spinner */}
                 <div className="flex flex-col items-center justify-center space-y-6">
-                  <div className="relative">
+                    <div className="relative">
                     <div className="w-20 h-20 border-4 border-gray-200 rounded-full"></div>
-                    <div className="w-20 h-20 border-4 border-[#FF1493] border-t-transparent rounded-full animate-spin absolute top-0 left-0"></div>
+                    <div className="w-20 h-20 border-4 border-black border-t-transparent rounded-full animate-spin absolute top-0 left-0"></div>
                   </div>
                   <p className="text-gray-700 font-semibold text-lg">Loading products...</p>
                   <p className="text-gray-500 text-sm">Please wait while we fetch the best products for you</p>
@@ -1449,9 +1449,7 @@ const ProductList = ({ defaultCategory } = {}) => {
                     <button
                       onClick={resetFilters}
                       className="px-8 py-3 text-black rounded-xl border-2 border-black font-semibold transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
-                      style={{ backgroundColor: '#FFD1DC' }}
-                      onMouseEnter={(e) => e.target.style.backgroundColor = '#FFB6C1'}
-                      onMouseLeave={(e) => e.target.style.backgroundColor = '#FFD1DC'}
+                      style={{ backgroundColor: headerColor }}
                     >
                       Clear all filters
                     </button>
@@ -1468,9 +1466,7 @@ const ProductList = ({ defaultCategory } = {}) => {
                     <Link
                       to="/"
                       className="inline-block px-8 py-3 text-black rounded-xl border-2 border-black font-semibold transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
-                      style={{ backgroundColor: '#FFD1DC' }}
-                      onMouseEnter={(e) => e.target.style.backgroundColor = '#FFB6C1'}
-                      onMouseLeave={(e) => e.target.style.backgroundColor = '#FFD1DC'}
+                      style={{ backgroundColor: headerColor }}
                     >
                       Continue Shopping
                     </Link>
@@ -1483,7 +1479,7 @@ const ProductList = ({ defaultCategory } = {}) => {
                   {filteredProducts.slice(0, displayCount).map((p) => (
                   <div
                     key={p._id || p.title}
-                    className="group bg-white overflow-hidden rounded-xl sm:rounded-2xl shadow-sm sm:shadow-md hover:shadow-xl sm:hover:shadow-2xl transition-all duration-500 cursor-pointer border border-gray-100 hover:border-pink-300 sm:hover:border-[#7A2A2A]/20 transform hover:-translate-y-1 sm:hover:-translate-y-2"
+                    className="group bg-white overflow-hidden rounded-xl sm:rounded-2xl shadow-sm sm:shadow-md hover:shadow-xl sm:hover:shadow-2xl transition-all duration-500 cursor-pointer border border-gray-100 hover:border-black transform hover:-translate-y-1 sm:hover:-translate-y-2"
                     onClick={() => handleCardClick(p)}
                   >
                     <div className="relative w-full aspect-[3/4] bg-gray-100 overflow-hidden flex items-center justify-center">
@@ -1498,7 +1494,7 @@ const ProductList = ({ defaultCategory } = {}) => {
                         loading="lazy"
                       />
                       {(p.discountPercent > 0 || p.discount) && (
-                        <span className="absolute top-2 right-2 sm:top-4 sm:right-4 bg-gradient-to-r from-[#8B2BE2] to-[#FF1493] text-white text-xs font-bold px-2 py-1 sm:px-3 sm:py-1.5 rounded-md sm:rounded-lg shadow-md sm:shadow-lg uppercase">
+                        <span className="absolute top-2 right-2 sm:top-4 sm:right-4 bg-black text-white text-xs font-bold px-2 py-1 sm:px-3 sm:py-1.5 rounded-md sm:rounded-lg shadow-md sm:shadow-lg uppercase">
                           {p.discountPercent || p.discount}% OFF
                         </span>
                       )}
@@ -1507,23 +1503,23 @@ const ProductList = ({ defaultCategory } = {}) => {
                     </div>
 
                     <div className="relative p-3 sm:p-4 md:p-5 bg-white">
-                      {/* Gradient accent bar - using pink/purple theme */}
-                      <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#8B2BE2] via-[#FF1493] to-[#8B2BE2] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+                      {/* Accent bar */}
+                      <div className="absolute bottom-0 left-0 right-0 h-1 bg-black transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
                       
                       <div className="flex justify-between items-start mb-1 sm:mb-2">
-                        <h3 className="text-xs font-semibold text-[#FF1493] uppercase tracking-wide line-clamp-1">
+                        <h3 className="text-xs font-semibold text-black uppercase tracking-wide line-clamp-1">
                           {p.product_info?.manufacturer || 'VARNICRAFTS'}
                         </h3>
                       </div>
                       
-                      <p className="text-sm sm:text-base font-bold text-gray-900 line-clamp-2 mb-2 sm:mb-3 min-h-[2.5rem] sm:min-h-[3rem] group-hover:text-[#FF1493] transition-colors">
+                      <p className="text-sm sm:text-base font-bold text-black line-clamp-2 mb-2 sm:mb-3 min-h-[2.5rem] sm:min-h-[3rem] transition-colors">
                         {p.title || 'Untitled Product'}
                       </p>
                 
                       <div className="flex items-baseline gap-1.5 sm:gap-2 mt-2 sm:mt-3">
                         <div className="flex items-center">
-                          <FaRupeeSign className="h-3 w-3 sm:h-4 sm:w-4 text-gray-900" />
-                          <span className="text-lg sm:text-xl font-bold text-gray-900 ml-0.5">
+                          <FaRupeeSign className="h-3 w-3 sm:h-4 sm:w-4 text-black" />
+                          <span className="text-lg sm:text-xl font-bold text-black ml-0.5">
                             {p.price?.toLocaleString() || Math.round(p.mrp - p.mrp * ((p.discountPercent || 0) / 100)).toLocaleString()}
                           </span>
                         </div>
@@ -1545,7 +1541,7 @@ const ProductList = ({ defaultCategory } = {}) => {
                       <div className="flex flex-col items-center justify-center space-y-4">
                         <div className="relative">
                           <div className="w-12 h-12 border-4 border-gray-200 rounded-full"></div>
-                          <div className="w-12 h-12 border-4 border-[#FF1493] border-t-transparent rounded-full animate-spin absolute top-0 left-0"></div>
+                          <div className="w-12 h-12 border-4 border-black border-t-transparent rounded-full animate-spin absolute top-0 left-0"></div>
                         </div>
                         <p className="text-gray-600 font-medium text-sm">Loading more products...</p>
                       </div>
@@ -1560,7 +1556,7 @@ const ProductList = ({ defaultCategory } = {}) => {
                       <p className="text-gray-500 text-sm font-medium">
                         You've reached the end of the products
                       </p>
-                      <div className="w-24 h-0.5 bg-gradient-to-r from-transparent via-[#FF1493] to-transparent mx-auto mt-2"></div>
+                      <div className="w-24 h-0.5 bg-black mx-auto mt-2"></div>
                     </div>
                   </div>
                 )}
@@ -1579,7 +1575,7 @@ const ProductList = ({ defaultCategory } = {}) => {
           ></div>
           <div className="fixed inset-y-0 right-0 max-w-sm w-full bg-white shadow-2xl overflow-y-auto custom-scrollbar animate-in slide-in-from-right">
             {/* Header */}
-            <div className="sticky top-0 bg-gradient-to-r from-[#8B2BE2] to-[#FF1493] px-6 py-5 flex justify-between items-center z-10 shadow-lg">
+            <div className="sticky top-0 bg-black px-6 py-5 flex justify-between items-center z-10 shadow-lg">
               <h3 className="text-xl font-bold text-white flex items-center gap-2">
                 <FaFilter className="text-white" />
                 Filters
@@ -1607,9 +1603,7 @@ const ProductList = ({ defaultCategory } = {}) => {
               <button
                 onClick={() => setShowMobileFilters(false)}
                 className="w-full px-6 py-4 text-black font-bold rounded-xl border-2 border-black transition-all shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
-                style={{ backgroundColor: '#FFD1DC' }}
-                onMouseEnter={(e) => e.target.style.backgroundColor = '#FFB6C1'}
-                onMouseLeave={(e) => e.target.style.backgroundColor = '#FFD1DC'}
+                style={{ backgroundColor: headerColor }}
               >
                 Apply Filters
               </button>

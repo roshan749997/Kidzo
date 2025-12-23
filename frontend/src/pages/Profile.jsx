@@ -75,14 +75,14 @@ export default function FlipkartAccountSettings() {
   const StatusBadge = ({ status }) => {
     const s = String(status || '').toLowerCase();
     const statusConfig = {
-      created: { bg: 'bg-pink-100', text: 'text-pink-800', border: 'border-pink-300', icon: FiClock, label: 'Pending' },
-      confirmed: { bg: 'bg-pink-200', text: 'text-pink-800', border: 'border-pink-400', icon: FiCheckCircle, label: 'Confirmed' },
-      on_the_way: { bg: 'bg-pink-300', text: 'text-pink-900', border: 'border-pink-500', icon: FiPackage, label: 'On the Way' },
-      delivered: { bg: 'bg-pink-400', text: 'text-white', border: 'border-pink-600', icon: FiCheckCircle, label: 'Delivered' },
-      failed: { bg: 'bg-pink-100', text: 'text-pink-700', border: 'border-pink-300', icon: FiX, label: 'Failed' },
-      paid: { bg: 'bg-pink-500', text: 'text-white', border: 'border-pink-700', icon: FiCheckCircle, label: 'Paid' },
+      created: { bg: 'bg-pink-100', text: 'text-black', border: 'border-pink-100', icon: FiClock, label: 'Pending' },
+      confirmed: { bg: 'bg-pink-100', text: 'text-black', border: 'border-pink-100', icon: FiCheckCircle, label: 'Confirmed' },
+      on_the_way: { bg: 'bg-pink-100', text: 'text-black', border: 'border-pink-100', icon: FiPackage, label: 'On the Way' },
+      delivered: { bg: 'bg-pink-100', text: 'text-black', border: 'border-pink-100', icon: FiCheckCircle, label: 'Delivered' },
+      failed: { bg: 'bg-pink-100', text: 'text-black', border: 'border-pink-100', icon: FiX, label: 'Failed' },
+      paid: { bg: 'bg-pink-100', text: 'text-black', border: 'border-pink-100', icon: FiCheckCircle, label: 'Paid' },
     };
-    const config = statusConfig[s] || { bg: 'bg-pink-100', text: 'text-pink-700', border: 'border-pink-200', icon: FiClock, label: 'Unknown' };
+    const config = statusConfig[s] || { bg: 'bg-pink-100', text: 'text-black', border: 'border-pink-100', icon: FiClock, label: 'Unknown' };
     const Icon = config.icon;
     return (
       <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${config.bg} ${config.text} ${config.border} border`}>
@@ -335,19 +335,19 @@ export default function FlipkartAccountSettings() {
       onClick={isLogout ? handleLogout : () => handleSectionChange(section)}
       className={`flex items-center justify-between px-4 lg:px-6 py-3.5 cursor-pointer transition-all duration-200 rounded-lg mx-2 lg:mx-3 mb-1 ${
         activeSection === section && !isLogout
-          ? 'bg-gradient-to-r from-pink-500 to-pink-600 text-white shadow-lg transform scale-105' 
+          ? 'bg-pink-100 text-black shadow-lg transform scale-105' 
           : isLogout
-          ? 'hover:bg-pink-50 text-pink-600 hover:text-pink-700'
+          ? 'bg-pink-100 text-black hover:bg-pink-100'
           : isAdmin
-          ? 'bg-pink-50 text-pink-700 hover:bg-pink-100'
-          : 'text-gray-700 hover:bg-pink-50 hover:text-pink-600'
+          ? 'bg-pink-100 text-black hover:bg-pink-100'
+          : 'text-black hover:bg-pink-100 hover:text-black'
       }`}
     >
       <div className="flex items-center gap-3">
         <Icon className="w-5 h-5" />
         <span className="text-sm font-medium">{label}</span>
       </div>
-      {!isLogout && <span className={activeSection === section ? 'text-white' : 'text-gray-400'}>›</span>}
+      {!isLogout && <span className={activeSection === section ? 'text-white' : 'text-black'}>›</span>}
     </div>
   );
 
@@ -405,85 +405,85 @@ export default function FlipkartAccountSettings() {
       created: { 
         label: 'Order Placed', 
         description: 'Your order has been placed successfully',
-        color: 'text-blue-600',
-        bgColor: 'bg-blue-50',
-        borderColor: 'border-blue-200'
+        color: 'text-black',
+        bgColor: 'bg-white',
+        borderColor: 'border-gray-200'
       },
       confirmed: { 
         label: 'Confirmed', 
         description: 'Order confirmed and being prepared',
-        color: 'text-green-600',
-        bgColor: 'bg-green-50',
-        borderColor: 'border-green-200'
+        color: 'text-black',
+        bgColor: 'bg-white',
+        borderColor: 'border-gray-200'
       },
       on_the_way: { 
         label: 'On the Way', 
         description: 'Your order is out for delivery',
-        color: 'text-purple-600',
-        bgColor: 'bg-purple-50',
-        borderColor: 'border-purple-200'
+        color: 'text-black',
+        bgColor: 'bg-white',
+        borderColor: 'border-gray-200'
       },
       delivered: { 
         label: 'Delivered', 
         description: 'Order has been delivered',
-        color: 'text-pink-600',
-        bgColor: 'bg-pink-50',
-        borderColor: 'border-pink-200'
+        color: 'text-black',
+        bgColor: 'bg-white',
+        borderColor: 'border-gray-200'
       },
       paid: { 
         label: 'Paid', 
         description: 'Payment received',
-        color: 'text-green-600',
-        bgColor: 'bg-green-50',
-        borderColor: 'border-green-200'
+        color: 'text-black',
+        bgColor: 'bg-white',
+        borderColor: 'border-gray-200'
       },
       failed: { 
         label: 'Failed', 
         description: 'Order could not be processed',
-        color: 'text-red-600',
-        bgColor: 'bg-red-50',
-        borderColor: 'border-red-200'
+        color: 'text-black',
+        bgColor: 'bg-white',
+        borderColor: 'border-gray-200'
       },
     };
     return statusInfo[s] || { 
       label: 'Unknown', 
       description: 'Status information not available',
-      color: 'text-gray-600',
-      bgColor: 'bg-gray-50',
+      color: 'text-black',
+      bgColor: 'bg-white',
       borderColor: 'border-gray-200'
     };
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-pink-50">
+    <div className="min-h-screen bg-white">
       {loading ? (
         <div className="flex items-center justify-center min-h-screen">
           <div className="text-center">
-            <div className="inline-block animate-spin rounded-full h-16 w-16 border-4 border-pink-500 border-t-transparent"></div>
-            <p className="mt-4 text-gray-600 font-medium">Loading your profile...</p>
+            <div className="inline-block animate-spin rounded-full h-16 w-16 border-4 border-pink-100 border-t-transparent"></div>
+            <p className="mt-4 text-black font-medium">Loading your profile...</p>
           </div>
         </div>
       ) : (
         <div className="flex flex-col lg:flex-row w-full min-h-screen">
           {/* Mobile Header */}
-          <div className="lg:hidden bg-white shadow-lg px-4 py-4 flex items-center justify-between sticky z-40 top-0 border-b-2 border-pink-200">
+          <div className="lg:hidden bg-white shadow-lg px-4 py-4 flex items-center justify-between sticky z-40 top-0 border-b-2 border-gray-200">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-pink-500 to-pink-600 flex items-center justify-center text-white text-lg font-bold shadow-lg ring-2 ring-pink-200">
+              <div className="w-12 h-12 rounded-full bg-pink-100 flex items-center justify-center text-black text-lg font-bold shadow-lg">
                 {(user.firstName || user.email || user.mobile || 'U').charAt(0).toUpperCase()}
               </div>
               <div>
-                <div className="text-xs text-gray-500 font-medium">Hello,</div>
-                <div className="font-bold text-gray-800 text-sm">{user.firstName || user.email || user.mobile || 'User'}</div>
+                <div className="text-xs text-black font-medium">Hello,</div>
+                <div className="font-bold text-black text-sm">{user.firstName || user.email || user.mobile || 'User'}</div>
               </div>
             </div>
             <button 
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 hover:bg-pink-50 rounded-lg transition-colors"
+              className="p-2 bg-pink-100 rounded-lg transition-colors"
             >
               {mobileMenuOpen ? (
-                <FiX className="w-6 h-6 text-pink-600" />
+                <FiX className="w-6 h-6 text-black" />
               ) : (
-                <FiMenu className="w-6 h-6 text-pink-600" />
+                <FiMenu className="w-6 h-6 text-black" />
               )}
             </button>
           </div>
@@ -494,7 +494,7 @@ export default function FlipkartAccountSettings() {
             transform ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0
             transition-transform duration-300 ease-in-out
             w-full lg:w-72 xl:w-80 bg-white shadow-xl lg:shadow-lg flex-shrink-0
-            overflow-y-auto border-r-2 border-pink-200
+            overflow-y-auto border-r-2 border-gray-200
           `}>
             {/* Overlay for mobile */}
             {mobileMenuOpen && (
@@ -505,17 +505,17 @@ export default function FlipkartAccountSettings() {
             )}
 
             {/* User Profile - Desktop only */}
-            <div className="hidden lg:block p-6 border-b-2 border-pink-200 bg-gradient-to-br from-pink-50 to-pink-100">
+            <div className="hidden lg:block p-6 border-b-2 border-gray-200 bg-white">
               <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-pink-500 to-pink-600 flex items-center justify-center text-white text-2xl font-bold shadow-lg ring-4 ring-pink-200">
+                <div className="w-16 h-16 rounded-full bg-pink-100 flex items-center justify-center text-black text-2xl font-bold shadow-lg">
                   {(user.firstName || user.email || user.mobile || 'U').charAt(0).toUpperCase()}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-xs text-gray-600 font-medium">Hello,</div>
-                  <div className="font-bold text-gray-800 text-lg truncate">
+                  <div className="text-xs text-black font-medium">Hello,</div>
+                  <div className="font-bold text-black text-lg truncate">
                     {user.firstName || user.email || user.mobile || 'User'} {user.lastName}
                   </div>
-                  <div className="text-xs text-gray-500 mt-1 truncate">{user.email}</div>
+                  <div className="text-xs text-black mt-1 truncate">{user.email}</div>
                 </div>
               </div>
             </div>
@@ -538,7 +538,7 @@ export default function FlipkartAccountSettings() {
                 section="addresses"
               />
               {isAdmin && <AdminButton />}
-              <div className="my-4 mx-5 border-t border-pink-200"></div>
+              <div className="my-4 mx-5 border-t border-gray-200"></div>
               <MenuItem 
                 icon={FiLogOut}
                 label="Logout"
@@ -557,8 +557,8 @@ export default function FlipkartAccountSettings() {
                     onClick={() => handleSectionChange('orders')}
                     className={`px-3 py-2.5 rounded-lg text-sm font-semibold transition-all ${
                       activeSection === 'orders' 
-                        ? 'bg-gradient-to-r from-pink-500 to-pink-600 text-white shadow-lg' 
-                        : 'bg-pink-50 text-pink-700 hover:bg-pink-100'
+                        ? 'bg-pink-100 text-black shadow-lg' 
+                        : 'bg-pink-100 text-black hover:bg-pink-100'
                     }`}
                   >
                     Orders
@@ -567,8 +567,8 @@ export default function FlipkartAccountSettings() {
                     onClick={() => handleSectionChange('profile')}
                     className={`px-3 py-2.5 rounded-lg text-sm font-semibold transition-all ${
                       activeSection === 'profile' 
-                        ? 'bg-gradient-to-r from-pink-500 to-pink-600 text-white shadow-lg' 
-                        : 'bg-pink-50 text-pink-700 hover:bg-pink-100'
+                        ? 'bg-pink-100 text-black shadow-lg' 
+                        : 'bg-pink-100 text-black hover:bg-pink-100'
                     }`}
                   >
                     Profile
@@ -577,8 +577,8 @@ export default function FlipkartAccountSettings() {
                     onClick={() => handleSectionChange('addresses')}
                     className={`px-3 py-2.5 rounded-lg text-sm font-semibold transition-all ${
                       activeSection === 'addresses' 
-                        ? 'bg-gradient-to-r from-pink-500 to-pink-600 text-white shadow-lg' 
-                        : 'bg-pink-50 text-pink-700 hover:bg-pink-100'
+                        ? 'bg-pink-100 text-black shadow-lg' 
+                        : 'bg-pink-100 text-black hover:bg-pink-100'
                     }`}
                   >
                     Addresses
@@ -590,50 +590,50 @@ export default function FlipkartAccountSettings() {
                 <div className="space-y-6">
                   {/* Account Summary Cards */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                    <div className="bg-gradient-to-br from-pink-50 to-pink-100 rounded-xl p-5 border-2 border-pink-200 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                    <div className="bg-white rounded-xl p-5 border-2 border-gray-200 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex-1">
-                          <p className="text-xs font-semibold text-gray-600 mb-1 uppercase">Total Orders</p>
-                          <p className="text-2xl sm:text-3xl font-bold text-gray-900">{totalOrders}</p>
-                          <p className="text-[10px] text-gray-500 mt-1">All time orders</p>
+                          <p className="text-xs font-semibold text-black mb-1 uppercase">Total Orders</p>
+                          <p className="text-2xl sm:text-3xl font-bold text-black">{totalOrders}</p>
+                          <p className="text-[10px] text-black mt-1">All time orders</p>
                         </div>
-                        <div className="w-12 h-12 bg-pink-200 rounded-xl flex items-center justify-center shadow-md">
-                          <FiShoppingBag className="w-6 h-6 text-pink-700" />
+                        <div className="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center shadow-md">
+                          <FiShoppingBag className="w-6 h-6 text-white" />
                         </div>
                       </div>
                     </div>
-                    <div className="bg-gradient-to-br from-pink-100 to-pink-200 rounded-xl p-5 border-2 border-pink-300 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                    <div className="bg-white rounded-xl p-5 border-2 border-gray-200 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex-1">
-                          <p className="text-xs font-semibold text-gray-700 mb-1 uppercase">Total Spent</p>
-                          <p className="text-2xl sm:text-3xl font-bold text-gray-900">{formatINR(totalSpent)}</p>
-                          <p className="text-[10px] text-gray-600 mt-1">Lifetime value</p>
+                          <p className="text-xs font-semibold text-black mb-1 uppercase">Total Spent</p>
+                          <p className="text-2xl sm:text-3xl font-bold text-black">{formatINR(totalSpent)}</p>
+                          <p className="text-[10px] text-black mt-1">Lifetime value</p>
                         </div>
-                        <div className="w-12 h-12 bg-pink-300 rounded-xl flex items-center justify-center shadow-md">
-                          <FiDollarSign className="w-6 h-6 text-pink-800" />
+                        <div className="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center shadow-md">
+                          <FiDollarSign className="w-6 h-6 text-white" />
                         </div>
                       </div>
                     </div>
-                    <div className="bg-gradient-to-br from-pink-200 to-pink-300 rounded-xl p-5 border-2 border-pink-400 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                    <div className="bg-white rounded-xl p-5 border-2 border-gray-200 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex-1">
-                          <p className="text-xs font-semibold text-gray-700 mb-1 uppercase">Pending Orders</p>
-                          <p className="text-2xl sm:text-3xl font-bold text-gray-900">{pendingOrders}</p>
-                          <p className="text-[10px] text-gray-600 mt-1">In progress</p>
+                          <p className="text-xs font-semibold text-black mb-1 uppercase">Pending Orders</p>
+                          <p className="text-2xl sm:text-3xl font-bold text-black">{pendingOrders}</p>
+                          <p className="text-[10px] text-black mt-1">In progress</p>
                         </div>
-                        <div className="w-12 h-12 bg-pink-400 rounded-xl flex items-center justify-center shadow-md">
+                        <div className="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center shadow-md">
                           <FiClock className="w-6 h-6 text-white" />
                         </div>
                       </div>
                     </div>
-                    <div className="bg-gradient-to-br from-pink-300 to-pink-400 rounded-xl p-5 border-2 border-pink-500 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                    <div className="bg-white rounded-xl p-5 border-2 border-gray-200 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex-1">
-                          <p className="text-xs font-semibold text-white mb-1 uppercase">Delivered</p>
-                          <p className="text-2xl sm:text-3xl font-bold text-white">{deliveredOrders}</p>
-                          <p className="text-[10px] text-pink-100 mt-1">Successfully completed</p>
+                          <p className="text-xs font-semibold text-black mb-1 uppercase">Delivered</p>
+                          <p className="text-2xl sm:text-3xl font-bold text-black">{deliveredOrders}</p>
+                          <p className="text-[10px] text-black mt-1">Successfully completed</p>
                         </div>
-                        <div className="w-12 h-12 bg-pink-500 rounded-xl flex items-center justify-center shadow-md">
+                        <div className="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center shadow-md">
                           <FiCheckCircle className="w-6 h-6 text-white" />
                         </div>
                       </div>
@@ -642,105 +642,105 @@ export default function FlipkartAccountSettings() {
 
                   {/* Additional Stats */}
                   {totalOrders > 0 && (
-                    <div className="bg-white rounded-xl p-5 border-2 border-pink-200 shadow-md mb-6">
-                      <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                        <FiTrendingUp className="w-5 h-5 text-pink-600" />
+                    <div className="bg-white rounded-xl p-5 border-2 border-gray-200 shadow-md mb-6">
+                      <h3 className="text-lg font-bold text-black mb-4 flex items-center gap-2">
+                        <FiTrendingUp className="w-5 h-5 text-black" />
                         Order Statistics
                       </h3>
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <div className="text-center p-4 bg-pink-50 rounded-lg border border-pink-200">
-                          <div className="text-2xl font-bold text-pink-700">{formatINR(averageOrderValue)}</div>
-                          <div className="text-xs text-gray-600 mt-1">Average Order Value</div>
+                        <div className="text-center p-4 bg-white rounded-lg border border-gray-200">
+                          <div className="text-2xl font-bold text-black">{formatINR(averageOrderValue)}</div>
+                          <div className="text-xs text-black mt-1">Average Order Value</div>
                         </div>
-                        <div className="text-center p-4 bg-pink-50 rounded-lg border border-pink-200">
-                          <div className="text-2xl font-bold text-pink-700">{Math.round((deliveredOrders / totalOrders) * 100)}%</div>
-                          <div className="text-xs text-gray-600 mt-1">Delivery Success Rate</div>
+                        <div className="text-center p-4 bg-white rounded-lg border border-gray-200">
+                          <div className="text-2xl font-bold text-black">{Math.round((deliveredOrders / totalOrders) * 100)}%</div>
+                          <div className="text-xs text-black mt-1">Delivery Success Rate</div>
                         </div>
-                        <div className="text-center p-4 bg-pink-50 rounded-lg border border-pink-200">
-                          <div className="text-2xl font-bold text-pink-700">{recentOrders.length}</div>
-                          <div className="text-xs text-gray-600 mt-1">Recent Orders</div>
+                        <div className="text-center p-4 bg-white rounded-lg border border-gray-200">
+                          <div className="text-2xl font-bold text-black">{recentOrders.length}</div>
+                          <div className="text-xs text-black mt-1">Recent Orders</div>
                         </div>
                       </div>
                     </div>
                   )}
 
                   {/* Personal Information */}
-                  <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden border-2 border-pink-200">
-                    <div className="p-4 sm:p-6 border-b-2 border-pink-200 bg-gradient-to-r from-pink-50 to-pink-100">
+                  <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden border-2 border-gray-200">
+                    <div className="p-4 sm:p-6 border-b-2 border-gray-200 bg-white">
                       <div className="flex items-center justify-between">
-                        <h2 className="text-lg sm:text-xl font-bold text-gray-900 flex items-center gap-2">
-                          <FiUser className="w-5 h-5 sm:w-6 sm:h-6 text-pink-600" />
+                        <h2 className="text-lg sm:text-xl font-bold text-black flex items-center gap-2">
+                          <FiUser className="w-5 h-5 sm:w-6 sm:h-6 text-black" />
                           Personal Information
                         </h2>
-                        <span className="text-xs text-gray-600 bg-pink-100 px-3 py-1 rounded-full font-semibold border border-pink-300">Read Only</span>
+                        <span className="text-xs text-black bg-white px-3 py-1 rounded-full font-semibold border border-gray-200">Read Only</span>
                       </div>
-                      <p className="text-xs text-gray-600 mt-2">Your account details are managed securely</p>
+                      <p className="text-xs text-black mt-2">Your account details are managed securely</p>
                     </div>
                     <div className="p-4 sm:p-6">
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
                         <div>
-                          <label className="block text-xs font-bold text-gray-700 mb-2 flex items-center gap-1">
+                          <label className="block text-xs font-bold text-black mb-2 flex items-center gap-1">
                             First Name
-                            <span className="text-gray-400 text-[10px]">(Required)</span>
+                            <span className="text-black text-[10px]">(Required)</span>
                           </label>
                           <input 
                             type="text" 
                             value={user.firstName || 'Not provided'}
-                            className="w-full px-4 py-3 border-2 border-pink-200 rounded-xl text-sm bg-pink-50 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-pink-500 transition-all"
+                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-gray-500 transition-all text-black"
                             readOnly
                           />
-                          <p className="text-[10px] text-gray-500 mt-1">Your first name as registered</p>
+                          <p className="text-[10px] text-black mt-1">Your first name as registered</p>
                         </div>
                         <div>
-                          <label className="block text-xs font-bold text-gray-700 mb-2 flex items-center gap-1">
+                          <label className="block text-xs font-bold text-black mb-2 flex items-center gap-1">
                             Last Name
-                            <span className="text-gray-400 text-[10px]">(Optional)</span>
+                            <span className="text-black text-[10px]">(Optional)</span>
                           </label>
                           <input 
                             type="text" 
                             value={user.lastName || 'Not provided'}
-                            className="w-full px-4 py-3 border-2 border-pink-200 rounded-xl text-sm bg-pink-50 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-pink-500 transition-all"
+                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-gray-500 transition-all text-black"
                             readOnly
                           />
-                          <p className="text-[10px] text-gray-500 mt-1">Your last name or surname</p>
+                          <p className="text-[10px] text-black mt-1">Your last name or surname</p>
                         </div>
                       </div>
                     </div>
                   </div>
 
                   {/* Email Address */}
-                  <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden border-2 border-pink-200">
-                    <div className="p-4 sm:p-6 border-b-2 border-pink-200 bg-gradient-to-r from-pink-50 to-pink-100">
-                      <h2 className="text-lg sm:text-xl font-bold text-gray-900 flex items-center gap-2">
-                        <svg className="w-5 h-5 sm:w-6 sm:h-6 text-pink-600" fill="currentColor" viewBox="0 0 24 24">
+                  <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden border-2 border-gray-200">
+                    <div className="p-4 sm:p-6 border-b-2 border-gray-200 bg-white">
+                      <h2 className="text-lg sm:text-xl font-bold text-black flex items-center gap-2">
+                        <svg className="w-5 h-5 sm:w-6 sm:h-6 text-black" fill="currentColor" viewBox="0 0 24 24">
                           <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
                         </svg>
                         Email Address
                       </h2>
-                      <p className="text-xs text-gray-600 mt-1">Primary contact email for your account</p>
+                      <p className="text-xs text-black mt-1">Primary contact email for your account</p>
                     </div>
                     <div className="p-4 sm:p-6">
                       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
                         <input 
                           type="text" 
                           value={user.email || 'Not provided'}
-                          className="flex-1 w-full px-4 py-3 border-2 border-pink-200 rounded-xl text-sm bg-pink-50 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-pink-500 transition-all"
+                          className="flex-1 w-full px-4 py-3 border-2 border-gray-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-gray-500 transition-all text-black"
                           readOnly
                         />
                         {user.email && (
-                          <div className="flex items-center gap-2 px-3 py-2 bg-pink-100 border-2 border-pink-300 rounded-lg">
-                            <FiCheckCircle className="w-4 h-4 text-pink-700" />
-                            <span className="text-xs font-semibold text-pink-800">Verified</span>
+                          <div className="flex items-center gap-2 px-3 py-2 bg-pink-100 border-2 border-pink-200 rounded-lg">
+                            <FiCheckCircle className="w-4 h-4 text-white" />
+                            <span className="text-xs font-semibold text-white">Verified</span>
                           </div>
                         )}
                       </div>
                       <div className="mt-3 space-y-1">
-                        <p className="text-xs text-gray-600 flex items-center gap-1">
-                          <FiCheckCircle className="w-3 h-3 text-pink-500" />
+                        <p className="text-xs text-black flex items-center gap-1">
+                          <FiCheckCircle className="w-3 h-3 text-black" />
                           Used for account login and authentication
                         </p>
-                        <p className="text-xs text-gray-600 flex items-center gap-1">
-                          <FiCheckCircle className="w-3 h-3 text-pink-500" />
+                        <p className="text-xs text-black flex items-center gap-1">
+                          <FiCheckCircle className="w-3 h-3 text-black" />
                           Order confirmations and shipping updates
                         </p>
                       </div>
@@ -748,15 +748,15 @@ export default function FlipkartAccountSettings() {
                   </div>
 
                   {/* Mobile Number */}
-                  <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden border-2 border-pink-200">
-                    <div className="p-4 sm:p-6 border-b-2 border-pink-200 bg-gradient-to-r from-pink-50 to-pink-100">
-                      <h2 className="text-lg sm:text-xl font-bold text-gray-900 flex items-center gap-2">
-                        <svg className="w-5 h-5 sm:w-6 sm:h-6 text-pink-600" fill="currentColor" viewBox="0 0 24 24">
+                  <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden border-2 border-gray-200">
+                    <div className="p-4 sm:p-6 border-b-2 border-gray-200 bg-white">
+                      <h2 className="text-lg sm:text-xl font-bold text-black flex items-center gap-2">
+                        <svg className="w-5 h-5 sm:w-6 sm:h-6 text-black" fill="currentColor" viewBox="0 0 24 24">
                           <path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/>
                         </svg>
                         Mobile Number
                       </h2>
-                      <p className="text-xs text-gray-600 mt-1">Contact number for delivery and updates</p>
+                      <p className="text-xs text-black mt-1">Contact number for delivery and updates</p>
                     </div>
                     <div className="p-4 sm:p-6">
                       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
@@ -764,34 +764,34 @@ export default function FlipkartAccountSettings() {
                           type="text" 
                           value={user.mobile && user.mobile.trim() !== '' ? user.mobile : 'Not provided'}
                           placeholder="Mobile number"
-                          className="flex-1 w-full px-4 py-3 border-2 border-pink-200 rounded-xl text-sm bg-pink-50 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-pink-500 transition-all"
+                          className="flex-1 w-full px-4 py-3 border-2 border-gray-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-gray-500 transition-all text-black"
                           readOnly
                         />
                         {user.mobile && user.mobile.trim() !== '' ? (
-                          <div className="flex items-center gap-2 px-3 py-2 bg-pink-100 border-2 border-pink-300 rounded-lg">
-                            <FiCheckCircle className="w-4 h-4 text-pink-700" />
-                            <span className="text-xs font-semibold text-pink-800">Verified</span>
+                          <div className="flex items-center gap-2 px-3 py-2 bg-pink-100 border-2 border-pink-200 rounded-lg">
+                            <FiCheckCircle className="w-4 h-4 text-white" />
+                            <span className="text-xs font-semibold text-white">Verified</span>
                           </div>
                         ) : (
-                          <div className="flex items-center gap-2 px-3 py-2 bg-pink-50 border-2 border-pink-200 rounded-lg">
-                            <FiClock className="w-4 h-4 text-pink-600" />
-                            <span className="text-xs font-semibold text-pink-700">Not Added</span>
+                          <div className="flex items-center gap-2 px-3 py-2 bg-pink-100 border-2 border-pink-200 rounded-lg">
+                            <FiClock className="w-4 h-4 text-white" />
+                            <span className="text-xs font-semibold text-white">Not Added</span>
                           </div>
                         )}
                       </div>
                       {user.mobile && user.mobile.trim() !== '' && (
-                        <div className="mt-3 p-3 bg-pink-50 rounded-lg border border-pink-200">
-                          <p className="text-xs text-gray-700 font-semibold mb-1">Mobile Number:</p>
-                          <p className="text-sm text-gray-900 font-mono">{user.mobile}</p>
+                        <div className="mt-3 p-3 bg-white rounded-lg border border-gray-200">
+                          <p className="text-xs text-black font-semibold mb-1">Mobile Number:</p>
+                          <p className="text-sm text-black font-mono">{user.mobile}</p>
                         </div>
                       )}
                       <div className="mt-3 space-y-1">
-                        <p className="text-xs text-gray-600 flex items-center gap-1">
-                          <FiCheckCircle className="w-3 h-3 text-pink-500" />
+                        <p className="text-xs text-black flex items-center gap-1">
+                          <FiCheckCircle className="w-3 h-3 text-black" />
                           Receive SMS updates for order status
                         </p>
-                        <p className="text-xs text-gray-600 flex items-center gap-1">
-                          <FiCheckCircle className="w-3 h-3 text-pink-500" />
+                        <p className="text-xs text-black flex items-center gap-1">
+                          <FiCheckCircle className="w-3 h-3 text-black" />
                           Delivery partner will contact you on this number
                         </p>
                       </div>
@@ -799,15 +799,15 @@ export default function FlipkartAccountSettings() {
                   </div>
 
                   {/* FAQs */}
-                  <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden border-2 border-pink-200">
-                    <div className="p-4 sm:p-6 border-b-2 border-pink-200 bg-gradient-to-r from-pink-50 to-pink-100">
-                      <h2 className="text-lg sm:text-xl font-bold text-gray-900 flex items-center gap-2">
-                        <svg className="w-5 h-5 sm:w-6 sm:h-6 text-pink-600" fill="currentColor" viewBox="0 0 24 24">
+                  <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden border-2 border-gray-200">
+                    <div className="p-4 sm:p-6 border-b-2 border-gray-200 bg-white">
+                      <h2 className="text-lg sm:text-xl font-bold text-black flex items-center gap-2">
+                        <svg className="w-5 h-5 sm:w-6 sm:h-6 text-black" fill="currentColor" viewBox="0 0 24 24">
                           <path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/>
                         </svg>
                         Frequently Asked Questions
                       </h2>
-                      <p className="text-xs text-gray-600 mt-1">Common questions about your account</p>
+                      <p className="text-xs text-black mt-1">Common questions about your account</p>
                     </div>
                     <div className="p-4 sm:p-6 space-y-4">
                       {[
@@ -828,13 +828,13 @@ export default function FlipkartAccountSettings() {
                           a: 'Currently, profile information is managed through your account settings. For security reasons, some information may require verification before changes can be made.'
                         }
                       ].map((faq, idx) => (
-                        <div key={idx} className="bg-gradient-to-r from-pink-50 to-pink-100 rounded-xl p-4 sm:p-5 border-2 border-pink-200 hover:shadow-md transition-all">
-                          <div className="font-bold text-gray-800 mb-2 text-sm sm:text-base flex items-start gap-2">
-                            <span className="text-pink-600 mt-0.5">Q:</span>
+                        <div key={idx} className="bg-white rounded-xl p-4 sm:p-5 border-2 border-gray-200 hover:shadow-md transition-all">
+                          <div className="font-bold text-black mb-2 text-sm sm:text-base flex items-start gap-2">
+                            <span className="text-black mt-0.5">Q:</span>
                             <span>{faq.q}</span>
                           </div>
-                          <div className="text-xs sm:text-sm text-gray-700 leading-relaxed ml-6">
-                            <span className="text-pink-600 font-semibold">A:</span> {faq.a}
+                          <div className="text-xs sm:text-sm text-black leading-relaxed ml-6">
+                            <span className="text-black font-semibold">A:</span> {faq.a}
                           </div>
                         </div>
                       ))}
@@ -844,18 +844,18 @@ export default function FlipkartAccountSettings() {
               )}
 
               {activeSection === 'orders' && (
-                <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-10 border-2 border-pink-200">
+                <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-10 border-2 border-gray-200">
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
                     <div>
-                      <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1 flex items-center gap-2">
-                        <FiShoppingBag className="w-6 h-6 text-pink-600" />
+                      <h2 className="text-xl sm:text-2xl font-bold text-black mb-1 flex items-center gap-2">
+                        <FiShoppingBag className="w-6 h-6 text-black" />
                         Your Orders
                       </h2>
-                      <p className="text-xs sm:text-sm text-gray-600">Track and manage all your orders in one place</p>
+                      <p className="text-xs sm:text-sm text-black">Track and manage all your orders in one place</p>
                     </div>
                     <button 
                       onClick={refreshOrders} 
-                      className="px-4 py-2.5 rounded-lg text-sm sm:text-base font-semibold shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 active:scale-95 bg-gradient-to-r from-pink-500 to-pink-600 text-white border-2 border-pink-600"
+                      className="px-4 py-2.5 rounded-lg text-sm sm:text-base font-semibold shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 active:scale-95 bg-pink-100 text-black border-2 border-pink-200"
                     >
                       Refresh
                     </button>
@@ -863,8 +863,8 @@ export default function FlipkartAccountSettings() {
                   {loadingOrders ? (
                     <div className="flex justify-center py-12">
                       <div className="text-center">
-                        <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-pink-500 border-t-transparent"></div>
-                        <p className="mt-4 text-gray-600">Loading orders...</p>
+                        <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-pink-100 border-t-transparent"></div>
+                        <p className="mt-4 text-black">Loading orders...</p>
                       </div>
                     </div>
                   ) : orders.length > 0 ? (
@@ -877,29 +877,25 @@ export default function FlipkartAccountSettings() {
                         estimatedDelivery.setDate(estimatedDelivery.getDate() + 7);
                         
                         return (
-                          <div key={order._id} className="border-2 border-pink-200 rounded-xl overflow-hidden hover:border-pink-400 hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-white to-pink-50">
+                          <div key={order._id} className="border-2 border-gray-200 rounded-xl overflow-hidden hover:border-gray-400 hover:shadow-lg transition-all duration-300 bg-white">
                             {/* Order Header */}
                             <div className="p-4 sm:p-5">
                               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
                                 <div className="flex-1">
                                   <div className="flex items-center gap-3 mb-2">
-                                    <div className="text-sm font-semibold text-gray-700">Order ID:</div>
-                                    <span className="font-mono font-bold text-pink-700 text-base">#{String(order._id).slice(-8).toUpperCase()}</span>
+                                    <div className="text-sm font-semibold text-black">Order ID:</div>
+                                    <span className="font-mono font-bold text-black text-base">#{String(order._id).slice(-8).toUpperCase()}</span>
                                   </div>
-                                  <div className="text-xs text-gray-500 flex items-center gap-2 mb-2">
+                                  <div className="text-xs text-black flex items-center gap-2 mb-2">
                                     <FiClock className="w-3 h-3" />
                                     <span>Placed on {orderDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
-                                    <span className="text-gray-300">•</span>
+                                    <span className="text-black">•</span>
                                     <span>{orderDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</span>
                                   </div>
                                   <div className="flex items-center gap-2 flex-wrap">
                                     <StatusBadge status={order.status} />
                                     {order.paymentMethod && (
-                                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${
-                                        order.paymentMethod === 'COD' 
-                                          ? 'bg-orange-100 text-orange-800 border border-orange-300' 
-                                          : 'bg-green-100 text-green-800 border border-green-300'
-                                      }`}>
+                                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-pink-100 text-black border border-pink-200">
                                         <FiCreditCard className="w-3 h-3" />
                                         {order.paymentMethod === 'COD' ? 'Cash on Delivery' : 'Online Payment'}
                                       </span>
@@ -907,18 +903,18 @@ export default function FlipkartAccountSettings() {
                                   </div>
                                 </div>
                                 <div className="text-right">
-                                  <div className="text-lg sm:text-xl font-bold text-gray-900 mb-1">{formatINR(order.amount)}</div>
-                                  <div className="text-xs text-gray-500">{order.items?.length || 0} item{(order.items?.length || 0) !== 1 ? 's' : ''}</div>
+                                  <div className="text-lg sm:text-xl font-bold text-black mb-1">{formatINR(order.amount)}</div>
+                                  <div className="text-xs text-black">{order.items?.length || 0} item{(order.items?.length || 0) !== 1 ? 's' : ''}</div>
                                 </div>
                               </div>
 
                               {/* Order Status Info */}
-                              <div className={`${statusInfo.bgColor} ${statusInfo.borderColor} border-2 rounded-lg p-3 mb-4`}>
+                              <div className="bg-white border-gray-200 border-2 rounded-lg p-3 mb-4">
                                 <div className="flex items-center gap-2 mb-1">
-                                  <div className={`w-2 h-2 rounded-full ${statusInfo.color.replace('text-', 'bg-')}`}></div>
-                                  <span className={`font-semibold ${statusInfo.color}`}>{statusInfo.label}</span>
+                                  <div className="w-2 h-2 rounded-full bg-black"></div>
+                                  <span className="font-semibold text-black">{statusInfo.label}</span>
                                 </div>
-                                <p className="text-xs text-gray-600 ml-4">{statusInfo.description}</p>
+                                <p className="text-xs text-black ml-4">{statusInfo.description}</p>
                               </div>
 
                               {/* Order Items Preview */}
@@ -929,21 +925,21 @@ export default function FlipkartAccountSettings() {
                                   const productPrice = it.price || it.product?.price || it.product?.mrp || 0;
                                   
                                   return (
-                                    <div key={idx} className="flex items-center gap-3 p-3 bg-white rounded-lg hover:bg-pink-50 transition-colors border border-pink-100">
+                                    <div key={idx} className="flex items-center gap-3 p-3 bg-white rounded-lg hover:bg-white transition-colors border border-gray-200">
                                       <img 
                                         src={productImage} 
                                         alt={productTitle} 
-                                        className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-lg border-2 border-pink-200 flex-shrink-0" 
+                                        className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-lg border-2 border-gray-200 flex-shrink-0" 
                                         onError={(e) => { e.target.src = getProductImage(null); }}
                                       />
                                       <div className="flex-1 min-w-0">
-                                        <div className="text-sm sm:text-base font-semibold text-gray-800 mb-1 truncate">{productTitle}</div>
-                                        <div className="text-xs text-gray-600 flex items-center gap-2 flex-wrap">
-                                          <span className="bg-pink-100 text-pink-700 px-2 py-0.5 rounded font-semibold">Qty: {it.quantity}</span>
-                                          {it.size && <span className="bg-pink-200 text-pink-800 px-2 py-0.5 rounded font-semibold">Size: {it.size}</span>}
+                                        <div className="text-sm sm:text-base font-semibold text-black mb-1 truncate">{productTitle}</div>
+                                        <div className="text-xs text-black flex items-center gap-2 flex-wrap">
+                                          <span className="bg-pink-100 text-black px-2 py-0.5 rounded font-semibold">Qty: {it.quantity}</span>
+                                          {it.size && <span className="bg-pink-100 text-black px-2 py-0.5 rounded font-semibold">Size: {it.size}</span>}
                                         </div>
                                       </div>
-                                      <div className="text-sm sm:text-base font-bold text-gray-900">{formatINR(productPrice * (it.quantity || 1))}</div>
+                                      <div className="text-sm sm:text-base font-bold text-black">{formatINR(productPrice * (it.quantity || 1))}</div>
                                     </div>
                                   );
                                 })}
@@ -951,7 +947,7 @@ export default function FlipkartAccountSettings() {
                                   <div className="text-center py-2">
                                     <button
                                       onClick={() => toggleOrderExpansion(order._id)}
-                                      className="text-sm text-pink-600 hover:text-pink-700 font-semibold"
+                                      className="text-sm text-black hover:text-black font-semibold"
                                     >
                                       +{order.items.length - 2} more item{(order.items.length - 2) !== 1 ? 's' : ''}
                                     </button>
@@ -961,15 +957,15 @@ export default function FlipkartAccountSettings() {
 
                               {/* Expanded Details */}
                               {isExpanded && (
-                                <div className="border-t-2 border-pink-200 pt-4 mt-4 space-y-4">
+                                <div className="border-t-2 border-gray-200 pt-4 mt-4 space-y-4">
                                   {/* Shipping Address */}
                                   {order.shippingAddress && (
-                                    <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                                    <div className="bg-white rounded-lg p-4 border border-gray-200">
                                       <div className="flex items-center gap-2 mb-2">
-                                        <FiMap className="w-4 h-4 text-pink-600" />
-                                        <span className="font-semibold text-gray-900 text-sm">Delivery Address</span>
+                                        <FiMap className="w-4 h-4 text-black" />
+                                        <span className="font-semibold text-black text-sm">Delivery Address</span>
                                       </div>
-                                      <div className="text-sm text-gray-700 space-y-1 ml-6">
+                                      <div className="text-sm text-black space-y-1 ml-6">
                                         <p className="font-medium">{order.shippingAddress.fullName}</p>
                                         <p>{order.shippingAddress.address || order.shippingAddress.addressLine1}</p>
                                         {order.shippingAddress.addressLine2 && <p>{order.shippingAddress.addressLine2}</p>}
@@ -990,53 +986,53 @@ export default function FlipkartAccountSettings() {
                                   )}
 
                                   {/* Order Timeline */}
-                                  <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                                  <div className="bg-white rounded-lg p-4 border border-gray-200">
                                     <div className="flex items-center gap-2 mb-3">
-                                      <FiTruck className="w-4 h-4 text-pink-600" />
-                                      <span className="font-semibold text-gray-900 text-sm">Order Timeline</span>
+                                      <FiTruck className="w-4 h-4 text-black" />
+                                      <span className="font-semibold text-black text-sm">Order Timeline</span>
                                     </div>
                                     <div className="space-y-2 ml-6">
                                       <div className="flex items-center gap-2">
-                                        <div className={`w-2 h-2 rounded-full ${['created', 'paid', 'confirmed'].includes(order.status?.toLowerCase()) ? 'bg-green-500' : 'bg-gray-300'}`}></div>
-                                        <span className="text-xs text-gray-600">Order Placed</span>
-                                        <span className="text-xs text-gray-400 ml-auto">{orderDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+                                        <div className="w-2 h-2 rounded-full bg-black"></div>
+                                        <span className="text-xs text-black">Order Placed</span>
+                                        <span className="text-xs text-black ml-auto">{orderDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
                                       </div>
                                       <div className="flex items-center gap-2">
-                                        <div className={`w-2 h-2 rounded-full ${['confirmed', 'paid'].includes(order.status?.toLowerCase()) ? 'bg-green-500' : 'bg-gray-300'}`}></div>
-                                        <span className="text-xs text-gray-600">Confirmed</span>
-                                        <span className="text-xs text-gray-400 ml-auto">Within 24hrs</span>
+                                        <div className="w-2 h-2 rounded-full bg-black"></div>
+                                        <span className="text-xs text-black">Confirmed</span>
+                                        <span className="text-xs text-black ml-auto">Within 24hrs</span>
                                       </div>
                                       <div className="flex items-center gap-2">
-                                        <div className={`w-2 h-2 rounded-full ${order.status?.toLowerCase() === 'on_the_way' ? 'bg-green-500' : 'bg-gray-300'}`}></div>
-                                        <span className="text-xs text-gray-600">Shipped</span>
-                                        <span className="text-xs text-gray-400 ml-auto">2-3 days</span>
+                                        <div className="w-2 h-2 rounded-full bg-black"></div>
+                                        <span className="text-xs text-black">Shipped</span>
+                                        <span className="text-xs text-black ml-auto">2-3 days</span>
                                       </div>
                                       <div className="flex items-center gap-2">
-                                        <div className={`w-2 h-2 rounded-full ${order.status?.toLowerCase() === 'delivered' ? 'bg-green-500' : 'bg-gray-300'}`}></div>
-                                        <span className="text-xs text-gray-600">Delivered</span>
-                                        <span className="text-xs text-gray-400 ml-auto">{estimatedDelivery.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+                                        <div className="w-2 h-2 rounded-full bg-black"></div>
+                                        <span className="text-xs text-black">Delivered</span>
+                                        <span className="text-xs text-black ml-auto">{estimatedDelivery.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
                                       </div>
                                     </div>
                                   </div>
 
                                   {/* Order Summary */}
-                                  <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                                  <div className="bg-white rounded-lg p-4 border border-gray-200">
                                     <div className="flex items-center gap-2 mb-3">
-                                      <FiDollarSign className="w-4 h-4 text-pink-600" />
-                                      <span className="font-semibold text-gray-900 text-sm">Order Summary</span>
+                                      <FiDollarSign className="w-4 h-4 text-black" />
+                                      <span className="font-semibold text-black text-sm">Order Summary</span>
                                     </div>
                                     <div className="space-y-2 ml-6 text-sm">
                                       <div className="flex justify-between">
-                                        <span className="text-gray-600">Subtotal ({order.items?.length || 0} items)</span>
-                                        <span className="font-medium text-gray-900">{formatINR(order.amount)}</span>
+                                        <span className="text-black">Subtotal ({order.items?.length || 0} items)</span>
+                                        <span className="font-medium text-black">{formatINR(order.amount)}</span>
                                       </div>
                                       <div className="flex justify-between">
-                                        <span className="text-gray-600">Shipping</span>
-                                        <span className="font-medium text-green-600">Free</span>
+                                        <span className="text-black">Shipping</span>
+                                        <span className="font-medium text-black">Free</span>
                                       </div>
                                       <div className="flex justify-between pt-2 border-t border-gray-300">
-                                        <span className="font-bold text-gray-900">Total Amount</span>
-                                        <span className="font-bold text-lg text-gray-900">{formatINR(order.amount)}</span>
+                                        <span className="font-bold text-black">Total Amount</span>
+                                        <span className="font-bold text-lg text-black">{formatINR(order.amount)}</span>
                                       </div>
                                     </div>
                                   </div>
@@ -1044,17 +1040,17 @@ export default function FlipkartAccountSettings() {
                               )}
 
                               {/* Action Buttons */}
-                              <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t-2 border-pink-200">
+                              <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t-2 border-gray-200">
                                 <button
                                   onClick={() => toggleOrderExpansion(order._id)}
-                                  className="px-4 py-2 rounded-lg text-sm font-semibold bg-white text-pink-600 border-2 border-pink-300 hover:bg-pink-50 transition-all"
+                                  className="px-4 py-2 rounded-lg text-sm font-semibold bg-pink-100 text-black border-2 border-pink-200 hover:bg-pink-100 transition-all"
                                 >
                                   <FiEye className="w-4 h-4 inline mr-2" />
                                   {isExpanded ? 'Show Less' : 'View Details'}
                                 </button>
                                 <button
                                   onClick={() => handleViewInvoice(order._id)}
-                                  className="px-4 py-2 rounded-lg text-sm font-semibold bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 transition-all shadow-md hover:shadow-lg"
+                                  className="px-4 py-2 rounded-lg text-sm font-semibold bg-pink-100 text-black hover:bg-pink-100 transition-all shadow-md hover:shadow-lg"
                                 >
                                   <FiFileText className="w-4 h-4 inline mr-2" />
                                   View Invoice
@@ -1062,7 +1058,7 @@ export default function FlipkartAccountSettings() {
                                 {order.status?.toLowerCase() === 'delivered' && (
                                   <button
                                     onClick={() => navigate(`/product/${order.items?.[0]?.product?._id || order.items?.[0]?.product?.id}`)}
-                                    className="px-4 py-2 rounded-lg text-sm font-semibold bg-white text-pink-600 border-2 border-pink-300 hover:bg-pink-50 transition-all"
+                                    className="px-4 py-2 rounded-lg text-sm font-semibold bg-pink-100 text-black border-2 border-pink-200 hover:bg-pink-100 transition-all"
                                   >
                                     Buy Again
                                   </button>
@@ -1076,16 +1072,16 @@ export default function FlipkartAccountSettings() {
                   ) : (
                     <div className="text-center py-12 sm:py-16">
                       <div className="relative inline-block mb-6">
-                        <FiShoppingBag className="w-24 h-24 sm:w-32 sm:h-32 text-pink-200" />
-                        <div className="absolute -bottom-2 -right-2 w-10 h-10 bg-pink-500 rounded-full flex items-center justify-center shadow-lg">
+                        <FiShoppingBag className="w-24 h-24 sm:w-32 sm:h-32 text-black" />
+                        <div className="absolute -bottom-2 -right-2 w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center shadow-lg">
                           <FiShoppingBag className="w-5 h-5 text-white" />
                         </div>
                       </div>
-                      <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">No Orders Yet</h3>
-                      <p className="text-gray-600 text-sm sm:text-base mb-6">You haven't placed any orders yet. Start shopping now!</p>
+                      <h3 className="text-xl sm:text-2xl font-bold text-black mb-2">No Orders Yet</h3>
+                      <p className="text-black text-sm sm:text-base mb-6">You haven't placed any orders yet. Start shopping now!</p>
                       <button 
                         onClick={() => navigate('/shop')} 
-                        className="px-6 sm:px-8 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-95 bg-gradient-to-r from-pink-500 to-pink-600 text-white border-2 border-pink-600"
+                        className="px-6 sm:px-8 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-95 bg-pink-100 text-black border-2 border-pink-200"
                       >
                         Start Shopping
                       </button>
@@ -1095,66 +1091,66 @@ export default function FlipkartAccountSettings() {
               )}
 
               {activeSection === 'addresses' && (
-                <div className="bg-white rounded-2xl shadow-lg overflow-hidden border-2 border-pink-200">
-                  <div className="p-4 sm:p-6 border-b-2 border-pink-200 bg-gradient-to-r from-pink-50 to-pink-100">
-                    <h2 className="text-lg sm:text-xl font-bold text-gray-900 flex items-center gap-2">
-                      <FiMapPin className="w-5 h-5 sm:w-6 sm:h-6 text-pink-600" />
+                <div className="bg-white rounded-2xl shadow-lg overflow-hidden border-2 border-gray-200">
+                  <div className="p-4 sm:p-6 border-b-2 border-gray-200 bg-white">
+                    <h2 className="text-lg sm:text-xl font-bold text-black flex items-center gap-2">
+                      <FiMapPin className="w-5 h-5 sm:w-6 sm:h-6 text-black" />
                       My Addresses
                     </h2>
-                    <p className="text-xs text-gray-600 mt-1">Manage your delivery addresses</p>
+                    <p className="text-xs text-black mt-1">Manage your delivery addresses</p>
                   </div>
                   <div className="p-4 sm:p-6">
                     {loadingAddresses ? (
                       <div className="flex justify-center py-12">
                         <div className="text-center">
-                          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-pink-500 border-t-transparent"></div>
-                          <p className="mt-4 text-gray-600">Loading addresses...</p>
+                          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-pink-100 border-t-transparent"></div>
+                          <p className="mt-4 text-black">Loading addresses...</p>
                         </div>
                       </div>
                     ) : addresses.length > 0 ? (
                       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                         {addresses.map((address, index) => (
-                          <div key={address._id || index} className="border-2 border-pink-200 rounded-xl p-4 sm:p-5 hover:border-pink-400 hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-white to-pink-50">
+                          <div key={address._id || index} className="border-2 border-gray-200 rounded-xl p-4 sm:p-5 hover:border-gray-400 hover:shadow-lg transition-all duration-300 bg-white">
                             <div className="flex justify-between items-start mb-3">
-                              <h3 className="font-bold text-gray-900 text-base sm:text-lg flex items-center gap-2">
+                              <h3 className="font-bold text-black text-base sm:text-lg flex items-center gap-2">
                                 {address.addressType?.toLowerCase() === 'home' ? (
-                                  <FiHome className="w-5 h-5 text-pink-600" />
+                                  <FiHome className="w-5 h-5 text-black" />
                                 ) : (
-                                  <FiBriefcase className="w-5 h-5 text-pink-600" />
+                                  <FiBriefcase className="w-5 h-5 text-black" />
                                 )}
                                 {address.fullName}
                               </h3>
                               <div className="flex items-center gap-2">
                                 {address.isDefault && (
-                                  <span className="px-3 py-1 text-xs font-bold bg-gradient-to-r from-pink-500 to-pink-600 text-white rounded-full shadow-md">
+                                  <span className="px-3 py-1 text-xs font-bold bg-pink-100 text-black rounded-full shadow-md">
                                     Default
                                   </span>
                                 )}
                                 <button
                                   onClick={() => openEditModal(address)}
-                                  className="p-2 text-pink-600 hover:bg-pink-100 rounded-lg transition-colors"
+                                  className="p-2 bg-pink-100 text-black rounded-lg transition-colors"
                                   title="Edit Address"
                                 >
                                   <FiEdit className="w-4 h-4" />
                                 </button>
                               </div>
                             </div>
-                            <div className="space-y-1.5 text-sm text-gray-600">
+                            <div className="space-y-1.5 text-sm text-black">
                               <p className="leading-relaxed">{address.addressLine1 || address.address}</p>
                               {address.addressLine2 && (
                                 <p className="leading-relaxed">{address.addressLine2}</p>
                               )}
                               {address.landmark && (
-                                <p className="text-gray-500 italic">Landmark: {address.landmark}</p>
+                                <p className="text-black italic">Landmark: {address.landmark}</p>
                               )}
-                              <p className="font-semibold text-gray-700 mt-2">
+                              <p className="font-semibold text-black mt-2">
                                 {address.city}, {address.state} - {address.pincode}
                               </p>
-                              <div className="flex items-center gap-2 pt-2 mt-2 border-t border-pink-200">
-                                <svg className="w-4 h-4 text-pink-600" fill="currentColor" viewBox="0 0 24 24">
+                              <div className="flex items-center gap-2 pt-2 mt-2 border-t border-gray-200">
+                                <svg className="w-4 h-4 text-black" fill="currentColor" viewBox="0 0 24 24">
                                   <path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/>
                                 </svg>
-                                <span className="font-medium text-gray-700">{address.phoneNumber || address.mobileNumber || address.alternatePhone}</span>
+                                <span className="font-medium text-black">{address.phoneNumber || address.mobileNumber || address.alternatePhone}</span>
                               </div>
                             </div>
                           </div>
@@ -1163,16 +1159,16 @@ export default function FlipkartAccountSettings() {
                     ) : (
                       <div className="text-center py-12 sm:py-16">
                         <div className="relative inline-block mb-6">
-                          <FiMapPin className="w-24 h-24 sm:w-32 sm:h-32 text-pink-200" />
-                          <div className="absolute -bottom-2 -right-2 w-10 h-10 bg-pink-500 rounded-full flex items-center justify-center shadow-lg">
+                          <FiMapPin className="w-24 h-24 sm:w-32 sm:h-32 text-black" />
+                          <div className="absolute -bottom-2 -right-2 w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center shadow-lg">
                             <FiMapPin className="w-5 h-5 text-white" />
                           </div>
                         </div>
-                        <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">No Addresses Saved</h3>
-                        <p className="text-gray-600 text-sm sm:text-base mb-6">You haven't added any addresses yet. Add your first address to get started with faster checkout.</p>
+                        <h3 className="text-xl sm:text-2xl font-bold text-black mb-2">No Addresses Saved</h3>
+                        <p className="text-black text-sm sm:text-base mb-6">You haven't added any addresses yet. Add your first address to get started with faster checkout.</p>
                         <button 
                           onClick={() => navigate('/address')}
-                          className="px-6 sm:px-8 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-95 bg-gradient-to-r from-pink-500 to-pink-600 text-white border-2 border-pink-600"
+                          className="px-6 sm:px-8 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-95 bg-pink-100 text-black border-2 border-pink-200"
                         >
                           Add New Address
                         </button>
@@ -1190,9 +1186,9 @@ export default function FlipkartAccountSettings() {
       {isEditModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-y-auto">
           <div className="bg-white rounded-2xl w-full max-w-2xl shadow-2xl max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-gradient-to-r from-pink-500 to-pink-600 px-6 py-4 flex justify-between items-center rounded-t-2xl z-10">
+            <div className="sticky top-0 bg-pink-100 px-6 py-4 flex justify-between items-center rounded-t-2xl z-10">
               <h3 className="text-xl font-bold text-white">Edit Address</h3>
-              <button onClick={closeEditModal} className="text-white hover:text-pink-100">
+              <button onClick={closeEditModal} className="text-white hover:text-white">
                 <FiX className="h-6 w-6" />
               </button>
             </div>
@@ -1200,24 +1196,24 @@ export default function FlipkartAccountSettings() {
             <form onSubmit={handleSaveAddress} className="p-6 space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Full Name *</label>
+                  <label className="block text-sm font-semibold text-black mb-2">Full Name *</label>
                   <input
                     type="text"
                     name="fullName"
                     value={addressFormData.fullName}
                     onChange={handleAddressFormChange}
-                    className="w-full px-4 py-2 border-2 border-pink-200 rounded-lg focus:border-pink-500 focus:outline-none"
+                    className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-gray-500 focus:outline-none text-black"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Mobile Number *</label>
+                  <label className="block text-sm font-semibold text-black mb-2">Mobile Number *</label>
                   <input
                     type="tel"
                     name="mobileNumber"
                     value={addressFormData.mobileNumber}
                     onChange={handleAddressFormChange}
-                    className="w-full px-4 py-2 border-2 border-pink-200 rounded-lg focus:border-pink-500 focus:outline-none"
+                    className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-gray-500 focus:outline-none text-black"
                     required
                     maxLength="10"
                     pattern="[0-9]{10}"
@@ -1226,53 +1222,53 @@ export default function FlipkartAccountSettings() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Address Line 1 *</label>
+                <label className="block text-sm font-semibold text-black mb-2">Address Line 1 *</label>
                 <input
                   type="text"
                   name="addressLine1"
                   value={addressFormData.addressLine1}
                   onChange={handleAddressFormChange}
-                  className="w-full px-4 py-2 border-2 border-pink-200 rounded-lg focus:border-pink-500 focus:outline-none"
+                  className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-gray-500 focus:outline-none text-black"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Address Line 2</label>
+                <label className="block text-sm font-semibold text-black mb-2">Address Line 2</label>
                 <input
                   type="text"
                   name="addressLine2"
                   value={addressFormData.addressLine2}
                   onChange={handleAddressFormChange}
-                  className="w-full px-4 py-2 border-2 border-pink-200 rounded-lg focus:border-pink-500 focus:outline-none"
+                  className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-gray-500 focus:outline-none text-black"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Locality</label>
+                <label className="block text-sm font-semibold text-black mb-2">Locality</label>
                 <input
                   type="text"
                   name="locality"
                   value={addressFormData.locality}
                   onChange={handleAddressFormChange}
-                  className="w-full px-4 py-2 border-2 border-pink-200 rounded-lg focus:border-pink-500 focus:outline-none"
+                  className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-gray-500 focus:outline-none text-black"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">City *</label>
+                  <label className="block text-sm font-semibold text-black mb-2">City *</label>
                   <input
                     type="text"
                     name="city"
                     value={addressFormData.city}
                     onChange={handleAddressFormChange}
-                    className="w-full px-4 py-2 border-2 border-pink-200 rounded-lg focus:border-pink-500 focus:outline-none"
+                    className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-gray-500 focus:outline-none text-black"
                     required
                   />
                 </div>
                 <div className="relative" ref={stateDropdownRef}>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">State *</label>
+                  <label className="block text-sm font-semibold text-black mb-2">State *</label>
                   <input
                     type="text"
                     name="state"
@@ -1283,11 +1279,11 @@ export default function FlipkartAccountSettings() {
                       setShowStateDropdown(true);
                     }}
                     onFocus={() => setShowStateDropdown(true)}
-                    className="w-full px-4 py-2 border-2 border-pink-200 rounded-lg focus:border-pink-500 focus:outline-none"
+                    className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-gray-500 focus:outline-none text-black"
                     required
                   />
                   {showStateDropdown && (
-                    <div className="absolute z-20 w-full mt-1 bg-white border-2 border-pink-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                    <div className="absolute z-20 w-full mt-1 bg-white border-2 border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                       {filteredStates.map((state) => (
                         <div
                           key={state}
@@ -1296,7 +1292,7 @@ export default function FlipkartAccountSettings() {
                             setShowStateDropdown(false);
                             setStateSearchTerm('');
                           }}
-                          className="px-4 py-2 hover:bg-pink-50 cursor-pointer text-sm"
+                          className="px-4 py-2 hover:bg-pink-100 hover:text-black cursor-pointer text-sm text-black"
                         >
                           {state}
                         </div>
@@ -1308,25 +1304,25 @@ export default function FlipkartAccountSettings() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Pincode *</label>
+                  <label className="block text-sm font-semibold text-black mb-2">Pincode *</label>
                   <input
                     type="text"
                     name="pincode"
                     value={addressFormData.pincode}
                     onChange={handleAddressFormChange}
-                    className="w-full px-4 py-2 border-2 border-pink-200 rounded-lg focus:border-pink-500 focus:outline-none"
+                    className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-gray-500 focus:outline-none text-black"
                     required
                     maxLength="6"
                     pattern="[0-9]{6}"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Address Type *</label>
+                  <label className="block text-sm font-semibold text-black mb-2">Address Type *</label>
                   <select
                     name="addressType"
                     value={addressFormData.addressType}
                     onChange={handleAddressFormChange}
-                    className="w-full px-4 py-2 border-2 border-pink-200 rounded-lg focus:border-pink-500 focus:outline-none"
+                    className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-gray-500 focus:outline-none text-black"
                     required
                   >
                     <option value="Home">Home</option>
@@ -1336,41 +1332,41 @@ export default function FlipkartAccountSettings() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Landmark</label>
+                <label className="block text-sm font-semibold text-black mb-2">Landmark</label>
                 <input
                   type="text"
                   name="landmark"
                   value={addressFormData.landmark}
                   onChange={handleAddressFormChange}
-                  className="w-full px-4 py-2 border-2 border-pink-200 rounded-lg focus:border-pink-500 focus:outline-none"
+                  className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-gray-500 focus:outline-none text-black"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Alternate Phone</label>
+                <label className="block text-sm font-semibold text-black mb-2">Alternate Phone</label>
                 <input
                   type="tel"
                   name="alternatePhone"
                   value={addressFormData.alternatePhone}
                   onChange={handleAddressFormChange}
-                  className="w-full px-4 py-2 border-2 border-pink-200 rounded-lg focus:border-pink-500 focus:outline-none"
+                  className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-gray-500 focus:outline-none text-black"
                   maxLength="10"
                   pattern="[0-9]{10}"
                 />
               </div>
 
-              <div className="flex justify-end gap-3 pt-4 border-t border-pink-200">
+              <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
                 <button
                   type="button"
                   onClick={closeEditModal}
-                  className="px-6 py-2 border-2 border-pink-300 rounded-lg text-pink-700 font-semibold hover:bg-pink-50 transition-all"
+                  className="px-6 py-2 border-2 border-gray-300 rounded-lg text-black font-semibold hover:bg-white transition-all"
                   disabled={savingAddress}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2 bg-gradient-to-r from-pink-500 to-pink-600 text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all transform hover:scale-105 disabled:opacity-50 flex items-center gap-2"
+                  className="px-6 py-2 bg-pink-100 text-black rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all transform hover:scale-105 disabled:opacity-50 flex items-center gap-2"
                   disabled={savingAddress}
                 >
                   <FiSave className="w-4 h-4" />
@@ -1387,10 +1383,10 @@ export default function FlipkartAccountSettings() {
         <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4 overflow-y-auto" onClick={() => setShowInvoiceModal(false)}>
           <div className="bg-white rounded-lg max-w-4xl w-full my-8 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center shadow-sm">
-              <h2 className="text-xl font-bold text-gray-900">Invoice</h2>
+              <h2 className="text-xl font-bold text-black">Invoice</h2>
               <button
                 onClick={() => setShowInvoiceModal(false)}
-                className="text-gray-400 hover:text-gray-600 transition-colors"
+                className="text-black hover:text-black transition-colors"
               >
                 <FiX className="w-6 h-6" />
               </button>
@@ -1398,8 +1394,8 @@ export default function FlipkartAccountSettings() {
             <div className="p-6">
               {loadingInvoice ? (
                 <div className="text-center py-12">
-                  <div className="animate-spin rounded-full h-12 w-12 border-4 border-pink-500 border-t-transparent mx-auto mb-4"></div>
-                  <p className="text-gray-600">Loading invoice...</p>
+                  <div className="animate-spin rounded-full h-12 w-12 border-4 border-pink-100 border-t-transparent mx-auto mb-4"></div>
+                  <p className="text-black">Loading invoice...</p>
                 </div>
               ) : selectedOrder ? (
                 <Invoice 
@@ -1409,7 +1405,7 @@ export default function FlipkartAccountSettings() {
                 />
               ) : (
                 <div className="text-center py-12">
-                  <p className="text-gray-600">Order details not available</p>
+                  <p className="text-black">Order details not available</p>
                 </div>
               )}
             </div>

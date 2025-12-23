@@ -6,9 +6,11 @@ import { getOrderById } from '../services/api';
 import { CheckCircle, Package, Calendar, Receipt, Truck, FileText } from 'lucide-react';
 import Invoice from '../components/Invoice';
 import ScrollToTop from '../components/ScrollToTop';
+import { useHeaderColor } from '../utils/useHeaderColor';
 
 const OrderSuccess = () => {
   const navigate = useNavigate();
+  const headerColor = useHeaderColor();
   const [searchParams] = useSearchParams();
   const { cartTotal } = useCart();
   const [user, setUser] = useState(null);
@@ -321,21 +323,24 @@ const OrderSuccess = () => {
             <div className="space-y-3 sm:space-y-4">
               <button
                 onClick={() => setShowInvoice(true)}
-                className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 sm:py-3.5 lg:py-4 rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-300 font-semibold text-sm sm:text-base shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 sm:gap-3"
+                className="w-full text-black py-3 sm:py-3.5 lg:py-4 rounded-xl border-2 border-black transition-all duration-300 font-semibold text-sm sm:text-base shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 sm:gap-3"
+                style={{ backgroundColor: headerColor }}
               >
                 <FileText className="w-5 h-5 sm:w-6 sm:h-6" />
                 <span>View Invoice</span>
               </button>
               <button
                 onClick={handleGoToOrders}
-                className="w-full bg-gradient-to-r from-black to-gray-800 text-white py-3 sm:py-3.5 lg:py-4 rounded-xl hover:from-gray-800 hover:to-black transition-all duration-300 font-semibold text-sm sm:text-base shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 sm:gap-3"
+                className="w-full text-black py-3 sm:py-3.5 lg:py-4 rounded-xl border-2 border-black transition-all duration-300 font-semibold text-sm sm:text-base shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 sm:gap-3"
+                style={{ backgroundColor: headerColor }}
               >
                 <Package className="w-5 h-5 sm:w-6 sm:h-6" />
                 <span>View My Orders</span>
               </button>
               <button
                 onClick={handleContinueShopping}
-                className="w-full bg-white text-gray-700 py-3 sm:py-3.5 lg:py-4 rounded-xl border-2 border-gray-300 hover:border-gray-400 hover:bg-gray-50 transition-all duration-300 font-semibold text-sm sm:text-base transform hover:scale-[1.02] active:scale-[0.98]"
+                className="w-full text-black py-3 sm:py-3.5 lg:py-4 rounded-xl border-2 border-black transition-all duration-300 font-semibold text-sm sm:text-base transform hover:scale-[1.02] active:scale-[0.98]"
+                style={{ backgroundColor: headerColor }}
               >
                 Continue Shopping
               </button>

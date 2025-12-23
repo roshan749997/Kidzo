@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { api } from '../utils/api';
 import ScrollToTop from '../components/ScrollToTop';
+import { useHeaderColor } from '../utils/useHeaderColor';
 
 const SignIn = () => {
+  const headerColor = useHeaderColor();
   const [loginMode, setLoginMode] = useState('email'); // 'email' or 'mobile'
   const [step, setStep] = useState(1); // 1: Mobile input, 2: OTP input
   const [formData, setFormData] = useState({
@@ -433,9 +435,7 @@ const SignIn = () => {
                       type="submit"
                       disabled={loading}
                       className="w-full text-black py-2.5 sm:py-3 rounded-lg font-semibold shadow-md hover:shadow-lg transition-all duration-300 disabled:opacity-60 transform active:scale-[0.98] flex items-center justify-center gap-2 border-2 border-black text-sm sm:text-base"
-                      style={{ backgroundColor: '#FFD1DC' }}
-                      onMouseEnter={(e) => !e.target.disabled && (e.target.style.backgroundColor = '#FFB6C1')}
-                      onMouseLeave={(e) => e.target.style.backgroundColor = '#FFD1DC'}
+                      style={{ backgroundColor: headerColor }}
                     >
                       {loading ? (
                         <>
@@ -506,9 +506,7 @@ const SignIn = () => {
                       type="submit"
                       disabled={loading || mobile.length !== 10 || !/^[6-9]\d{9}$/.test(mobile)}
                       className="w-full text-black py-2.5 sm:py-3 rounded-lg border-2 border-black font-semibold shadow-md hover:shadow-lg transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed transform active:scale-[0.98] text-sm sm:text-base"
-                      style={{ backgroundColor: '#FFD1DC' }}
-                      onMouseEnter={(e) => !e.target.disabled && (e.target.style.backgroundColor = '#FFB6C1')}
-                      onMouseLeave={(e) => e.target.style.backgroundColor = '#FFD1DC'}
+                      style={{ backgroundColor: headerColor }}
                     >
                       {loading ? (
                         <span className="flex items-center justify-center gap-2">
@@ -606,9 +604,7 @@ const SignIn = () => {
                       type="submit"
                       disabled={loading || getOtpValue().length !== 6}
                       className="w-full text-black py-2.5 sm:py-3 rounded-lg border-2 border-black font-semibold shadow-md hover:shadow-lg transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed transform active:scale-[0.98] text-sm sm:text-base"
-                      style={{ backgroundColor: '#FFD1DC' }}
-                      onMouseEnter={(e) => !e.target.disabled && (e.target.style.backgroundColor = '#FFB6C1')}
-                      onMouseLeave={(e) => e.target.style.backgroundColor = '#FFD1DC'}
+                      style={{ backgroundColor: headerColor }}
                     >
                       {loading ? (
                         <span className="flex items-center justify-center gap-2">

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { getMyAddress, saveMyAddress, deleteAddressById, createPaymentOrder, verifyPayment, createCodOrder } from '../services/api';
 import ScrollToTop from '../components/ScrollToTop';
+import { useHeaderColor } from '../utils/useHeaderColor';
 
 const indianStates = [
   'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh',
@@ -17,6 +18,7 @@ const indianStates = [
 
 export default function AddressForm() {
   const navigate = useNavigate();
+  const headerColor = useHeaderColor();
   const [showStateDropdown, setShowStateDropdown] = useState(false);
   const [filteredStates, setFilteredStates] = useState([...indianStates]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -411,7 +413,7 @@ export default function AddressForm() {
                   {formData.landmark && <div className="text-sm text-gray-700">Landmark: {formData.landmark}</div>}
                   {formData.alternatePhone && <div className="text-sm text-gray-700">Alt: {formData.alternatePhone}</div>}
                   <div className="mt-4 flex gap-3">
-                    <button type="button" onClick={() => setEditMode(true)} className="px-4 py-2 border-2 rounded-lg text-[#FF1493] border-[#FF1493] hover:bg-pink-50 cursor-pointer font-semibold transition-all shadow-sm hover:shadow-md">Edit Address</button>
+                    <button type="button" onClick={() => setEditMode(true)} className="px-4 py-2 border-2 rounded-lg text-black border-black cursor-pointer font-semibold transition-all shadow-sm hover:shadow-md" style={{ backgroundColor: headerColor }}>Edit Address</button>
                     <button 
                       type="button" 
                       onClick={async () => {
@@ -451,7 +453,8 @@ export default function AddressForm() {
               <button
                 type="button"
                 onClick={handleUseCurrentLocation}
-                className="mb-6 bg-gradient-to-r from-[#FF1493] to-[#8B2BE2] text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:from-[#E01282] hover:to-[#7A1BD1] transition-all font-medium shadow-md hover:shadow-lg cursor-pointer"
+                className="mb-6 text-black px-4 py-2 rounded-lg flex items-center gap-2 border-2 border-black transition-all font-medium shadow-md hover:shadow-lg cursor-pointer"
+                style={{ backgroundColor: headerColor }}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
@@ -644,16 +647,15 @@ export default function AddressForm() {
                 <button
                   type="submit"
                   disabled={saving}
-                  className={`bg-gradient-to-r from-[#FF1493] to-[#8B2BE2] hover:from-[#E01282] hover:to-[#7A1BD1] text-white px-8 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl cursor-pointer w-full sm:w-auto text-center transform hover:scale-105 active:scale-95 ${saving ? 'opacity-70 cursor-not-allowed' : ''}`}
+                  className={`text-black px-8 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl cursor-pointer w-full sm:w-auto text-center transform hover:scale-105 active:scale-95 border-2 border-black ${saving ? 'opacity-70 cursor-not-allowed' : ''}`}
+                  style={{ backgroundColor: headerColor }}
                 >
                   {saving ? 'Saving...' : 'SAVE AND DELIVER HERE'}
                 </button>
                 <button
                   onClick={handleCancel}
                   className="text-black px-6 py-3 rounded-xl font-semibold transition-all cursor-pointer w-full sm:w-auto text-center border-2 border-black shadow-md hover:shadow-lg"
-                  style={{ backgroundColor: '#FFD1DC' }}
-                  onMouseEnter={(e) => e.target.style.backgroundColor = '#FFB6C1'}
-                  onMouseLeave={(e) => e.target.style.backgroundColor = '#FFD1DC'}
+                  style={{ backgroundColor: headerColor }}
                 >
                   CANCEL
                 </button>
@@ -809,13 +811,7 @@ export default function AddressForm() {
                   ? 'text-black hover:shadow-xl transform hover:scale-105 active:scale-95' 
                   : 'bg-gray-300 text-gray-600 cursor-not-allowed border-gray-300'
               }`}
-              style={hasSavedAddress ? { backgroundColor: '#FFD1DC' } : {}}
-              onMouseEnter={(e) => {
-                if (hasSavedAddress) e.target.style.backgroundColor = '#FFB6C1';
-              }}
-              onMouseLeave={(e) => {
-                if (hasSavedAddress) e.target.style.backgroundColor = '#FFD1DC';
-              }}
+              style={hasSavedAddress ? { backgroundColor: headerColor } : {}}
             >
               {paymentMethod === 'cod' ? 'PLACE ORDER (COD)' : 'PROCEED TO PAYMENT'}
             </button>

@@ -5,11 +5,12 @@ import { fetchSareeById, fetchSarees } from '../services/api';
 import { placeholders, getProductImage } from '../utils/imagePlaceholder';
 import { FaRupeeSign, FaSpinner, FaStar, FaRegStar } from 'react-icons/fa';
 import ScrollToTop from './ScrollToTop';
+import { useHeaderColor } from '../utils/useHeaderColor';
 
 const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
 
 // Simple LoginModal Component
-const LoginModal = ({ isOpen, onClose }) => {
+const LoginModal = ({ isOpen, onClose, buttonColor }) => {
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={onClose}>
@@ -20,15 +21,14 @@ const LoginModal = ({ isOpen, onClose }) => {
           <Link
             to="/signin"
             className="flex-1 text-black font-semibold px-6 py-3 rounded-lg text-center border-2 border-black transition-all"
-            style={{ backgroundColor: '#FFD1DC' }}
-            onMouseEnter={(e) => e.target.style.backgroundColor = '#FFB6C1'}
-            onMouseLeave={(e) => e.target.style.backgroundColor = '#FFD1DC'}
+            style={{ backgroundColor: buttonColor || '#e7dacf' }}
           >
             Login
           </Link>
           <button
             onClick={onClose}
-            className="px-6 py-3 bg-gray-200 text-black font-semibold rounded-lg hover:bg-gray-300 transition-all"
+            className="px-6 py-3 text-black font-semibold rounded-lg border-2 border-black transition-all"
+            style={{ backgroundColor: buttonColor || '#e7dacf' }}
           >
             Cancel
           </button>
@@ -52,7 +52,7 @@ const ProductCard = ({ product }) => {
   return (
     <div
       onClick={() => navigate(`/product/${product._id || product.id}`)}
-      className="group bg-white overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border border-gray-100 hover:border-pink-300 transform hover:-translate-y-1"
+      className="group bg-white overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border border-gray-100 hover:border-black transform hover:-translate-y-1"
     >
       <div className="relative w-full aspect-[3/4] bg-gray-100 overflow-hidden flex items-center justify-center">
         <img
@@ -66,17 +66,17 @@ const ProductCard = ({ product }) => {
           loading="lazy"
         />
         {discountPercent > 0 && (
-          <span className="absolute top-2 right-2 bg-gradient-to-r from-[#8B2BE2] to-[#FF1493] text-white text-xs font-bold px-2 py-1 rounded-md shadow-md uppercase">
+          <span className="absolute top-2 right-2 bg-black text-white text-xs font-bold px-2 py-1 rounded-md shadow-md uppercase">
             {discountPercent}% OFF
           </span>
         )}
       </div>
       <div className="relative p-4 bg-white">
-        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#8B2BE2] via-[#FF1493] to-[#8B2BE2] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
-        <h3 className="text-xs font-semibold text-[#FF1493] uppercase tracking-wide line-clamp-1 mb-1">
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-black transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+        <h3 className="text-xs font-semibold text-black uppercase tracking-wide line-clamp-1 mb-1">
           {product.product_info?.manufacturer || product.brand || 'KIDZO'}
         </h3>
-        <p className="text-sm font-bold text-black line-clamp-2 mb-2 min-h-[2.5rem] group-hover:text-[#FF1493] transition-colors">
+        <p className="text-sm font-bold text-black line-clamp-2 mb-2 min-h-[2.5rem] transition-colors">
           {product.name || product.title || 'Untitled Product'}
         </p>
         <div className="flex items-baseline gap-2">
@@ -121,6 +121,7 @@ const ProductDetail = () => {
   const [loadingRecommendations, setLoadingRecommendations] = useState(false);
   const [loadingTrending, setLoadingTrending] = useState(false);
   const [loadingSale, setLoadingSale] = useState(false);
+  const headerColor = useHeaderColor();
 
   // Scroll to top when product ID changes
   useEffect(() => {
@@ -372,7 +373,7 @@ const ProductDetail = () => {
 
   return (
     <>
-      <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
+      <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} buttonColor={headerColor} />
       
       <div className="min-h-screen bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
@@ -477,7 +478,7 @@ const ProductDetail = () => {
                         >
                           <span className="text-xs font-medium text-black">{size}</span>
                           {isSelected && (
-                            <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                             </svg>
                           )}
@@ -555,7 +556,7 @@ const ProductDetail = () => {
                 {originalPrice > finalPrice && (
                   <>
                     <span className="text-lg text-gray-400 line-through">₹{Math.round(originalPrice).toLocaleString()}</span>
-                    <span className="text-sm font-semibold text-green-600 bg-green-50 px-2 py-1 rounded">
+                    <span className="text-sm font-semibold text-black bg-white border border-black px-2 py-1 rounded">
                       {Math.round(((originalPrice - finalPrice) / originalPrice) * 100)}% OFF
                     </span>
                   </>
@@ -567,9 +568,7 @@ const ProductDetail = () => {
                 <button 
                   onClick={handleAddToCart}
                   className="flex-1 flex items-center justify-center gap-2 text-black font-semibold px-6 py-3.5 rounded-lg transition-all shadow-lg hover:shadow-xl active:scale-[0.98] text-base border-2 border-black"
-                  style={{ backgroundColor: '#FFD1DC' }}
-                  onMouseEnter={(e) => e.target.style.backgroundColor = '#FFB6C1'}
-                  onMouseLeave={(e) => e.target.style.backgroundColor = '#FFD1DC'}
+                  style={{ backgroundColor: headerColor }}
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -579,9 +578,7 @@ const ProductDetail = () => {
                 <button
                   onClick={handleBuyNow}
                   className="flex-1 flex items-center justify-center gap-2 text-black font-semibold px-6 py-3.5 rounded-lg transition-all shadow-md hover:shadow-lg active:scale-[0.98] text-base border-2 border-black"
-                  style={{ backgroundColor: '#FFD1DC' }}
-                  onMouseEnter={(e) => e.target.style.backgroundColor = '#FFB6C1'}
-                  onMouseLeave={(e) => e.target.style.backgroundColor = '#FFD1DC'}
+                  style={{ backgroundColor: headerColor }}
                 >
                   <span>Buy Now</span>
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -594,7 +591,7 @@ const ProductDetail = () => {
               <div className="grid grid-cols-2 gap-3">
                 <div className="bg-white rounded-lg p-4 border border-gray-200">
                   <div className="flex items-center gap-2 mb-1">
-                    <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                     <span className="text-xs font-semibold text-black uppercase">Free Shipping</span>
@@ -603,7 +600,7 @@ const ProductDetail = () => {
                 </div>
                 <div className="bg-white rounded-lg p-4 border border-gray-200">
                   <div className="flex items-center gap-2 mb-1">
-                    <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                     </svg>
                     <span className="text-xs font-semibold text-black uppercase">Easy Returns</span>
@@ -788,7 +785,7 @@ const ProductDetail = () => {
                 <h3 className="text-lg font-semibold text-black mb-4">Shipping & Returns</h3>
                 <div className="space-y-3 text-sm">
                   <div className="flex items-start gap-3">
-                    <svg className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 text-black mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                     <div>
@@ -797,7 +794,7 @@ const ProductDetail = () => {
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <svg className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 text-black mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                     </svg>
                     <div>
@@ -806,7 +803,7 @@ const ProductDetail = () => {
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <svg className="w-5 h-5 text-purple-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 text-black mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                     </svg>
                     <div>
@@ -1005,9 +1002,7 @@ const NotFoundState = () => (
     <Link 
       to="/" 
       className="text-black px-8 py-3 rounded-lg font-medium border-2 border-black transition-all"
-      style={{ backgroundColor: '#FFD1DC' }}
-      onMouseEnter={(e) => e.target.style.backgroundColor = '#FFB6C1'}
-      onMouseLeave={(e) => e.target.style.backgroundColor = '#FFD1DC'}
+      style={{ backgroundColor: headerColor }}
     >
       Back to Home
     </Link>

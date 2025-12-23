@@ -118,7 +118,7 @@ const KidzoSections = () => {
         gradient: 'from-pink-500 via-pink-600 to-pink-700',
         image: 'https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765538964/unnamed_fn6esy.jpg',
         buttonClass: 'bg-white text-[#02050B] hover:bg-[#02050B] hover:text-white',
-        path: '/shop'
+        path: '/category/baby-care'
       },
       {
         id: 2,
@@ -130,7 +130,7 @@ const KidzoSections = () => {
         buttonText: 'Explore →',
         gradient: 'from-blue-500 via-purple-600 to-blue-700',
         image: 'https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765538871/unnamed_t9cus4.jpg',
-        path: '/shop'
+        path: '/category/kids-clothing/winterwear'
       },
       {
         id: 3,
@@ -143,7 +143,7 @@ const KidzoSections = () => {
         gradient: 'from-teal-500 via-green-500 to-teal-600',
         image: 'https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765538961/unnamed_hqycjk.jpg',
         buttonClass: 'bg-white text-[#02050B] hover:bg-[#02050B] hover:text-white',
-        path: '/shop'
+        path: '/category/footwear'
       },
       {
         id: 4,
@@ -157,7 +157,7 @@ const KidzoSections = () => {
         image: 'https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765538765/unnamed_yt1lzi.jpg',
         buttonClass: 'bg-white text-blue-700 hover:bg-blue-50',
         badgeClass: 'bg-blue-300/30',
-        path: '/shop'
+        path: '/category/kids-clothing'
       }
     ];
 
@@ -180,7 +180,7 @@ const KidzoSections = () => {
             </h2>
             <p className="text-gray-600 text-sm sm:text-base mt-2">Limited time offers - Don't miss out!</p>
             <button
-              onClick={() => handleCategoryClick('/shop')}
+              onClick={() => handleCategoryClick('/category/kids-clothing')}
               className="mt-4 px-6 py-2 bg-gradient-to-r from-pink-500 to-rose-600 text-white font-semibold rounded-lg hover:shadow-lg transition-all duration-300 transform hover:scale-105"
             >
               View All Offers →
@@ -344,7 +344,7 @@ const KidzoSections = () => {
             </h2>
             <p className="text-gray-600 text-sm sm:text-base mt-2">Discover our exclusive range of premium products</p>
             <button
-              onClick={() => handleCategoryClick('/collections')}
+              onClick={() => handleCategoryClick('/category/kids-accessories')}
               className="mt-4 px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-600 text-white font-semibold rounded-lg hover:shadow-lg transition-all duration-300 transform hover:scale-105"
             >
               Explore Collection →
@@ -354,7 +354,7 @@ const KidzoSections = () => {
           <div className="w-full px-2 sm:px-4">
             {/* Mobile Banner */}
             <div 
-              onClick={() => handleCategoryClick('/collections')}
+              onClick={() => handleCategoryClick('/category/kids-accessories')}
               className="relative overflow-hidden rounded-2xl shadow-xl md:hidden cursor-pointer hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02]"
             >
               <div className="w-full">
@@ -371,7 +371,7 @@ const KidzoSections = () => {
             </div>
             {/* Desktop Banner */}
             <div 
-              onClick={() => handleCategoryClick('/collections')}
+              onClick={() => handleCategoryClick('/category/kids-accessories')}
               className="relative overflow-hidden rounded-2xl md:rounded-3xl shadow-xl hidden md:block cursor-pointer hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.01]"
             >
               <div className="w-full">
@@ -490,13 +490,13 @@ const KidzoSections = () => {
         id: 1,
         image: 'https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765610052/Pink_and_Yellow_Playful_Kids_Fashion_Sale_Promotion_Landscape_Banner_dl4a3a.svg',
         alt: 'Pink and Yellow Kids Fashion Sale Promotion',
-        path: '/shop'
+        path: '/category/kids-clothing'
       },
       {
         id: 2,
         image: 'https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765610311/Colorful_Kids_Fashion_Tips_YouTube_Thumbnail_wfyxyn.svg',
         alt: 'Green and Pink Modern Gradient Summer Kids Fashion Banner',
-        path: '/shop'
+        path: '/category/footwear'
       }
     ];
 
@@ -519,7 +519,7 @@ const KidzoSections = () => {
             </h2>
             <p className="text-gray-600 text-sm sm:text-base mt-2">Check out our latest promotions and deals</p>
             <button
-              onClick={() => handleCategoryClick('/shop')}
+              onClick={() => handleCategoryClick('/category/toys')}
               className="mt-4 px-6 py-2 bg-gradient-to-r from-orange-500 to-red-600 text-white font-semibold rounded-lg hover:shadow-lg transition-all duration-300 transform hover:scale-105"
             >
               View All Deals →
@@ -529,7 +529,7 @@ const KidzoSections = () => {
           {/* Mobile Only Banner */}
           <div className="mb-4 md:hidden px-2">
             <div
-              onClick={() => handleCategoryClick('/shop')}
+              onClick={() => handleCategoryClick('/category/toys')}
               className="relative overflow-hidden rounded-xl shadow-lg transition-all duration-300 transform active:scale-[0.98] cursor-pointer"
             >
               <div className="w-full aspect-[4/5] bg-gray-100 overflow-hidden">

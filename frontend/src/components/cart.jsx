@@ -4,9 +4,11 @@ import { FaTrash, FaPlus, FaMinus, FaArrowLeft, FaShoppingCart } from 'react-ico
 import { useCart } from '../context/CartContext';
 import { getProductImage, placeholders } from '../utils/imagePlaceholder';
 import ScrollToTop from './ScrollToTop';
+import { useHeaderColor } from '../utils/useHeaderColor';
 
 function Cart() {
   const navigate = useNavigate();
+  const headerColor = useHeaderColor();
   const { 
     cart = [], 
     updateQuantity, 
@@ -50,9 +52,7 @@ function Cart() {
         <button 
           onClick={() => navigate('/')}
           className="flex items-center text-black mb-4 sm:mb-6 transition-all cursor-pointer border-2 border-black rounded-lg px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 text-sm sm:text-base font-semibold shadow-sm transform hover:scale-105 active:scale-95 w-full sm:w-auto"
-          style={{ backgroundColor: '#FFD1DC' }}
-          onMouseEnter={(e) => e.target.style.backgroundColor = '#FFB6C1'}
-          onMouseLeave={(e) => e.target.style.backgroundColor = '#FFD1DC'}
+          style={{ backgroundColor: headerColor }}
         >
           <FaArrowLeft className="mr-2 w-4 h-4 sm:w-5 sm:h-5" /> Continue Shopping
         </button>
@@ -70,9 +70,7 @@ function Cart() {
           <button 
             onClick={() => navigate('/')}
             className="text-black px-6 sm:px-8 py-2.5 sm:py-3 rounded-xl border-2 border-black transition-all font-semibold shadow-lg transform hover:scale-105 active:scale-95 cursor-pointer text-sm sm:text-base w-full sm:w-auto"
-            style={{ backgroundColor: '#FFD1DC' }}
-            onMouseEnter={(e) => e.target.style.backgroundColor = '#FFB6C1'}
-            onMouseLeave={(e) => e.target.style.backgroundColor = '#FFD1DC'}
+            style={{ backgroundColor: headerColor }}
           >
             Continue Shopping
           </button>
@@ -220,9 +218,7 @@ function Cart() {
               <button 
                 onClick={() => navigate('/checkout/address')}
                 className="w-full text-black py-3 sm:py-4 px-3 sm:px-4 rounded-xl border-2 border-black transition-all font-bold shadow-lg transform hover:scale-105 active:scale-95 cursor-pointer text-sm sm:text-base md:text-lg touch-manipulation"
-                style={{ backgroundColor: '#FFD1DC' }}
-                onMouseEnter={(e) => e.target.style.backgroundColor = '#FFB6C1'}
-                onMouseLeave={(e) => e.target.style.backgroundColor = '#FFD1DC'}
+                style={{ backgroundColor: headerColor }}
               >
                 Proceed to Checkout
               </button>
@@ -230,9 +226,7 @@ function Cart() {
               <button 
                 onClick={clearCart}
                 className="w-full mt-3 sm:mt-4 text-black border-2 border-black py-2.5 sm:py-3 px-3 sm:px-4 rounded-xl transition-all font-semibold cursor-pointer transform hover:scale-105 active:scale-95 text-sm sm:text-base touch-manipulation"
-                style={{ backgroundColor: '#FFD1DC' }}
-                onMouseEnter={(e) => e.target.style.backgroundColor = '#FFB6C1'}
-                onMouseLeave={(e) => e.target.style.backgroundColor = '#FFD1DC'}
+                style={{ backgroundColor: headerColor }}
               >
                 Clear Cart
               </button>
