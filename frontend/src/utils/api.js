@@ -149,6 +149,12 @@ export const api = {
   },
   updateCartQuantity: ({ productId, quantity, size = null }) => request('/api/cart/update', { method: 'PUT', body: JSON.stringify({ productId, quantity, size }) }),
 
+  // Public policy and contact info endpoints
+  getPolicy: (type) => request(`/api/policies/${type}`, { method: 'GET' }),
+  getContactInfo: () => request('/api/contact-info', { method: 'GET' }),
+  getCategories: () => request('/api/categories', { method: 'GET' }),
+  getLogo: (type) => request(`/api/logos/${type}`, { method: 'GET' }),
+
   // Admin endpoints
   admin: {
     stats: () => request('/api/admin/stats', { method: 'GET' }),
@@ -158,6 +164,12 @@ export const api = {
     deleteProduct: (id) => request(`/api/admin/products/${id}`, { method: 'DELETE' }),
     listOrders: () => request('/api/admin/orders', { method: 'GET' }),
     listAddresses: () => request('/api/admin/addresses', { method: 'GET' }),
+    getPolicies: () => request('/api/admin/policies', { method: 'GET' }),
+    updatePolicy: (type, title, content, sections) => request(`/api/admin/policies/${type}`, { method: 'PUT', body: JSON.stringify({ title, content, sections }) }),
+    getContactInfo: () => request('/api/admin/contact-info', { method: 'GET' }),
+    updateContactInfo: (payload) => request('/api/admin/contact-info', { method: 'PUT', body: JSON.stringify(payload) }),
+    getLogos: () => request('/api/admin/logos', { method: 'GET' }),
+    updateLogo: (type, url, alt, width, height) => request(`/api/admin/logos/${type}`, { method: 'PUT', body: JSON.stringify({ url, alt, width, height }) }),
 
     // more robust updateOrderStatus that tries multiple routes
     updateOrderStatus: async (id, status) => {

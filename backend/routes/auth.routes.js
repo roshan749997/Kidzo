@@ -48,29 +48,62 @@ router.get(
     const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
     const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
     
+    console.log('[Google OAuth] Login attempt:', {
+      hasClientId: !!GOOGLE_CLIENT_ID,
+      hasClientSecret: !!GOOGLE_CLIENT_SECRET,
+      frontendUrl: FRONTEND_URL,
+      referer: req.get('referer'),
+      origin: req.get('origin'),
+    });
+    
     if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
-      console.error('[Google OAuth] Missing credentials');
+      console.error('[Google OAuth] Missing credentials - Client ID or Secret not configured');
       return res.redirect(`${FRONTEND_URL}/auth/failure?error=${encodeURIComponent('Google OAuth is not configured. Please contact support.')}`);
     }
     
     next();
   },
-  passport.authenticate('google', {
-    scope: ['profile', 'email'],
-    session: false,
-  })
+  (req, res, next) => {
+    // Log before redirecting to Google
+    console.log('[Google OAuth] Redirecting to Google consent screen');
+    passport.authenticate('google', {
+      scope: ['profile', 'email'],
+      session: false,
+    })(req, res, next);
+  }
 );
 
 // 🔹 Step 2: Google Callback (this MUST match GOOGLE_CALLBACK_URL)
 router.get(
   '/google/callback',
-  passport.authenticate('google', {
-    failureRedirect: `${FRONTEND_URL}/auth/failure`,
-    session: false,
-  }),
+  (req, res, next) => {
+    console.log('[Google OAuth] Callback received:', {
+      query: req.query,
+      hasCode: !!req.query.code,
+      hasError: !!req.query.error,
+      error: req.query.error,
+      state: req.query.state,
+    });
+    
+    passport.authenticate('google', {
+      failureRedirect: `${FRONTEND_URL}/auth/failure`,
+      session: false,
+    })(req, res, next);
+  },
   async (req, res) => {
     try {
       const user = req.user;
+
+      if (!user) {
+        console.error('[Google OAuth] No user object after authentication');
+        return res.redirect(`${FRONTEND_URL}/auth/failure?error=${encodeURIComponent('Authentication failed: User not found')}`);
+      }
+
+      console.log('[Google OAuth] User authenticated:', {
+        userId: String(user._id),
+        email: user.email,
+        name: user.name,
+      });
 
       // Create JWT token
       const token = jwt.sign(
@@ -92,6 +125,13 @@ router.get(
       // For sameSite: 'none', secure must be true
       const cookieSameSite = cookieSecure ? 'none' : 'lax';
 
+      console.log('[Google OAuth] Setting cookie:', {
+        secure: cookieSecure,
+        sameSite: cookieSameSite,
+        isProd,
+        frontendUrl: FRONTEND_URL,
+      });
+
       // Set Cookie for authentication
       res.cookie('jwt', token, {
         httpOnly: true,
@@ -99,13 +139,16 @@ router.get(
         secure: cookieSecure,
         maxAge: 7 * 24 * 60 * 60 * 1000,
         path: '/', // Ensure cookie is available across all paths
+        domain: process.env.COOKIE_DOMAIN || undefined, // Allow domain override if needed
       });
 
       // 🔥 FINAL REDIRECT AFTER SUCCESSFUL GOOGLE LOGIN
       // Sends the user to frontend with success page
+      console.log('[Google OAuth] Redirecting to success page:', `${FRONTEND_URL}/auth/success`);
       return res.redirect(`${FRONTEND_URL}/auth/success`);
     } catch (e) {
-      console.error("Google login error:", e);
+      console.error("[Google OAuth] Error in callback handler:", e);
+      console.error("[Google OAuth] Error stack:", e.stack);
       const errorMessage = encodeURIComponent(e.message || 'Authentication failed');
       return res.redirect(`${FRONTEND_URL}/auth/failure?error=${errorMessage}`);
     }

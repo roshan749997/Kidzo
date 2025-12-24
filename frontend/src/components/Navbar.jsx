@@ -21,6 +21,41 @@ const Navbar = () => {
   const [bannerIndex, setBannerIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const [userInitial, setUserInitial] = useState('');
+  const [headerLogo, setHeaderLogo] = useState({
+    url: 'https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765607037/Pink_and_Purple_Playful_Kids_Store_Logo_150_x_60_px_1_ex8w7m.svg',
+    alt: 'Kidzo',
+    width: 'auto',
+    height: 'auto',
+  });
+
+  useEffect(() => {
+    const loadLogo = async () => {
+      try {
+        const { api } = await import('../utils/api');
+        const logo = await api.getLogo('header').catch(() => null);
+        if (logo) {
+          setHeaderLogo({ 
+            url: logo.url, 
+            alt: logo.alt || 'Kidzo',
+            width: logo.width || 'auto',
+            height: logo.height || 'auto',
+          });
+        }
+      } catch (err) {
+        console.error('Failed to load header logo:', err);
+      }
+    };
+    loadLogo();
+
+    // Listen for logo updates
+    const handleLogoUpdate = (event) => {
+      if (event.detail.type === 'header') {
+        loadLogo();
+      }
+    };
+    window.addEventListener('logo:updated', handleLogoUpdate);
+    return () => window.removeEventListener('logo:updated', handleLogoUpdate);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -328,9 +363,20 @@ const Navbar = () => {
             {/* Logo/Brand - Left */}
             <Link to="/" className="flex-shrink-0">
               <img 
-                src="https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765607037/Pink_and_Purple_Playful_Kids_Store_Logo_150_x_60_px_1_ex8w7m.svg"
-                alt="Kidzo"
-                className="h-10 sm:h-12 md:h-14 lg:h-16 w-auto object-contain"
+                src={headerLogo.url}
+                alt={headerLogo.alt}
+                style={{
+                  ...(headerLogo.width !== 'auto' && { width: headerLogo.width }),
+                  ...(headerLogo.height !== 'auto' && { height: headerLogo.height }),
+                  maxWidth: '100%',
+                  objectFit: 'contain',
+                }}
+                className={headerLogo.width === 'auto' && headerLogo.height === 'auto' 
+                  ? "h-10 sm:h-12 md:h-14 lg:h-16 w-auto object-contain" 
+                  : "object-contain"}
+                onError={(e) => {
+                  e.target.src = 'https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765607037/Pink_and_Purple_Playful_Kids_Store_Logo_150_x_60_px_1_ex8w7m.svg';
+                }}
               />
             </Link>
 

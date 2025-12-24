@@ -1,8 +1,65 @@
 import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import { Heart, Mail, Phone, MapPin, Facebook, Instagram, Truck, Shield, RotateCcw, HeadphonesIcon, MessageCircle } from 'lucide-react';
+import { api } from '../utils/api';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const [contactInfo, setContactInfo] = useState({
+    email: 'support@kidzo.com',
+    phone: '+91 98765 43210',
+    address: 'Kidzo Headquarters, 123 Playful Lane, Mumbai, India 400001',
+    companyName: 'Kidzo',
+  });
+  const [footerLogo, setFooterLogo] = useState({
+    url: 'https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765609203/2_qw44ed.svg',
+    alt: 'Kidzo',
+    width: 'auto',
+    height: 'auto',
+  });
+
+  useEffect(() => {
+    loadContactInfo();
+    loadLogo();
+  }, []);
+
+  const loadLogo = async () => {
+    try {
+      const logo = await api.getLogo('footer').catch(() => null);
+      if (logo) {
+        setFooterLogo({ 
+          url: logo.url, 
+          alt: logo.alt || 'Kidzo',
+          width: logo.width || 'auto',
+          height: logo.height || 'auto',
+        });
+      }
+    } catch (err) {
+      console.error('Failed to load footer logo:', err);
+    }
+  };
+
+  useEffect(() => {
+    // Listen for logo updates
+    const handleLogoUpdate = (event) => {
+      if (event.detail.type === 'footer') {
+        loadLogo();
+      }
+    };
+    window.addEventListener('logo:updated', handleLogoUpdate);
+    return () => window.removeEventListener('logo:updated', handleLogoUpdate);
+  }, []);
+
+  const loadContactInfo = async () => {
+    try {
+      const data = await api.getContactInfo();
+      if (data) {
+        setContactInfo(data);
+      }
+    } catch (err) {
+      console.error('Failed to load contact info:', err);
+    }
+  };
 
   const quickLinks = [
     { name: 'Home', path: '/' },
@@ -28,6 +85,9 @@ const Footer = () => {
     { icon: HeadphonesIcon, title: '24/7 Support', description: 'Dedicated customer care' },
   ];
 
+  // Extract phone number without +91 for WhatsApp link
+  const whatsappNumber = contactInfo.phone.replace(/[\s\+\-]/g, '').replace(/^91/, '');
+
   const socialLinks = [
     {
       name: 'Instagram',
@@ -42,7 +102,7 @@ const Footer = () => {
     {
       name: 'WhatsApp',
       icon: <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5" />,
-      url: 'https://wa.me/919876543210',
+      url: `https://wa.me/${whatsappNumber}`,
     },
   ];
 
@@ -85,9 +145,20 @@ const Footer = () => {
           <div className="sm:col-span-2 lg:col-span-1">
             <div className="mb-4 sm:mb-6">
               <img 
-                src="https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765609203/2_qw44ed.svg"
-                alt="Kidzo"
-                className="h-50 sm:h-60 w-auto object-contain mb-10 sm:mb-4"
+                src={footerLogo.url}
+                alt={footerLogo.alt || contactInfo.companyName}
+                style={{
+                  ...(footerLogo.width !== 'auto' && { width: footerLogo.width }),
+                  ...(footerLogo.height !== 'auto' && { height: footerLogo.height }),
+                  maxWidth: '100%',
+                  objectFit: 'contain',
+                }}
+                className={footerLogo.width === 'auto' && footerLogo.height === 'auto' 
+                  ? "h-50 sm:h-60 w-auto object-contain mb-10 sm:mb-4" 
+                  : "object-contain mb-10 sm:mb-4"}
+                onError={(e) => {
+                  e.target.src = 'https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765609203/2_qw44ed.svg';
+                }}
               />
               <p className="text-sm sm:text-base leading-relaxed max-w-md opacity-90" style={{ color: '#1F2937' }}>
                 Your trusted destination for premium kids & baby products. 
@@ -99,15 +170,15 @@ const Footer = () => {
             <div className="space-y-2 sm:space-y-3">
               <div className="flex items-start sm:items-center gap-2 sm:gap-3 opacity-90" style={{ color: '#1F2937' }}>
                 <Phone className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 mt-0.5 sm:mt-0" style={{ color: '#FF5CA8' }} />
-                <span className="text-sm sm:text-base break-words">+91 98765 43210</span>
+                <span className="text-sm sm:text-base break-words">{contactInfo.phone}</span>
               </div>
               <div className="flex items-start sm:items-center gap-2 sm:gap-3 opacity-90" style={{ color: '#1F2937' }}>
                 <Mail className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 mt-0.5 sm:mt-0" style={{ color: '#FF5CA8' }} />
-                <span className="text-sm sm:text-base break-all">support@kidzo.com</span>
+                <span className="text-sm sm:text-base break-all">{contactInfo.email}</span>
               </div>
               <div className="flex items-start sm:items-center gap-2 sm:gap-3 opacity-90" style={{ color: '#1F2937' }}>
                 <MapPin className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 mt-0.5 sm:mt-0" style={{ color: '#FF5CA8' }} />
-                <span className="text-sm sm:text-base break-words">123 Fashion Street, Mumbai, India 400001</span>
+                <span className="text-sm sm:text-base break-words">{contactInfo.address}</span>
               </div>
             </div>
           </div>
@@ -150,12 +221,45 @@ const Footer = () => {
         </div>
       </div>
 
+      {/* Policy Links Section */}
+      <div className="w-full px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-4 bg-white">
+        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 md:gap-4">
+          <Link 
+            to="/privacy" 
+            className="text-sm sm:text-base text-gray-600 hover:text-black transition-colors duration-200"
+          >
+            Privacy Policy
+          </Link>
+          <span className="text-gray-400">•</span>
+          <Link 
+            to="/terms" 
+            className="text-sm sm:text-base text-gray-600 hover:text-black transition-colors duration-200"
+          >
+            Terms & Conditions
+          </Link>
+          <span className="text-gray-400">•</span>
+          <Link 
+            to="/shipping" 
+            className="text-sm sm:text-base text-gray-600 hover:text-black transition-colors duration-200"
+          >
+            Shipping Policy
+          </Link>
+          <span className="text-gray-400">•</span>
+          <Link 
+            to="/refund-cancellation" 
+            className="text-sm sm:text-base text-gray-600 hover:text-black transition-colors duration-200"
+          >
+            Refund/Cancellation Policy
+          </Link>
+        </div>
+      </div>
+
       {/* Bottom Footer Bar */}
       <div className="border-t" style={{ borderColor: 'rgba(229, 231, 235, 0.1)' }}>
         <div className="w-full px-3 sm:px-4 md:px-6 lg:px-8 xl:px-4 2xl:px-6 py-4 sm:py-5 md:py-6">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4">
             <div className="text-xs sm:text-sm opacity-90 text-center sm:text-left" style={{ color: '#1F2937' }}>
-              © {currentYear} Kidzo. All Rights Reserved
+              © {currentYear} {contactInfo.companyName}. All Rights Reserved
             </div>
             <div className="flex gap-3 sm:gap-4">
               {socialLinks.map((social, index) => (

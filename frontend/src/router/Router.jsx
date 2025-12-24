@@ -26,6 +26,9 @@ import AdminProducts from '../pages/admin/AdminProducts';
 import AdminOrders from '../pages/admin/AdminOrders';
 import AdminLayout from '../pages/admin/AdminLayout';
 import AdminAddresses from '../pages/admin/AdminAddresses';
+import AdminPolicies from '../pages/admin/AdminPolicies';
+import AdminContactInfo from '../pages/admin/AdminContactInfo';
+import AdminLogos from '../pages/admin/AdminLogos';
 import PrivacyPolicy from '../pages/PrivacyPolicy';
 import TermsAndConditions from '../pages/TermsAndConditions';
 import ShippingPolicy from '../pages/ShippingPolicy';
@@ -120,6 +123,7 @@ const Router = () => {
           <Route path="privacy" element={<PrivacyPolicy />} />
           <Route path="terms" element={<TermsAndConditions />} />
           <Route path="shipping" element={<ShippingPolicy />} />
+          <Route path="refund-cancellation" element={<RefundCancellationPolicy />} />
           <Route path="returns" element={<RefundCancellationPolicy />} />
 
           {/* Private route(s) */}
@@ -141,6 +145,9 @@ const Router = () => {
           <Route path="products" element={<AdminProducts />} />
           <Route path="orders" element={<AdminOrders />} />
           <Route path="addresses" element={<AdminAddresses />} />
+          <Route path="policies" element={<AdminPolicies />} />
+          <Route path="contact-info" element={<AdminContactInfo />} />
+          <Route path="logos" element={<AdminLogos />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

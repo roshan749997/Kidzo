@@ -11,7 +11,20 @@ export function setupPassport() {
 
   const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
   const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
-  const callbackURL = process.env.GOOGLE_CALLBACK_URL || "http://localhost:5000/api/auth/google/callback";
+  
+  // Build callback URL - use env var or construct from BACKEND_URL
+  let callbackURL = process.env.GOOGLE_CALLBACK_URL;
+  if (!callbackURL) {
+    const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:5000';
+    callbackURL = `${BACKEND_URL.replace(/\/+$/, '')}/api/auth/google/callback`;
+  }
+
+  console.log('[passport] Google OAuth Configuration:', {
+    hasClientId: !!GOOGLE_CLIENT_ID,
+    hasClientSecret: !!GOOGLE_CLIENT_SECRET,
+    callbackURL: callbackURL,
+    nodeEnv: process.env.NODE_ENV,
+  });
 
   // Only register GoogleStrategy if credentials are provided
   if (GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET) {

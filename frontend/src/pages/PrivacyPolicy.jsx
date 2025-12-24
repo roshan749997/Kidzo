@@ -1,12 +1,170 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import ScrollToTop from '../components/ScrollToTop';
+import { api } from '../utils/api';
+
+// Format policy content to preserve line breaks and spacing
+const formatPolicyContent = (content) => {
+  if (!content) return '';
+  
+  // If content already has HTML tags, ensure proper spacing
+  if (content.includes('<p>') || content.includes('<br>') || content.includes('<div>')) {
+    // Ensure paragraphs have proper spacing
+    return content
+      .replace(/<\/p>\s*<p>/g, '</p><p>')
+      .replace(/<p>/g, '<p class="mb-4">')
+      .replace(/<br\s*\/?>/gi, '<br>');
+  }
+  
+  // Convert double newlines to paragraph breaks, single newlines to <br>
+  let paragraphs = content.split(/\n\s*\n/).filter(p => p.trim().length > 0);
+  
+  if (paragraphs.length > 1) {
+    return paragraphs
+      .map(para => `<p class="mb-4">${para.trim().replace(/\n/g, '<br>')}</p>`)
+      .join('');
+  } else {
+    // Single paragraph with line breaks
+    return `<p class="mb-4">${content.trim().replace(/\n/g, '<br>')}</p>`;
+  }
+};
 
 const PrivacyPolicy = () => {
-  const lastUpdated = new Date().toLocaleDateString("en-IN", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
+  const [contactInfo, setContactInfo] = useState({
+    email: 'support@kidzo.com',
+    phone: '+91 98765 43210',
+    address: 'Kidzo Headquarters, 123 Playful Lane, Mumbai, India 400001',
+    companyName: 'Kidzo',
   });
+  const [policy, setPolicy] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Scroll to top on page load
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    loadData();
+  }, []);
+
+  const loadData = async () => {
+    try {
+      const [policyData, contactData] = await Promise.all([
+        api.getPolicy('privacy').catch(() => null),
+        api.getContactInfo().catch(() => null),
+      ]);
+
+      if (policyData) {
+        setPolicy(policyData);
+      }
+      if (contactData) {
+        setContactInfo(contactData);
+      }
+    } catch (err) {
+      console.error('Failed to load policy data:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const lastUpdated = policy?.lastUpdated 
+    ? new Date(policy.lastUpdated).toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      })
+    : new Date().toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      });
+
+  // If policy content exists from backend, render it
+  if (policy && (policy.sections?.length > 0 || policy.content)) {
+    return (
+      <div className="min-h-screen bg-gray-200 text-gray-800">
+        <div className="max-w-5xl mx-auto px-5 lg:px-20 py-5 lg:py-24">
+          <header className="mb-8 lg:mb-12 text-center">
+            <h1 className="text-3xl lg:text-4xl font-bold mb-2">
+              {policy.title || 'Privacy Policy'}
+            </h1>
+            <p className="text-sm lg:text-base text-gray-600">
+              Last updated: {lastUpdated}
+            </p>
+          </header>
+          
+          {/* Render sections if available, otherwise render content */}
+          {policy.sections && policy.sections.length > 0 ? (
+            <>
+              <style>{`
+                .policy-section {
+                  margin-bottom: 2rem;
+                }
+                .policy-section:last-child {
+                  margin-bottom: 0;
+                }
+                .policy-section h2 {
+                  margin-bottom: 0.75rem;
+                }
+                .policy-section p {
+                  margin-bottom: 1rem;
+                  line-height: 1.75;
+                }
+                .policy-section p.mb-4 {
+                  margin-bottom: 1rem;
+                }
+                .policy-section p:last-child {
+                  margin-bottom: 0;
+                }
+                .policy-section ul, .policy-section ol {
+                  margin-bottom: 1rem;
+                  padding-left: 1.5rem;
+                  margin-top: 0.5rem;
+                }
+                .policy-section li {
+                  margin-bottom: 0.5rem;
+                  line-height: 1.75;
+                }
+                .policy-section li:last-child {
+                  margin-bottom: 0;
+                }
+                .policy-section br {
+                  line-height: 1.75;
+                }
+                .policy-section div {
+                  line-height: 1.75;
+                }
+                .policy-section strong {
+                  font-weight: 600;
+                }
+              `}</style>
+              <div className="space-y-8 lg:space-y-10">
+                {policy.sections
+                  .sort((a, b) => (a.sectionNumber || 0) - (b.sectionNumber || 0))
+                  .map((section, index) => (
+                    <section key={index} className="policy-section">
+                      <h2 className="text-xl lg:text-2xl font-semibold mb-3">
+                        {section.sectionNumber}. {section.heading.replace(/^\d+\.\s*/, '')}
+                      </h2>
+                      <div 
+                        className="leading-relaxed text-gray-800"
+                        dangerouslySetInnerHTML={{ 
+                          __html: formatPolicyContent(section.content)
+                        }}
+                      />
+                    </section>
+                  ))}
+              </div>
+            </>
+          ) : (
+            <div 
+              className="space-y-8 lg:space-y-10 prose prose-lg max-w-none"
+              dangerouslySetInnerHTML={{ __html: policy.content }}
+            />
+          )}
+          
+          <ScrollToTop />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-200 text-gray-800">
@@ -19,11 +177,11 @@ const PrivacyPolicy = () => {
           <p className="text-sm lg:text-base text-gray-600">
             Version 1.0 • Last updated: {lastUpdated}
           </p>
-          <p className="mt-3 text-sm lg:text-base text-gray-700 max-w-3xl mx-auto">
+            <p className="mt-3 text-sm lg:text-base text-gray-700 max-w-3xl mx-auto">
             This Privacy Policy explains how{" "}
-            <strong>Shivrudray International Private Limited</strong> ("we",
+            <strong>{contactInfo.companyName}</strong> ("we",
             "our" or "us") collects, uses, shares and protects your information
-            when you browse or shop for our sarees and women's accessories
+            when you browse or shop for kids clothing, accessories, footwear, baby care products, and toys
             through our website (the "Service").
           </p>
         </header>
@@ -80,7 +238,7 @@ const PrivacyPolicy = () => {
               </li>
               <li>
                 <strong>Order & Transaction Information:</strong> Products
-                purchased (sarees and accessories), order history, payment
+                purchased (kids clothing, accessories, footwear, baby care products, toys), order history, payment
                 method used and transaction identifiers. Card details are
                 processed securely by our payment gateway; we do not store your
                 full card information.
@@ -330,16 +488,15 @@ const PrivacyPolicy = () => {
               queries relating to your personal data or this Privacy Policy.
             </p>
             <p className="leading-relaxed">
-              <strong>Grievance Officer:</strong> Mr. Chandrakant Maheshbhai
-              Teraiya (Director) <br />
+              <strong>Grievance Officer:</strong> Customer Support Team <br />
               Email:{" "}
               <span className="text-blue-600">
-                shivrudrayinternational03@gmail.com
+                {contactInfo.email}
               </span>{" "}
               <br />
               Phone:{" "}
               <span className="text-blue-600">
-                +91 92744 90602
+                {contactInfo.phone}
               </span>
             </p>
           </section>
@@ -367,20 +524,18 @@ const PrivacyPolicy = () => {
               Policy or your personal information, you may contact us at:
             </p>
             <p className="leading-relaxed">
-              <strong>Shivrudray International Private Limited</strong> <br />
+              <strong>{contactInfo.companyName}</strong> <br />
               Email:{" "}
               <span className="text-blue-600">
-                shivrudrayinternational03@gmail.com
+                {contactInfo.email}
               </span>{" "}
               <br />
               Phone:{" "}
               <span className="text-blue-600">
-                +91 92744 90602 / +91 92740 99941
+                {contactInfo.phone}
               </span>
               <br />
-              Address: Broker Office No. A-417, THE APMC RS No. 261, Morbi
-              Rajkot Highway, Bedi, Rajkot – 360003, Gujarat, India <br />
-              GSTIN: 24ABRCS1773P1ZI
+              Address: {contactInfo.address}
             </p>
           </section>
         </div>

@@ -2,6 +2,9 @@ import { Router } from 'express';
 import auth from '../middleware/auth.js';
 import adminOnly from '../middleware/admin.js';
 import { createProduct, adminListProducts, deleteProductById, adminListOrders, adminStats, adminListAddresses, updateProduct, updateOrderStatus } from '../controllers/admin.controller.js';
+import { adminGetPolicies, adminUpdatePolicy } from '../controllers/policy.controller.js';
+import { adminGetContactInfo, adminUpdateContactInfo } from '../controllers/contactInfo.controller.js';
+import { adminGetLogos, adminUpdateLogo } from '../controllers/logo.controller.js';
 
 const router = Router();
 
@@ -22,5 +25,17 @@ router.get('/stats', auth, adminOnly, adminStats);
 
 // Addresses
 router.get('/addresses', auth, adminOnly, adminListAddresses);
+
+// Policies
+router.get('/policies', auth, adminOnly, adminGetPolicies);
+router.put('/policies/:type', auth, adminOnly, adminUpdatePolicy);
+
+// Contact Info
+router.get('/contact-info', auth, adminOnly, adminGetContactInfo);
+router.put('/contact-info', auth, adminOnly, adminUpdateContactInfo);
+
+// Logos
+router.get('/logos', auth, adminOnly, adminGetLogos);
+router.put('/logos/:type', auth, adminOnly, adminUpdateLogo);
 
 export default router;

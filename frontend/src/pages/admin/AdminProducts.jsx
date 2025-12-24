@@ -55,6 +55,8 @@ const AdminProducts = () => {
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [categories, setCategories] = useState([]);
+  const [allCategories, setAllCategories] = useState([]);
 
   const load = async () => {
     try {
@@ -68,8 +70,29 @@ const AdminProducts = () => {
     }
   };
 
+  const loadCategories = async () => {
+    try {
+      const data = await api.getCategories();
+      if (data) {
+        setCategories(data.categories || []);
+        setAllCategories(data.allCategories || []);
+      }
+    } catch (e) {
+      console.error('Failed to load categories:', e);
+      // Fallback to hardcoded categories if API fails
+      setAllCategories([
+        { name: 'Kids Clothing', slug: 'kids-clothing' },
+        { name: 'Kids Accessories', slug: 'kids-accessories' },
+        { name: 'Footwear', slug: 'footwear' },
+        { name: 'Baby Care', slug: 'baby-care' },
+        { name: 'Toys', slug: 'toys' },
+      ]);
+    }
+  };
+
   useEffect(() => {
     load();
+    loadCategories();
   }, []);
 
   const onChange = (e) => {
@@ -251,10 +274,10 @@ const AdminProducts = () => {
   }, [filtered, page, pageSize]);
   useEffect(() => { setPage(1); }, [query, categoryFilter, pageSize]);
 
-  const categories = ['all', 'kids-clothing', 'kids-accessories', 'footwear', 'baby-care', 'toys'];
+  const filterCategories = ['all', 'kids-clothing', 'kids-accessories', 'footwear', 'baby-care', 'toys'];
   const categoryStats = useMemo(() => {
     const stats = {};
-    categories.forEach(cat => {
+    filterCategories.forEach(cat => {
       stats[cat] = list.filter(p => cat === 'all' || String(p.category || '').toLowerCase() === cat).length;
     });
     return stats;
@@ -540,11 +563,37 @@ const AdminProducts = () => {
                     <label className="block text-sm font-semibold text-gray-700 mb-2">Category *</label>
                     <select name="category" value={form.category} onChange={onChange} className="w-full border-2 border-gray-200 rounded-lg px-4 py-2 focus:border-pink-500 focus:outline-none" required>
                       <option value="">Select Category</option>
-                      <option value="kids-clothing">Kids Clothing</option>
-                      <option value="kids-accessories">Kids Accessories</option>
-                      <option value="footwear">Footwear</option>
-                      <option value="baby-care">Baby Care</option>
-                      <option value="toys">Toys</option>
+                      {categories.length > 0 ? (
+                        // Render categories with subcategories grouped
+                        categories.map((parent) => (
+                          <optgroup key={parent._id || parent.slug} label={parent.name}>
+                            <option value={parent.slug || parent.name.toLowerCase().replace(/\s+/g, '-')}>
+                              {parent.name}
+                            </option>
+                            {parent.subcategories && parent.subcategories.length > 0 && parent.subcategories.map((sub) => (
+                              <option key={sub._id || sub.slug} value={sub.slug || sub.name.toLowerCase().replace(/\s+/g, '-')}>
+                                {parent.name} - {sub.name}
+                              </option>
+                            ))}
+                          </optgroup>
+                        ))
+                      ) : allCategories.length > 0 ? (
+                        // Fallback: render all categories flat
+                        allCategories.map((cat) => (
+                          <option key={cat._id || cat.slug} value={cat.slug || cat.name.toLowerCase().replace(/\s+/g, '-')}>
+                            {cat.name}
+                          </option>
+                        ))
+                      ) : (
+                        // Default fallback
+                        <>
+                          <option value="kids-clothing">Kids Clothing</option>
+                          <option value="kids-accessories">Kids Accessories</option>
+                          <option value="footwear">Footwear</option>
+                          <option value="baby-care">Baby Care</option>
+                          <option value="toys">Toys</option>
+                        </>
+                      )}
                     </select>
                   </div>
                 </div>
