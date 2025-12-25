@@ -47,12 +47,13 @@ server.use(
   cors({
     origin: [frontendUrl, 'http://localhost:5173', 'http://localhost:5174'],
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
   })
 );
 
-server.use(express.json());
+server.use(express.json({ limit: '10mb' })); // Increase limit to handle base64 images
+server.use(express.urlencoded({ extended: true, limit: '10mb' }));
 server.use(cookieParser());
 
 // Initialize Passport

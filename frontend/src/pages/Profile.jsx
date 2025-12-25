@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { api } from '../utils/api';
 import { getMyAddress, getMyOrders, updateAddressById, saveMyAddress, getOrderById } from '../services/api';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { FiSettings, FiPackage, FiUser, FiMapPin, FiLogOut, FiMenu, FiX, FiEdit, FiEye, FiShoppingBag, FiDollarSign, FiClock, FiCheckCircle, FiTrendingUp, FiHeart, FiHome, FiBriefcase, FiTrash2, FiSave, FiFileText, FiTruck, FiCreditCard, FiMap } from 'react-icons/fi';
+import { FiSettings, FiPackage, FiUser, FiMapPin, FiLogOut, FiMenu, FiX, FiEdit, FiEye, FiShoppingBag, FiDollarSign, FiClock, FiCheckCircle, FiTrendingUp, FiHeart, FiHome, FiBriefcase, FiTrash2, FiSave, FiFileText, FiTruck, FiCreditCard, FiMap, FiCamera, FiUpload } from 'react-icons/fi';
 import ScrollToTop from '../components/ScrollToTop';
 import { getProductImage } from '../utils/imagePlaceholder';
 import Invoice from '../components/Invoice';
@@ -36,8 +36,14 @@ export default function FlipkartAccountSettings() {
     lastName: '',
     email: '',
     mobile: '',
-    gender: 'male'
+    gender: 'male',
+    avatar: ''
   });
+  const [profilePicture, setProfilePicture] = useState('');
+  const [profilePicturePreview, setProfilePicturePreview] = useState('');
+  const [uploadingPicture, setUploadingPicture] = useState(false);
+  const [imageError, setImageError] = useState(false);
+  const fileInputRef = useRef(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
   const [addresses, setAddresses] = useState([]);
@@ -129,8 +135,12 @@ export default function FlipkartAccountSettings() {
         lastName: lastName,
         email: userData.user?.email || '',
         mobile: phoneNumber,
-        gender: 'male'
+        gender: 'male',
+        avatar: userData.user?.avatar || ''
       });
+      setProfilePicture(userData.user?.avatar || '');
+      setProfilePicturePreview(userData.user?.avatar || '');
+      setImageError(false);
       setIsAdmin(adminStatus);
     } catch (error) {
       console.error('Error fetching user data:', error);
@@ -322,6 +332,181 @@ export default function FlipkartAccountSettings() {
     }
   };
 
+  const handleFileSelect = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file');
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Image size should be less than 5MB');
+      return;
+    }
+
+    // Reset image error when selecting new image
+    setImageError(false);
+
+    // Create preview
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setProfilePicturePreview(reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleUploadPicture = async () => {
+    if (!profilePicturePreview && !profilePicture) {
+      alert('Please select an image first');
+      return;
+    }
+
+    try {
+      setUploadingPicture(true);
+      const avatarUrl = profilePicturePreview || profilePicture;
+      
+      // Check if base64 image is too large
+      if (avatarUrl.startsWith('data:image')) {
+        const base64Length = avatarUrl.length;
+        // Base64 increases size by ~33%, so calculate original size
+        // Remove data URL prefix to get actual base64 length
+        const base64Data = avatarUrl.includes(',') ? avatarUrl.split(',')[1] : avatarUrl;
+        const base64SizeKB = base64Data.length * 3 / 4 / 1024; // Approximate original size in KB
+        const base64SizeMB = base64SizeKB / 1024;
+        
+        console.log('Image size check:', {
+          base64Length,
+          estimatedOriginalSizeKB: base64SizeKB.toFixed(2),
+          estimatedOriginalSizeMB: base64SizeMB.toFixed(2)
+        });
+        
+        // Warn if original image is > 3MB (base64 would be ~4MB)
+        if (base64SizeMB > 3) {
+          const proceed = window.confirm(
+            `The image is quite large (approximately ${base64SizeMB.toFixed(1)}MB). ` +
+            `This may take longer to upload. Continue?`
+          );
+          if (!proceed) {
+            setUploadingPicture(false);
+            return;
+          }
+        }
+      }
+      
+      console.log('Uploading profile picture...', { 
+        hasPreview: !!profilePicturePreview, 
+        hasPicture: !!profilePicture,
+        urlLength: avatarUrl.length,
+        isBase64: avatarUrl.startsWith('data:image')
+      });
+      
+      // If it's a data URL (base64), you might want to upload to Cloudinary first
+      // For now, we'll accept both URLs and base64 data URLs
+      const result = await api.updateProfile({ avatar: avatarUrl });
+      console.log('Profile picture update result:', result);
+      
+      setProfilePicture(avatarUrl);
+      setUser(prev => ({ ...prev, avatar: avatarUrl }));
+      setImageError(false);
+      
+      // Update localStorage
+      try {
+        const userData = localStorage.getItem('user_data');
+        if (userData) {
+          const parsed = JSON.parse(userData);
+          if (parsed.user) {
+            parsed.user.avatar = avatarUrl;
+          } else {
+            parsed.avatar = avatarUrl;
+          }
+          localStorage.setItem('user_data', JSON.stringify(parsed));
+        }
+      } catch (err) {
+        console.error('Error updating localStorage:', err);
+      }
+      
+      // Dispatch event to notify Navbar
+      window.dispatchEvent(new CustomEvent('profilePictureUpdated', { detail: { avatar: avatarUrl } }));
+      window.dispatchEvent(new Event('storage'));
+      
+      alert('Profile picture updated successfully!');
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    } catch (error) {
+      console.error('Error updating profile picture:', error);
+      console.error('Error details:', {
+        message: error.message,
+        status: error.status,
+        response: error.response
+      });
+      
+      let errorMessage = 'Unknown error';
+      if (error.status === 401) {
+        errorMessage = 'Authentication failed. Please log in again.';
+      } else if (error.status === 413) {
+        errorMessage = 'Image is too large. Please use a smaller image (max 2MB recommended).';
+      } else if (error.response?.message) {
+        errorMessage = error.response.message;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      alert(`Failed to update profile picture: ${errorMessage}. Please try again.`);
+    } finally {
+      setUploadingPicture(false);
+    }
+  };
+
+  const handleRemovePicture = async () => {
+    if (!window.confirm('Are you sure you want to remove your profile picture?')) {
+      return;
+    }
+
+    try {
+      setUploadingPicture(true);
+      await api.updateProfile({ avatar: '' });
+      setProfilePicture('');
+      setProfilePicturePreview('');
+      setImageError(false);
+      setUser(prev => ({ ...prev, avatar: '' }));
+      
+      // Update localStorage
+      try {
+        const userData = localStorage.getItem('user_data');
+        if (userData) {
+          const parsed = JSON.parse(userData);
+          if (parsed.user) {
+            parsed.user.avatar = '';
+          } else {
+            parsed.avatar = '';
+          }
+          localStorage.setItem('user_data', JSON.stringify(parsed));
+        }
+      } catch (err) {
+        console.error('Error updating localStorage:', err);
+      }
+      
+      // Dispatch event to notify Navbar
+      window.dispatchEvent(new CustomEvent('profilePictureUpdated', { detail: { avatar: '' } }));
+      window.dispatchEvent(new Event('storage'));
+      
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+      alert('Profile picture removed successfully!');
+    } catch (error) {
+      console.error('Error removing profile picture:', error);
+      alert('Failed to remove profile picture. Please try again.');
+    } finally {
+      setUploadingPicture(false);
+    }
+  };
+
   const handleSectionChange = (section) => {
     setActiveSection(section);
     setMobileMenuOpen(false);
@@ -468,8 +653,28 @@ export default function FlipkartAccountSettings() {
           {/* Mobile Header */}
           <div className="lg:hidden bg-white shadow-lg px-4 py-4 flex items-center justify-between sticky z-40 top-0 border-b-2 border-gray-200">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-pink-100 flex items-center justify-center text-black text-lg font-bold shadow-lg">
-                {(user.firstName || user.email || user.mobile || 'U').charAt(0).toUpperCase()}
+              <div className="relative">
+                <div className="w-12 h-12 rounded-full bg-pink-100 flex items-center justify-center text-black text-lg font-bold shadow-lg overflow-hidden">
+                  {(profilePicture || user.avatar) && !imageError ? (
+                    <img 
+                      src={profilePicturePreview || profilePicture || user.avatar} 
+                      alt="Profile" 
+                      className="w-full h-full object-cover"
+                      onError={() => setImageError(true)}
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      {(user.firstName || user.email || user.mobile || 'U').charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                </div>
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="absolute bottom-0 right-0 w-5 h-5 bg-pink-100 rounded-full flex items-center justify-center shadow-lg"
+                  title="Change profile picture"
+                >
+                  <FiCamera className="w-3 h-3 text-black" />
+                </button>
               </div>
               <div>
                 <div className="text-xs text-black font-medium">Hello,</div>
@@ -507,8 +712,28 @@ export default function FlipkartAccountSettings() {
             {/* User Profile - Desktop only */}
             <div className="hidden lg:block p-6 border-b-2 border-gray-200 bg-white">
               <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-full bg-pink-100 flex items-center justify-center text-black text-2xl font-bold shadow-lg">
-                  {(user.firstName || user.email || user.mobile || 'U').charAt(0).toUpperCase()}
+                <div className="relative group">
+                  <div className="w-16 h-16 rounded-full bg-pink-100 flex items-center justify-center text-black text-2xl font-bold shadow-lg overflow-hidden">
+                    {(profilePicture || user.avatar) && !imageError ? (
+                      <img 
+                        src={profilePicturePreview || profilePicture || user.avatar} 
+                        alt="Profile" 
+                        className="w-full h-full object-cover"
+                        onError={() => setImageError(true)}
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        {(user.firstName || user.email || user.mobile || 'U').charAt(0).toUpperCase()}
+                      </div>
+                    )}
+                  </div>
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    className="absolute bottom-0 right-0 w-6 h-6 bg-pink-100 rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                    title="Change profile picture"
+                  >
+                    <FiCamera className="w-3 h-3 text-black" />
+                  </button>
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="text-xs text-black font-medium">Hello,</div>
@@ -588,6 +813,111 @@ export default function FlipkartAccountSettings() {
 
               {activeSection === 'profile' && (
                 <div className="space-y-6">
+                  {/* Profile Picture Section */}
+                  <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden border-2 border-gray-200">
+                    <div className="p-4 sm:p-6 border-b-2 border-gray-200 bg-white">
+                      <h2 className="text-lg sm:text-xl font-bold text-black flex items-center gap-2">
+                        <FiCamera className="w-5 h-5 sm:w-6 sm:h-6 text-black" />
+                        Profile Picture
+                      </h2>
+                      <p className="text-xs text-black mt-1">Upload or change your profile picture</p>
+                    </div>
+                    <div className="p-4 sm:p-6">
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+                        {/* Profile Picture Preview */}
+                        <div className="relative">
+                          <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-pink-100 flex items-center justify-center text-black text-3xl sm:text-4xl font-bold shadow-lg overflow-hidden border-4 border-gray-200">
+                            {(profilePicturePreview || profilePicture || user.avatar) && !imageError ? (
+                              <img 
+                                src={profilePicturePreview || profilePicture || user.avatar} 
+                                alt="Profile Preview" 
+                                className="w-full h-full object-cover"
+                                onError={() => setImageError(true)}
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center">
+                                {(user.firstName || user.email || user.mobile || 'U').charAt(0).toUpperCase()}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Upload Controls */}
+                        <div className="flex-1 space-y-4">
+                          <div className="space-y-3">
+                            <input
+                              ref={fileInputRef}
+                              type="file"
+                              accept="image/*"
+                              onChange={handleFileSelect}
+                              className="hidden"
+                            />
+                            <div className="flex flex-col sm:flex-row gap-3">
+                              <button
+                                onClick={() => fileInputRef.current?.click()}
+                                className="px-4 py-2.5 rounded-lg text-sm font-semibold bg-pink-100 text-black border-2 border-pink-200 hover:bg-pink-100 transition-all flex items-center justify-center gap-2"
+                              >
+                                <FiUpload className="w-4 h-4" />
+                                {profilePicturePreview ? 'Change Picture' : 'Choose Picture'}
+                              </button>
+                              {profilePicturePreview && (
+                                <button
+                                  onClick={handleUploadPicture}
+                                  disabled={uploadingPicture}
+                                  className="px-4 py-2.5 rounded-lg text-sm font-semibold bg-pink-100 text-black border-2 border-pink-200 hover:bg-pink-100 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                                >
+                                  {uploadingPicture ? (
+                                    <>
+                                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-black border-t-transparent"></div>
+                                      Uploading...
+                                    </>
+                                  ) : (
+                                    <>
+                                      <FiSave className="w-4 h-4" />
+                                      Save Picture
+                                    </>
+                                  )}
+                                </button>
+                              )}
+                              {(profilePicture || user.avatar) && !profilePicturePreview && (
+                                <button
+                                  onClick={handleRemovePicture}
+                                  disabled={uploadingPicture}
+                                  className="px-4 py-2.5 rounded-lg text-sm font-semibold bg-white text-black border-2 border-gray-300 hover:bg-gray-50 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                                >
+                                  <FiTrash2 className="w-4 h-4" />
+                                  Remove
+                                </button>
+                              )}
+                              {profilePicturePreview && (
+                                <button
+                                  onClick={() => {
+                                    setProfilePicturePreview('');
+                                    fileInputRef.current && (fileInputRef.current.value = '');
+                                  }}
+                                  className="px-4 py-2.5 rounded-lg text-sm font-semibold bg-white text-black border-2 border-gray-300 hover:bg-gray-50 transition-all flex items-center justify-center gap-2"
+                                >
+                                  <FiX className="w-4 h-4" />
+                                  Cancel
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                          <div className="text-xs text-black space-y-1">
+                            <p className="flex items-center gap-1">
+                              <FiCheckCircle className="w-3 h-3" />
+                              Supported formats: JPG, PNG, GIF
+                            </p>
+                            <p className="flex items-center gap-1">
+                              <FiCheckCircle className="w-3 h-3" />
+                              Maximum file size: 5MB
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                   {/* Account Summary Cards */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                     <div className="bg-white rounded-xl p-5 border-2 border-gray-200 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">

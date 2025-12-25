@@ -29,6 +29,37 @@ router.get('/me', auth, async (req, res) => {
   }
 });
 
+// Update user profile (including avatar)
+router.patch('/me', auth, async (req, res) => {
+  try {
+    console.log('[PATCH /api/auth/me] Request received:', {
+      userId: req.userId,
+      hasAvatar: !!req.body.avatar,
+      avatarLength: req.body.avatar ? req.body.avatar.length : 0
+    });
+    
+    const { avatar } = req.body;
+    const user = await User.findById(req.userId);
+    if (!user) {
+      console.log('[PATCH /api/auth/me] User not found:', req.userId);
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    if (avatar !== undefined) {
+      user.avatar = avatar;
+      console.log('[PATCH /api/auth/me] Avatar updated for user:', req.userId);
+    }
+    
+    await user.save();
+    const updatedUser = await User.findById(req.userId).select('name email phone isAdmin googleId avatar provider createdAt updatedAt');
+    console.log('[PATCH /api/auth/me] Profile updated successfully');
+    res.json({ user: updatedUser, message: 'Profile updated successfully' });
+  } catch (e) {
+    console.error('[PATCH /api/auth/me] Error:', e);
+    res.status(500).json({ message: 'Failed to update profile', error: e.message });
+  }
+});
+
 /* ------------------------------------------
    GOOGLE OAUTH 2.0 FIXED CONFIGURATION
 --------------------------------------------- */

@@ -140,6 +140,48 @@ export const api = {
     }
   },
 
+  updateProfile: async (payload) => {
+    try {
+      const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
+      const isCookieSession = token === 'cookie';
+      
+      console.log('[api.updateProfile] Starting update:', {
+        hasToken: !!token,
+        isCookieSession,
+        payloadKeys: Object.keys(payload),
+        avatarLength: payload.avatar ? payload.avatar.length : 0
+      });
+      
+      const options = {
+        method: 'PATCH',
+        body: JSON.stringify(payload),
+        credentials: 'include', // Always include credentials for cookies
+      };
+      
+      // If not cookie session, explicitly add Authorization header
+      if (!isCookieSession && token) {
+        options.headers = {
+          Authorization: `Bearer ${token}`,
+        };
+        console.log('[api.updateProfile] Added Authorization header');
+      } else {
+        console.log('[api.updateProfile] Using cookie-based auth');
+      }
+      
+      const result = await request('/api/auth/me', options);
+      console.log('[api.updateProfile] Success:', result);
+      return result;
+    } catch (e) {
+      console.error('[api.updateProfile] Error:', e);
+      console.error('[api.updateProfile] Error details:', {
+        message: e.message,
+        status: e.status,
+        response: e.response
+      });
+      throw e;
+    }
+  },
+
   // Cart endpoints
   getCart: () => request('/api/cart', { method: 'GET' }),
   addToCart: ({ productId, quantity = 1, size = null }) => request('/api/cart/add', { method: 'POST', body: JSON.stringify({ productId, quantity, size }) }),

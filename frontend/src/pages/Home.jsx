@@ -17,7 +17,7 @@ const Home = () => {
           },
           {
             desktop: 'https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765533979/Green_Cute_Baby_Store_Facebook_Ads_2048_x_594_px_tiow9i.svg',
-            alt: 'Festive Offer - Kidzo',
+            alt: 'Festive Season Offer - Kidzo',
           },
         ]}
         mobileSrc="https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765533983/Beige_Neutral_Kids_Fashion_Product_Detail_Instagram_Post_obnvdg.svg"

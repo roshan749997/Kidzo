@@ -12,28 +12,35 @@ export function setupPassport() {
   const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
   const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
   
-  // Build callback URL - use env var or construct from BACKEND_URL
-  let callbackURL = process.env.GOOGLE_CALLBACK_URL;
-  if (!callbackURL) {
-    const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:5000';
-    callbackURL = `${BACKEND_URL.replace(/\/+$/, '')}/api/auth/google/callback`;
+  // ✅ ENV based callback URL (REQUIRED for production)
+  // Must match exactly with Google Cloud Console Authorized redirect URIs
+  const callbackURL = process.env.GOOGLE_CALLBACK_URL;
+  
+  // Fallback only for local development if not set
+  const finalCallbackURL = callbackURL || (process.env.NODE_ENV !== 'production' 
+    ? 'http://localhost:5000/api/auth/google/callback' 
+    : null);
+
+  if (!finalCallbackURL) {
+    console.error('[passport] ERROR: GOOGLE_CALLBACK_URL is required in production!');
   }
 
   console.log('[passport] Google OAuth Configuration:', {
     hasClientId: !!GOOGLE_CLIENT_ID,
     hasClientSecret: !!GOOGLE_CLIENT_SECRET,
-    callbackURL: callbackURL,
+    callbackURL: finalCallbackURL,
+    callbackURLSource: callbackURL ? 'GOOGLE_CALLBACK_URL env var' : 'fallback (dev only)',
     nodeEnv: process.env.NODE_ENV,
   });
 
   // Only register GoogleStrategy if credentials are provided
-  if (GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET) {
+  if (GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET && finalCallbackURL) {
     passport.use(
       new GoogleStrategy(
         {
           clientID: GOOGLE_CLIENT_ID,
           clientSecret: GOOGLE_CLIENT_SECRET,
-          callbackURL: callbackURL,
+          callbackURL: finalCallbackURL,
         },
       async (accessToken, refreshToken, profile, done) => {
         try {
@@ -87,9 +94,13 @@ export function setupPassport() {
       }
     )
     );
-    console.log('[passport] Google OAuth strategy registered');
+    console.log('[passport] Google OAuth strategy registered with callbackURL:', finalCallbackURL);
   } else {
-    console.warn('[passport] Google OAuth disabled: Missing GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET');
+    const missing = [];
+    if (!GOOGLE_CLIENT_ID) missing.push('GOOGLE_CLIENT_ID');
+    if (!GOOGLE_CLIENT_SECRET) missing.push('GOOGLE_CLIENT_SECRET');
+    if (!finalCallbackURL) missing.push('GOOGLE_CALLBACK_URL');
+    console.warn('[passport] Google OAuth disabled: Missing', missing.join(', '));
   }
 
   passport.serializeUser((user, done) => {

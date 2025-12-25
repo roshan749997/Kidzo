@@ -21,6 +21,8 @@ const Navbar = () => {
   const [bannerIndex, setBannerIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const [userInitial, setUserInitial] = useState('');
+  const [userAvatar, setUserAvatar] = useState('');
+  const [avatarError, setAvatarError] = useState(false);
   const [headerLogo, setHeaderLogo] = useState({
     url: 'https://res.cloudinary.com/dvkxgrcbv/image/upload/v1765607037/Pink_and_Purple_Playful_Kids_Store_Logo_150_x_60_px_1_ex8w7m.svg',
     alt: 'Kidzo',
@@ -127,8 +129,11 @@ const Navbar = () => {
               const parsed = JSON.parse(userData);
               const name = parsed.name || parsed.user?.name || '';
               const email = parsed.email || parsed.user?.email || '';
+              const avatar = parsed.avatar || parsed.user?.avatar || '';
               const initial = name ? name.charAt(0).toUpperCase() : (email ? email.charAt(0).toUpperCase() : 'U');
               setUserInitial(initial);
+              setUserAvatar(avatar);
+              setAvatarError(false);
             } else {
               // Try to fetch from API
               try {
@@ -136,17 +141,26 @@ const Navbar = () => {
                 const data = await api.me();
                 const userName = data?.user?.name || '';
                 const userEmail = data?.user?.email || '';
+                const userAvatar = data?.user?.avatar || '';
                 const initial = userName ? userName.charAt(0).toUpperCase() : (userEmail ? userEmail.charAt(0).toUpperCase() : 'U');
                 setUserInitial(initial);
+                setUserAvatar(userAvatar);
+                setAvatarError(false);
               } catch (err) {
                 setUserInitial('U');
+                setUserAvatar('');
+                setAvatarError(false);
               }
             }
           } catch (err) {
             setUserInitial('U');
+            setUserAvatar('');
+            setAvatarError(false);
           }
         } else {
           setUserInitial('');
+          setUserAvatar('');
+          setAvatarError(false);
         }
       } catch {
         setIsAuthenticated(false);
@@ -171,9 +185,16 @@ const Navbar = () => {
     window.addEventListener('storage', onStorage);
     window.addEventListener('authStateChanged', onAuthStateChanged);
     
+    // Listen for profile picture updates
+    const onProfilePictureUpdated = () => {
+      checkAuth();
+    };
+    window.addEventListener('profilePictureUpdated', onProfilePictureUpdated);
+    
     return () => {
       window.removeEventListener('storage', onStorage);
       window.removeEventListener('authStateChanged', onAuthStateChanged);
+      window.removeEventListener('profilePictureUpdated', onProfilePictureUpdated);
     };
   }, []);
 
@@ -200,6 +221,8 @@ const Navbar = () => {
       // Update state
       setIsAuthenticated(false);
       setUserInitial('');
+      setUserAvatar('');
+      setAvatarError(false);
       
       // Dispatch events to notify other components
       window.dispatchEvent(new Event('storage'));
@@ -217,6 +240,8 @@ const Navbar = () => {
       } catch {}
       setIsAuthenticated(false);
       setUserInitial('');
+      setUserAvatar('');
+      setAvatarError(false);
       navigate('/signin');
     }
   };
@@ -575,14 +600,23 @@ const Navbar = () => {
                 )}
               </Link>
 
-              {/* My Account Icon / User Initial - Hidden on Mobile, Visible on Desktop */}
+              {/* My Account Icon / User Profile Picture - Hidden on Mobile, Visible on Desktop */}
               {isAuthenticated && userInitial ? (
                 <Link 
                   to="/profile" 
-                  className="hidden md:flex w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-pink-500 to-pink-600 text-white font-bold text-sm sm:text-base md:text-lg items-center justify-center shadow-md hover:shadow-lg transition-all duration-200 hover:scale-110 group touch-manipulation ring-2 ring-pink-200 hover:ring-pink-300"
+                  className="hidden md:flex w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-pink-500 to-pink-600 text-white font-bold text-sm sm:text-base md:text-lg items-center justify-center shadow-md hover:shadow-lg transition-all duration-200 hover:scale-110 group touch-manipulation ring-2 ring-pink-200 hover:ring-pink-300 overflow-hidden"
                   title="My Profile"
                 >
-                  {userInitial}
+                  {userAvatar && !avatarError ? (
+                    <img 
+                      src={userAvatar} 
+                      alt="Profile" 
+                      className="w-full h-full object-cover"
+                      onError={() => setAvatarError(true)}
+                    />
+                  ) : (
+                    <span>{userInitial}</span>
+                  )}
                 </Link>
               ) : (
                 <button 
@@ -686,8 +720,17 @@ const Navbar = () => {
                     className="bg-white border border-gray-300 rounded-lg py-3 sm:py-4 px-3 sm:px-4 flex items-center justify-center space-x-2 hover:bg-gray-50 active:bg-gray-100 transition-all duration-200 touch-manipulation shadow-sm"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
-                    <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-gradient-to-br from-pink-500 to-pink-600 text-white font-bold text-sm sm:text-base flex items-center justify-center">
-                      {userInitial}
+                    <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-gradient-to-br from-pink-500 to-pink-600 text-white font-bold text-sm sm:text-base flex items-center justify-center overflow-hidden">
+                      {userAvatar && !avatarError ? (
+                        <img 
+                          src={userAvatar} 
+                          alt="Profile" 
+                          className="w-full h-full object-cover"
+                          onError={() => setAvatarError(true)}
+                        />
+                      ) : (
+                        <span>{userInitial}</span>
+                      )}
                     </div>
                     <span className="font-bold text-xs sm:text-sm text-black">Profile</span>
                   </Link>
