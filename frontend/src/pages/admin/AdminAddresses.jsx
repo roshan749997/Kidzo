@@ -59,67 +59,67 @@ const AdminAddresses = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
-      <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+      <div className="max-w-7xl mx-auto p-3 sm:p-4 lg:p-6 xl:p-8">
         {/* Header */}
-        <div className="mb-6 sm:mb-8">
-          <div className="mb-6">
-            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">User Addresses</h1>
-            <p className="text-gray-600">View and manage customer delivery addresses</p>
+        <div className="mb-4 sm:mb-6 lg:mb-8">
+          <div className="mb-4 sm:mb-6">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-1 sm:mb-2">User Addresses</h1>
+            <p className="text-sm sm:text-base text-gray-600">View and manage customer delivery addresses</p>
           </div>
 
           {/* Stats Cards */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-            <div className="bg-white rounded-xl p-4 border-2 border-blue-200 shadow-md">
-              <div className="flex items-center gap-2 mb-2">
-                <FiMapPin className="h-5 w-5 text-blue-600" />
-                <span className="text-xs font-semibold text-gray-600 uppercase">Total</span>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
+            <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 border-2 border-blue-200 shadow-md">
+              <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-2">
+                <FiMapPin className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600 flex-shrink-0" />
+                <span className="text-xs font-semibold text-gray-600 uppercase truncate">Total</span>
               </div>
-              <div className="text-2xl font-bold text-gray-900">{stats.totalAddresses}</div>
+              <div className="text-xl sm:text-2xl font-bold text-gray-900">{stats.totalAddresses}</div>
             </div>
-            <div className="bg-white rounded-xl p-4 border-2 border-green-200 shadow-md">
-              <div className="flex items-center gap-2 mb-2">
-                <FiHome className="h-5 w-5 text-green-600" />
-                <span className="text-xs font-semibold text-gray-600 uppercase">Home</span>
+            <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 border-2 border-green-200 shadow-md">
+              <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-2">
+                <FiHome className="h-4 w-4 sm:h-5 sm:w-5 text-green-600 flex-shrink-0" />
+                <span className="text-xs font-semibold text-gray-600 uppercase truncate">Home</span>
               </div>
-              <div className="text-2xl font-bold text-gray-900">{stats.homeAddresses}</div>
+              <div className="text-xl sm:text-2xl font-bold text-gray-900">{stats.homeAddresses}</div>
             </div>
-            <div className="bg-white rounded-xl p-4 border-2 border-purple-200 shadow-md">
-              <div className="flex items-center gap-2 mb-2">
-                <FiBriefcase className="h-5 w-5 text-purple-600" />
-                <span className="text-xs font-semibold text-gray-600 uppercase">Work</span>
+            <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 border-2 border-purple-200 shadow-md">
+              <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-2">
+                <FiBriefcase className="h-4 w-4 sm:h-5 sm:w-5 text-purple-600 flex-shrink-0" />
+                <span className="text-xs font-semibold text-gray-600 uppercase truncate">Work</span>
               </div>
-              <div className="text-2xl font-bold text-gray-900">{stats.workAddresses}</div>
+              <div className="text-xl sm:text-2xl font-bold text-gray-900">{stats.workAddresses}</div>
             </div>
-            <div className="bg-white rounded-xl p-4 border-2 border-amber-200 shadow-md">
-              <div className="flex items-center gap-2 mb-2">
-                <FiUser className="h-5 w-5 text-amber-600" />
-                <span className="text-xs font-semibold text-gray-600 uppercase">Users</span>
+            <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 border-2 border-amber-200 shadow-md">
+              <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-2">
+                <FiUser className="h-4 w-4 sm:h-5 sm:w-5 text-amber-600 flex-shrink-0" />
+                <span className="text-xs font-semibold text-gray-600 uppercase truncate">Users</span>
               </div>
-              <div className="text-2xl font-bold text-gray-900">{stats.uniqueUsers}</div>
+              <div className="text-xl sm:text-2xl font-bold text-gray-900">{stats.uniqueUsers}</div>
             </div>
           </div>
 
           {/* Search */}
-          <div className="bg-white rounded-xl p-4 border-2 border-gray-200 shadow-md mb-6">
-            <div className="flex flex-col sm:flex-row gap-4">
+          <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 border-2 border-gray-200 shadow-md mb-4 sm:mb-6">
+            <div className="flex flex-col gap-3 sm:gap-4">
               <div className="flex-1 relative">
-                <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4 sm:h-5 sm:w-5" />
                 <input
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Search by name, email, phone, address, city, or pincode..."
-                  className="w-full pl-10 pr-4 py-2 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none"
+                  placeholder="Search addresses..."
+                  className="w-full pl-9 sm:pl-10 pr-4 py-2 text-sm sm:text-base border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none"
                 />
               </div>
               <select
                 value={pageSize}
                 onChange={(e) => setPageSize(Number(e.target.value))}
-                className="px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none"
+                className="px-3 sm:px-4 py-2 text-sm sm:text-base border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none"
               >
-                <option value={5}>5 per page</option>
-                <option value={10}>10 per page</option>
-                <option value={20}>20 per page</option>
-                <option value={50}>50 per page</option>
+                <option value={5}>5/page</option>
+                <option value={10}>10/page</option>
+                <option value={20}>20/page</option>
+                <option value={50}>50/page</option>
               </select>
             </div>
           </div>
@@ -149,11 +149,12 @@ const AdminAddresses = () => {
           </div>
         ) : (
           <>
-            <div className="bg-white rounded-xl border-2 border-gray-200 shadow-lg overflow-hidden">
-              <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-4">
+            {/* Desktop Table View */}
+            <div className="hidden md:block bg-white rounded-xl border-2 border-gray-200 shadow-lg overflow-hidden">
+              <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-4 sm:px-6 py-3 sm:py-4">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                    <FiMapPin className="h-5 w-5" />
+                  <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+                    <FiMapPin className="h-4 w-4 sm:h-5 sm:w-5" />
                     Addresses ({filtered.length})
                   </h2>
                 </div>
@@ -228,15 +229,15 @@ const AdminAddresses = () => {
                   </tbody>
                 </table>
               </div>
-              <div className="bg-gray-50 px-6 py-4 border-t border-gray-200 flex items-center justify-between">
-                <div className="text-sm text-gray-600">
+              <div className="bg-gray-50 px-4 sm:px-6 py-3 sm:py-4 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div className="text-xs sm:text-sm text-gray-600 text-center sm:text-left">
                   Showing {((page - 1) * pageSize) + 1} to {Math.min(page * pageSize, filtered.length)} of {filtered.length} addresses
                 </div>
                 <div className="flex gap-2">
                   <button
                     disabled={page <= 1}
                     onClick={() => setPage(p => Math.max(1, p - 1))}
-                    className={`px-4 py-2 rounded-lg border-2 font-semibold transition-all ${
+                    className={`px-3 sm:px-4 py-2 rounded-lg border-2 text-xs sm:text-sm font-semibold transition-all ${
                       page <= 1
                         ? 'text-gray-400 bg-gray-50 border-gray-200 cursor-not-allowed'
                         : 'text-gray-700 bg-white border-gray-300 hover:bg-gray-50'
@@ -244,13 +245,101 @@ const AdminAddresses = () => {
                   >
                     Previous
                   </button>
-                  <div className="px-4 py-2 bg-white border-2 border-gray-300 rounded-lg font-semibold text-gray-700">
+                  <div className="px-3 sm:px-4 py-2 bg-white border-2 border-gray-300 rounded-lg text-xs sm:text-sm font-semibold text-gray-700">
                     Page {page} of {totalPages}
                   </div>
                   <button
                     disabled={page >= totalPages}
                     onClick={() => setPage(p => Math.min(totalPages, p + 1))}
-                    className={`px-4 py-2 rounded-lg border-2 font-semibold transition-all ${
+                    className={`px-3 sm:px-4 py-2 rounded-lg border-2 text-xs sm:text-sm font-semibold transition-all ${
+                      page >= totalPages
+                        ? 'text-gray-400 bg-gray-50 border-gray-200 cursor-not-allowed'
+                        : 'text-gray-700 bg-white border-gray-300 hover:bg-gray-50'
+                    }`}
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Mobile Card View */}
+            <div className="md:hidden space-y-3">
+              <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-3 rounded-t-xl">
+                <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                  <FiMapPin className="h-5 w-5" />
+                  Addresses ({filtered.length})
+                </h2>
+              </div>
+              {pageItems.map(a => (
+                <div key={a._id} className="bg-white border-2 border-gray-200 rounded-xl shadow-md overflow-hidden">
+                  <div className="p-4">
+                    <div className="flex items-start gap-3 mb-3">
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center text-white font-bold flex-shrink-0">
+                        {(a.userId?.name || a.fullName || 'U')[0].toUpperCase()}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-semibold text-gray-900 mb-1">{a.userId?.name || a.fullName || 'Unknown'}</div>
+                        <div className="text-xs text-gray-500 flex items-center gap-1 mb-1">
+                          <FiMail className="h-3 w-3" />
+                          <span className="truncate">{a.userId?.email || 'N/A'}</span>
+                        </div>
+                        <div className="text-xs text-gray-500 flex items-center gap-1">
+                          <FiPhone className="h-3 w-3" />
+                          {a.mobileNumber || a.alternatePhone || 'N/A'}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="mb-3 pt-3 border-t border-gray-200">
+                      <div className="text-sm text-gray-900 font-medium mb-1">{a.address || 'N/A'}</div>
+                      {a.landmark && (
+                        <div className="text-xs text-gray-500 mb-1">Landmark: {a.landmark}</div>
+                      )}
+                      <div className="text-xs text-gray-600">{a.city || 'N/A'}, {a.state || 'N/A'} - {a.pincode || 'N/A'}</div>
+                    </div>
+                    <div className="flex items-center justify-between pt-3 border-t border-gray-200">
+                      <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold ${
+                        a.addressType?.toLowerCase() === 'home'
+                          ? 'bg-green-100 text-green-800 border border-green-300'
+                          : a.addressType?.toLowerCase() === 'work'
+                          ? 'bg-purple-100 text-purple-800 border border-purple-300'
+                          : 'bg-gray-100 text-gray-800 border border-gray-300'
+                      }`}>
+                        {a.addressType?.toLowerCase() === 'home' ? <FiHome className="w-3 h-3" /> : <FiBriefcase className="w-3 h-3" />}
+                        {a.addressType || 'Other'}
+                      </span>
+                      {a.createdAt && (
+                        <div className="text-xs text-gray-500">
+                          {new Date(a.createdAt).toLocaleDateString()}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+              <div className="bg-gray-50 px-4 py-3 border-2 border-gray-200 rounded-xl flex flex-col items-center justify-between gap-3">
+                <div className="text-xs text-gray-600 text-center">
+                  Showing {((page - 1) * pageSize) + 1} to {Math.min(page * pageSize, filtered.length)} of {filtered.length} addresses
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    disabled={page <= 1}
+                    onClick={() => setPage(p => Math.max(1, p - 1))}
+                    className={`px-3 py-2 rounded-lg border-2 text-xs font-semibold transition-all ${
+                      page <= 1
+                        ? 'text-gray-400 bg-gray-50 border-gray-200 cursor-not-allowed'
+                        : 'text-gray-700 bg-white border-gray-300 hover:bg-gray-50'
+                    }`}
+                  >
+                    Prev
+                  </button>
+                  <div className="px-3 py-2 bg-white border-2 border-gray-300 rounded-lg text-xs font-semibold text-gray-700">
+                    {page}/{totalPages}
+                  </div>
+                  <button
+                    disabled={page >= totalPages}
+                    onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                    className={`px-3 py-2 rounded-lg border-2 text-xs font-semibold transition-all ${
                       page >= totalPages
                         ? 'text-gray-400 bg-gray-50 border-gray-200 cursor-not-allowed'
                         : 'text-gray-700 bg-white border-gray-300 hover:bg-gray-50'

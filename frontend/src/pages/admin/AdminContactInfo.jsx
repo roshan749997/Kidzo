@@ -80,16 +80,16 @@ const AdminContactInfo = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
-      <div className="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
+      <div className="max-w-4xl mx-auto p-3 sm:p-4 lg:p-6 xl:p-8">
         {/* Header */}
-        <div className="mb-6 sm:mb-8">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-3 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-lg">
-              <FiMail className="h-6 w-6" />
+        <div className="mb-4 sm:mb-6 lg:mb-8">
+          <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+            <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-lg flex-shrink-0">
+              <FiMail className="h-5 w-5 sm:h-6 sm:w-6" />
             </div>
-            <div>
-              <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">Contact Information</h1>
-              <p className="text-gray-600 mt-1">Manage company contact details displayed across the website</p>
+            <div className="min-w-0">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">Contact Information</h1>
+              <p className="text-xs sm:text-sm lg:text-base text-gray-600 mt-1">Manage company contact details displayed across the website</p>
             </div>
           </div>
         </div>
@@ -107,18 +107,18 @@ const AdminContactInfo = () => {
         )}
 
         {/* Form */}
-        <div className="bg-white border-2 border-gray-200 rounded-2xl shadow-lg overflow-hidden">
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-4">
-            <h2 className="text-xl font-bold text-white flex items-center gap-2">
-              <FiHome className="h-5 w-5" />
+        <div className="bg-white border-2 border-gray-200 rounded-xl sm:rounded-2xl shadow-lg overflow-hidden">
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-4 sm:px-6 py-3 sm:py-4">
+            <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+              <FiHome className="h-4 w-4 sm:h-5 sm:w-5" />
               Company Details
             </h2>
           </div>
-          <form onSubmit={handleSubmit} className="p-6 space-y-6">
+          <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4 sm:space-y-6">
             {/* Company Name */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                <FiHome className="h-4 w-4" />
+              <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2 flex items-center gap-2">
+                <FiHome className="h-3 w-3 sm:h-4 sm:w-4" />
                 Company Name
               </label>
               <input
@@ -126,15 +126,15 @@ const AdminContactInfo = () => {
                 name="companyName"
                 value={form.companyName}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
+                className="w-full text-sm sm:text-base px-3 sm:px-4 py-2 sm:py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
                 placeholder="Enter company name"
               />
             </div>
 
             {/* Email */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                <FiMail className="h-4 w-4" />
+              <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2 flex items-center gap-2">
+                <FiMail className="h-3 w-3 sm:h-4 sm:w-4" />
                 Email Address
               </label>
               <input
@@ -143,15 +143,15 @@ const AdminContactInfo = () => {
                 value={form.email}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
+                className="w-full text-sm sm:text-base px-3 sm:px-4 py-2 sm:py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
                 placeholder="support@kidzo.com"
               />
             </div>
 
             {/* Phone */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                <FiPhone className="h-4 w-4" />
+              <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2 flex items-center gap-2">
+                <FiPhone className="h-3 w-3 sm:h-4 sm:w-4" />
                 Phone Number
               </label>
               <input
@@ -160,15 +160,15 @@ const AdminContactInfo = () => {
                 value={form.phone}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
+                className="w-full text-sm sm:text-base px-3 sm:px-4 py-2 sm:py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
                 placeholder="+91 98765 43210"
               />
             </div>
 
             {/* Address */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                <FiMapPin className="h-4 w-4" />
+              <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2 flex items-center gap-2">
+                <FiMapPin className="h-3 w-3 sm:h-4 sm:w-4" />
                 Address
               </label>
               <textarea
@@ -177,26 +177,26 @@ const AdminContactInfo = () => {
                 onChange={handleChange}
                 required
                 rows={4}
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all resize-none"
+                className="w-full text-sm sm:text-base px-3 sm:px-4 py-2 sm:py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all resize-none"
                 placeholder="Enter full company address"
               />
             </div>
 
             {/* Submit Button */}
-            <div className="flex justify-end pt-4 border-t border-gray-200">
+            <div className="flex justify-end pt-3 sm:pt-4 border-t border-gray-200">
               <button
                 type="submit"
                 disabled={saving}
-                className="px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg font-semibold shadow-md hover:shadow-lg transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                className="w-full sm:w-auto px-6 sm:px-8 py-2 sm:py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg font-semibold shadow-md hover:shadow-lg transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm sm:text-base"
               >
                 {saving ? (
                   <>
-                    <FiLoader className="h-5 w-5 animate-spin" />
+                    <FiLoader className="h-4 w-4 sm:h-5 sm:w-5 animate-spin" />
                     Saving...
                   </>
                 ) : (
                   <>
-                    <FiSave className="h-5 w-5" />
+                    <FiSave className="h-4 w-4 sm:h-5 sm:w-5" />
                     Save Contact Information
                   </>
                 )}
@@ -206,8 +206,8 @@ const AdminContactInfo = () => {
         </div>
 
         {/* Info Box */}
-        <div className="mt-6 bg-blue-50 border-2 border-blue-200 rounded-xl p-4">
-          <p className="text-sm text-blue-800">
+        <div className="mt-4 sm:mt-6 bg-blue-50 border-2 border-blue-200 rounded-xl p-3 sm:p-4">
+          <p className="text-xs sm:text-sm text-blue-800">
             <strong>Note:</strong> These contact details will be displayed across all policy pages and footer sections of the website.
           </p>
         </div>

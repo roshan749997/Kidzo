@@ -135,28 +135,29 @@ const AdminLayout = () => {
         {open && (
           <div className="lg:hidden fixed inset-0 z-50">
             <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setOpen(false)} />
-            <aside className="absolute inset-y-0 left-0 w-72 flex flex-col bg-white shadow-2xl">
+            <aside className="absolute inset-y-0 left-0 w-72 max-w-[85vw] flex flex-col bg-white shadow-2xl">
               {/* Mobile Header */}
-              <div className="p-6 border-b-2 border-gray-200 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-pink-600 to-rose-600 flex items-center justify-center text-white font-bold text-lg shadow-lg">
+              <div className="p-4 sm:p-6 border-b-2 border-gray-200 flex items-center justify-between">
+                <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-pink-600 to-rose-600 flex items-center justify-center text-white font-bold text-base sm:text-lg shadow-lg flex-shrink-0">
                     A
                   </div>
-                  <div>
-                    <div className="text-lg font-bold text-gray-900">Admin Panel</div>
-                    <div className="text-xs text-gray-500">Kidzoo Management</div>
+                  <div className="min-w-0">
+                    <div className="text-base sm:text-lg font-bold text-gray-900 truncate">Admin Panel</div>
+                    <div className="text-xs text-gray-500 truncate">Kidzoo Management</div>
                   </div>
                 </div>
                 <button
                   onClick={() => setOpen(false)}
-                  className="p-2 rounded-lg hover:bg-gray-100 text-gray-600"
+                  className="p-2 rounded-lg hover:bg-gray-100 text-gray-600 flex-shrink-0"
+                  aria-label="Close menu"
                 >
-                  <FiX className="w-6 h-6" />
+                  <FiX className="w-5 h-5 sm:w-6 sm:h-6" />
                 </button>
               </div>
 
               {/* Mobile Navigation */}
-              <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
+              <nav className="flex-1 p-3 sm:p-4 space-y-1 sm:space-y-2 overflow-y-auto">
                 {navItem('/admin', 'Dashboard', FiGrid, 'Overview & stats')}
                 {navItem('/admin/products', 'Products', FiBox, 'Manage catalog')}
                 {navItem('/admin/orders', 'Orders', FiShoppingBag, 'Track orders')}
@@ -167,22 +168,22 @@ const AdminLayout = () => {
               </nav>
 
               {/* Mobile User Section */}
-              <div className="p-4 border-t-2 border-gray-200">
-                <div className="flex items-center gap-3 mb-3 p-3 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center text-white font-bold shadow-md">
+              <div className="p-3 sm:p-4 border-t-2 border-gray-200">
+                <div className="flex items-center gap-2 sm:gap-3 mb-3 p-2 sm:p-3 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center text-white font-bold text-sm sm:text-base shadow-md flex-shrink-0">
                     {userName[0].toUpperCase()}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-sm font-semibold text-gray-900 truncate">{userName}</div>
+                    <div className="text-xs sm:text-sm font-semibold text-gray-900 truncate">{userName}</div>
                     <div className="text-xs text-gray-500">Administrator</div>
                   </div>
                 </div>
                 <button
                   onClick={logout}
-                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-600 hover:bg-red-50 transition-all duration-200 font-semibold"
+                  className="w-full flex items-center justify-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-3 rounded-xl text-red-600 hover:bg-red-50 transition-all duration-200 font-semibold text-sm sm:text-base"
                 >
-                  <FiLogOut className="w-5 h-5" />
-                  <span className="text-sm">Logout</span>
+                  <FiLogOut className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span>Logout</span>
                 </button>
               </div>
             </aside>
@@ -193,35 +194,41 @@ const AdminLayout = () => {
         <div className="flex-1 min-w-0 lg:ml-72">
           {/* Header */}
           <header className="sticky top-0 z-20 bg-white/80 backdrop-blur-lg border-b-2 border-gray-200 shadow-sm">
-            <div className="px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <button
-                  className="lg:hidden p-2 rounded-lg hover:bg-gray-100 text-gray-700 transition-colors"
-                  onClick={() => setOpen(true)}
-                >
-                  <FiMenu className="w-6 h-6" />
-                </button>
-                <div>
-                  <h1 className="text-2xl font-bold text-gray-900"><Title /></h1>
-                  <div className="text-sm text-gray-500 mt-0.5">
-                    {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+            <div className="px-3 sm:px-4 lg:px-8 py-3 sm:py-4">
+              <div className="flex items-center justify-between gap-2 sm:gap-4">
+                <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
+                  <button
+                    className="lg:hidden p-2 rounded-lg hover:bg-gray-100 text-gray-700 transition-colors flex-shrink-0"
+                    onClick={() => setOpen(true)}
+                    aria-label="Open menu"
+                  >
+                    <FiMenu className="w-5 h-5 sm:w-6 sm:h-6" />
+                  </button>
+                  <div className="min-w-0 flex-1">
+                    <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 truncate"><Title /></h1>
+                    <div className="text-xs sm:text-sm text-gray-500 mt-0.5 hidden sm:block">
+                      {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                    </div>
+                    <div className="text-xs text-gray-500 mt-0.5 sm:hidden">
+                      {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-lg border-2 border-gray-200">
-                  <FiUser className="w-4 h-4 text-gray-400" />
-                  <span className="text-sm font-semibold text-gray-700">{userName}</span>
-                </div>
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center text-white font-bold shadow-md cursor-pointer hover:shadow-lg transition-shadow">
-                  {userName[0].toUpperCase()}
+                <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+                  <div className="hidden sm:flex items-center gap-2 px-3 sm:px-4 py-2 bg-gray-50 rounded-lg border-2 border-gray-200">
+                    <FiUser className="w-4 h-4 text-gray-400" />
+                    <span className="text-sm font-semibold text-gray-700 hidden md:inline">{userName}</span>
+                  </div>
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center text-white font-bold text-sm sm:text-base shadow-md cursor-pointer hover:shadow-lg transition-shadow">
+                    {userName[0].toUpperCase()}
+                  </div>
                 </div>
               </div>
             </div>
           </header>
 
           {/* Content Area */}
-          <main className="p-4 sm:p-6 lg:p-8">
+          <main className="p-3 sm:p-4 lg:p-6 xl:p-8">
             <Outlet />
           </main>
         </div>

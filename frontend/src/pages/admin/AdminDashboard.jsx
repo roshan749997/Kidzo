@@ -68,11 +68,11 @@ const AdminDashboard = () => {
   const StatCard = ({ icon: Icon, label, value, gradient, trend, trendValue, onClick }) => (
     <div 
       onClick={onClick}
-      className={`rounded-2xl p-6 shadow-lg border-2 hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1 bg-gradient-to-br ${gradient}`}
+      className={`rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6 shadow-lg border-2 hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1 bg-gradient-to-br ${gradient}`}
     >
-      <div className="flex items-start justify-between mb-4">
-        <div className={`p-3 rounded-xl bg-white/80 shadow-md`}>
-          <Icon className={`h-6 w-6 text-gray-700`} />
+      <div className="flex items-start justify-between mb-2 sm:mb-4">
+        <div className={`p-2 sm:p-3 rounded-lg sm:rounded-xl bg-white/80 shadow-md`}>
+          <Icon className={`h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-gray-700`} />
         </div>
         {trend && (
           <div className={`text-xs font-semibold px-2 py-1 rounded-full ${trend > 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
@@ -80,10 +80,10 @@ const AdminDashboard = () => {
           </div>
         )}
       </div>
-      <div className="text-3xl font-bold text-gray-900 mb-1">{value}</div>
-      <div className="text-sm font-medium text-gray-700">{label}</div>
+      <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1 break-words">{value}</div>
+      <div className="text-xs sm:text-sm font-medium text-gray-700 line-clamp-2">{label}</div>
       {trendValue && (
-        <div className="mt-2 text-xs text-gray-600">vs last month</div>
+        <div className="mt-2 text-xs text-gray-600 hidden sm:block">vs last month</div>
       )}
     </div>
   );
@@ -91,13 +91,13 @@ const AdminDashboard = () => {
   const QuickActionCard = ({ icon: Icon, title, description, link, color }) => (
     <Link 
       to={link}
-      className={`block p-6 rounded-xl border-2 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 bg-white border-${color}-200 hover:border-${color}-400`}
+      className={`block p-4 sm:p-5 lg:p-6 rounded-lg sm:rounded-xl border-2 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 bg-white border-${color}-200 hover:border-${color}-400`}
     >
-      <div className={`inline-flex p-3 rounded-lg bg-${color}-100 mb-4`}>
-        <Icon className={`h-6 w-6 text-${color}-600`} />
+      <div className={`inline-flex p-2 sm:p-3 rounded-lg bg-${color}-100 mb-3 sm:mb-4`}>
+        <Icon className={`h-5 w-5 sm:h-6 sm:w-6 text-${color}-600`} />
       </div>
-      <h3 className="text-lg font-bold text-gray-900 mb-2">{title}</h3>
-      <p className="text-sm text-gray-600">{description}</p>
+      <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-1 sm:mb-2">{title}</h3>
+      <p className="text-xs sm:text-sm text-gray-600">{description}</p>
     </Link>
   );
 
@@ -111,24 +111,24 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
-      <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+      <div className="max-w-7xl mx-auto p-3 sm:p-4 lg:p-6 xl:p-8">
         {/* Header */}
-        <div className="mb-6 sm:mb-8">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+        <div className="mb-4 sm:mb-6 lg:mb-8">
+          <div className="flex flex-col gap-3 sm:gap-4 mb-4">
             <div>
-              <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">Dashboard Overview</h1>
-              <p className="text-gray-600">Welcome back! Here's what's happening with your store today.</p>
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-1 sm:mb-2">Dashboard Overview</h1>
+              <p className="text-sm sm:text-base text-gray-600">Welcome back! Here's what's happening with your store today.</p>
             </div>
             <div className="flex flex-wrap gap-2">
               <Link 
                 to="/admin/products" 
-                className="px-4 py-2 bg-gradient-to-r from-pink-600 to-rose-600 text-white rounded-lg font-semibold shadow-md hover:shadow-lg transition-all transform hover:scale-105"
+                className="px-3 sm:px-4 py-2 text-sm sm:text-base bg-gradient-to-r from-pink-600 to-rose-600 text-white rounded-lg font-semibold shadow-md hover:shadow-lg transition-all transform hover:scale-105"
               >
                 Manage Products
               </Link>
               <Link 
                 to="/admin/orders" 
-                className="px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-lg font-semibold shadow-md hover:shadow-lg transition-all transform hover:scale-105"
+                className="px-3 sm:px-4 py-2 text-sm sm:text-base bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-lg font-semibold shadow-md hover:shadow-lg transition-all transform hover:scale-105"
               >
                 View Orders
               </Link>
@@ -154,7 +154,7 @@ const AdminDashboard = () => {
         ) : (
           <>
             {/* Main Stats Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-4 sm:mb-6 lg:mb-8">
               <StatCard 
                 icon={FiDollarSign} 
                 label="Total Revenue" 
@@ -185,43 +185,43 @@ const AdminDashboard = () => {
             </div>
 
             {/* Secondary Stats */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6 sm:mb-8">
-              <div className="bg-white rounded-xl p-4 border-2 border-yellow-200 shadow-md">
-                <div className="flex items-center gap-2 mb-2">
-                  <FiClock className="h-5 w-5 text-yellow-600" />
-                  <span className="text-xs font-semibold text-gray-600 uppercase">Pending</span>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6 lg:mb-8">
+              <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 border-2 border-yellow-200 shadow-md">
+                <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-2">
+                  <FiClock className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-600 flex-shrink-0" />
+                  <span className="text-xs font-semibold text-gray-600 uppercase truncate">Pending</span>
                 </div>
-                <div className="text-2xl font-bold text-gray-900">{pendingOrders}</div>
+                <div className="text-xl sm:text-2xl font-bold text-gray-900">{pendingOrders}</div>
               </div>
-              <div className="bg-white rounded-xl p-4 border-2 border-green-200 shadow-md">
-                <div className="flex items-center gap-2 mb-2">
-                  <FiCheckCircle className="h-5 w-5 text-green-600" />
-                  <span className="text-xs font-semibold text-gray-600 uppercase">Delivered</span>
+              <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 border-2 border-green-200 shadow-md">
+                <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-2">
+                  <FiCheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-green-600 flex-shrink-0" />
+                  <span className="text-xs font-semibold text-gray-600 uppercase truncate">Delivered</span>
                 </div>
-                <div className="text-2xl font-bold text-gray-900">{deliveredOrders}</div>
+                <div className="text-xl sm:text-2xl font-bold text-gray-900">{deliveredOrders}</div>
               </div>
-              <div className="bg-white rounded-xl p-4 border-2 border-red-200 shadow-md">
-                <div className="flex items-center gap-2 mb-2">
-                  <FiXCircle className="h-5 w-5 text-red-600" />
-                  <span className="text-xs font-semibold text-gray-600 uppercase">Failed</span>
+              <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 border-2 border-red-200 shadow-md">
+                <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-2">
+                  <FiXCircle className="h-4 w-4 sm:h-5 sm:w-5 text-red-600 flex-shrink-0" />
+                  <span className="text-xs font-semibold text-gray-600 uppercase truncate">Failed</span>
                 </div>
-                <div className="text-2xl font-bold text-gray-900">{failedOrders}</div>
+                <div className="text-xl sm:text-2xl font-bold text-gray-900">{failedOrders}</div>
               </div>
-              <div className="bg-white rounded-xl p-4 border-2 border-blue-200 shadow-md">
-                <div className="flex items-center gap-2 mb-2">
-                  <FiUsers className="h-5 w-5 text-blue-600" />
-                  <span className="text-xs font-semibold text-gray-600 uppercase">Customers</span>
+              <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 border-2 border-blue-200 shadow-md">
+                <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-2">
+                  <FiUsers className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600 flex-shrink-0" />
+                  <span className="text-xs font-semibold text-gray-600 uppercase truncate">Customers</span>
                 </div>
-                <div className="text-2xl font-bold text-gray-900">
+                <div className="text-xl sm:text-2xl font-bold text-gray-900">
                   {new Set(allOrders.map(o => o.user?._id || o.user?.id).filter(Boolean)).size}
                 </div>
               </div>
             </div>
 
             {/* Quick Actions */}
-            <div className="mb-6 sm:mb-8">
-              <h2 className="text-xl font-bold text-gray-900 mb-4">Quick Actions</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="mb-4 sm:mb-6 lg:mb-8">
+              <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-3 sm:mb-4">Quick Actions</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                 <QuickActionCard 
                   icon={FiBox}
                   title="Add Product"
@@ -254,18 +254,18 @@ const AdminDashboard = () => {
             </div>
 
             {/* Main Content Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
               {/* Recent Orders */}
-              <div className="lg:col-span-2 bg-white border-2 border-gray-200 rounded-2xl shadow-lg overflow-hidden">
-                <div className="bg-gradient-to-r from-pink-600 to-rose-600 px-6 py-4">
-                  <div className="flex items-center justify-between">
-                    <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                      <FiShoppingBag className="h-5 w-5" />
-                      Recent Orders
+              <div className="lg:col-span-2 bg-white border-2 border-gray-200 rounded-xl sm:rounded-2xl shadow-lg overflow-hidden">
+                <div className="bg-gradient-to-r from-pink-600 to-rose-600 px-4 sm:px-6 py-3 sm:py-4">
+                  <div className="flex items-center justify-between gap-2">
+                    <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+                      <FiShoppingBag className="h-4 w-4 sm:h-5 sm:w-5" />
+                      <span className="truncate">Recent Orders</span>
                     </h2>
                     <Link 
                       to="/admin/orders"
-                      className="text-white text-sm font-semibold hover:underline"
+                      className="text-white text-xs sm:text-sm font-semibold hover:underline flex-shrink-0"
                     >
                       View All →
                     </Link>
@@ -273,35 +273,35 @@ const AdminDashboard = () => {
                 </div>
                 <div className="divide-y">
                   {recentOrders.length === 0 ? (
-                    <div className="p-8 text-center text-gray-500">
-                      <FiShoppingBag className="h-12 w-12 mx-auto mb-3 text-gray-300" />
-                      <p>No recent orders</p>
+                    <div className="p-6 sm:p-8 text-center text-gray-500">
+                      <FiShoppingBag className="h-10 w-10 sm:h-12 sm:w-12 mx-auto mb-3 text-gray-300" />
+                      <p className="text-sm sm:text-base">No recent orders</p>
                     </div>
                   ) : (
                     recentOrders.map(o => (
                       <div 
                         key={o._id} 
-                        className="p-4 hover:bg-gray-50 transition-colors cursor-pointer"
+                        className="p-3 sm:p-4 hover:bg-gray-50 transition-colors cursor-pointer"
                         onClick={() => navigate(`/admin/orders`)}
                       >
-                        <div className="flex items-start justify-between mb-2">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-1">
-                              <span className="font-bold text-gray-900">#{String(o._id).slice(-6)}</span>
+                        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-2">
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-1 flex-wrap">
+                              <span className="font-bold text-gray-900 text-sm sm:text-base">#{String(o._id).slice(-6)}</span>
                               <StatusBadge status={o.status} />
                             </div>
-                            <div className="text-sm text-gray-700 font-medium">{o.user?.name || 'Customer'}</div>
-                            <div className="text-xs text-gray-500">{o.user?.email || ''}</div>
+                            <div className="text-xs sm:text-sm text-gray-700 font-medium truncate">{o.user?.name || 'Customer'}</div>
+                            <div className="text-xs text-gray-500 truncate">{o.user?.email || ''}</div>
                           </div>
-                          <div className="text-right">
-                            <div className="text-lg font-bold text-gray-900">{formatINR(o.amount)}</div>
+                          <div className="text-left sm:text-right">
+                            <div className="text-base sm:text-lg font-bold text-gray-900">{formatINR(o.amount)}</div>
                             <div className="text-xs text-gray-500">{o.items?.length || 0} items</div>
                           </div>
                         </div>
-                        <div className="flex items-center justify-between mt-2 pt-2 border-t border-gray-100">
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-0 mt-2 pt-2 border-t border-gray-100">
                           <div className="text-xs text-gray-500 flex items-center gap-1">
                             <FiClock className="h-3 w-3" />
-                            {new Date(o.createdAt).toLocaleString()}
+                            <span className="truncate">{new Date(o.createdAt).toLocaleString()}</span>
                           </div>
                           <div className="text-xs font-semibold text-gray-700">
                             {o.razorpayPaymentId ? 'Paid' : 'Pending Payment'}
@@ -314,26 +314,26 @@ const AdminDashboard = () => {
               </div>
 
               {/* Activity Feed & Summary */}
-              <div className="space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 {/* Activity Feed */}
-                <div className="bg-white border-2 border-gray-200 rounded-2xl shadow-lg overflow-hidden">
-                  <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-4">
-                    <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                      <FiClock className="h-5 w-5" />
-                      Activity Feed
+                <div className="bg-white border-2 border-gray-200 rounded-xl sm:rounded-2xl shadow-lg overflow-hidden">
+                  <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-4 sm:px-6 py-3 sm:py-4">
+                    <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+                      <FiClock className="h-4 w-4 sm:h-5 sm:w-5" />
+                      <span className="truncate">Activity Feed</span>
                     </h2>
                   </div>
-                  <div className="p-4 max-h-[400px] overflow-y-auto">
+                  <div className="p-3 sm:p-4 max-h-[300px] sm:max-h-[400px] overflow-y-auto">
                     {activity.length === 0 ? (
-                      <div className="text-center py-8 text-gray-500">
-                        <FiClock className="h-10 w-10 mx-auto mb-2 text-gray-300" />
-                        <p className="text-sm">No recent activity</p>
+                      <div className="text-center py-6 sm:py-8 text-gray-500">
+                        <FiClock className="h-8 w-8 sm:h-10 sm:w-10 mx-auto mb-2 text-gray-300" />
+                        <p className="text-xs sm:text-sm">No recent activity</p>
                       </div>
                     ) : (
-                      <div className="space-y-4">
+                      <div className="space-y-3 sm:space-y-4">
                         {activity.map((a, idx) => (
-                          <div key={a.id} className="flex items-start gap-3 pb-4 border-b border-gray-100 last:border-0">
-                            <div className="mt-1">
+                          <div key={a.id} className="flex items-start gap-2 sm:gap-3 pb-3 sm:pb-4 border-b border-gray-100 last:border-0">
+                            <div className="mt-1 flex-shrink-0">
                               <div className={`w-2 h-2 rounded-full ${
                                 idx === 0 ? 'bg-green-500' : 
                                 idx === 1 ? 'bg-blue-500' : 
@@ -341,8 +341,8 @@ const AdminDashboard = () => {
                               }`}></div>
                             </div>
                             <div className="flex-1 min-w-0">
-                              <div className="text-sm font-medium text-gray-900">{a.text}</div>
-                              <div className="text-xs text-gray-500 mt-1">{a.time}</div>
+                              <div className="text-xs sm:text-sm font-medium text-gray-900 line-clamp-2">{a.text}</div>
+                              <div className="text-xs text-gray-500 mt-1 truncate">{a.time}</div>
                               <div className="text-xs font-semibold text-green-600 mt-1">{formatINR(a.amount)}</div>
                             </div>
                           </div>
@@ -353,39 +353,39 @@ const AdminDashboard = () => {
                 </div>
 
                 {/* Order Status Summary */}
-                <div className="bg-white border-2 border-gray-200 rounded-2xl shadow-lg overflow-hidden">
-                  <div className="bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-4">
-                    <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                      <FiTrendingUp className="h-5 w-5" />
-                      Order Summary
+                <div className="bg-white border-2 border-gray-200 rounded-xl sm:rounded-2xl shadow-lg overflow-hidden">
+                  <div className="bg-gradient-to-r from-purple-600 to-pink-600 px-4 sm:px-6 py-3 sm:py-4">
+                    <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+                      <FiTrendingUp className="h-4 w-4 sm:h-5 sm:w-5" />
+                      <span className="truncate">Order Summary</span>
                     </h2>
                   </div>
-                  <div className="p-4 space-y-3">
-                    <div className="flex items-center justify-between p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                  <div className="p-3 sm:p-4 space-y-2 sm:space-y-3">
+                    <div className="flex items-center justify-between p-2 sm:p-3 bg-yellow-50 rounded-lg border border-yellow-200">
                       <div className="flex items-center gap-2">
-                        <FiClock className="h-4 w-4 text-yellow-600" />
-                        <span className="text-sm font-medium text-gray-700">Pending</span>
+                        <FiClock className="h-4 w-4 text-yellow-600 flex-shrink-0" />
+                        <span className="text-xs sm:text-sm font-medium text-gray-700">Pending</span>
                       </div>
-                      <span className="text-lg font-bold text-gray-900">{pendingOrders}</span>
+                      <span className="text-base sm:text-lg font-bold text-gray-900">{pendingOrders}</span>
                     </div>
-                    <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-200">
+                    <div className="flex items-center justify-between p-2 sm:p-3 bg-green-50 rounded-lg border border-green-200">
                       <div className="flex items-center gap-2">
-                        <FiCheckCircle className="h-4 w-4 text-green-600" />
-                        <span className="text-sm font-medium text-gray-700">Delivered</span>
+                        <FiCheckCircle className="h-4 w-4 text-green-600 flex-shrink-0" />
+                        <span className="text-xs sm:text-sm font-medium text-gray-700">Delivered</span>
                       </div>
-                      <span className="text-lg font-bold text-gray-900">{deliveredOrders}</span>
+                      <span className="text-base sm:text-lg font-bold text-gray-900">{deliveredOrders}</span>
                     </div>
-                    <div className="flex items-center justify-between p-3 bg-red-50 rounded-lg border border-red-200">
+                    <div className="flex items-center justify-between p-2 sm:p-3 bg-red-50 rounded-lg border border-red-200">
                       <div className="flex items-center gap-2">
-                        <FiXCircle className="h-4 w-4 text-red-600" />
-                        <span className="text-sm font-medium text-gray-700">Failed</span>
+                        <FiXCircle className="h-4 w-4 text-red-600 flex-shrink-0" />
+                        <span className="text-xs sm:text-sm font-medium text-gray-700">Failed</span>
                       </div>
-                      <span className="text-lg font-bold text-gray-900">{failedOrders}</span>
+                      <span className="text-base sm:text-lg font-bold text-gray-900">{failedOrders}</span>
                     </div>
-                    <div className="pt-3 border-t border-gray-200">
+                    <div className="pt-2 sm:pt-3 border-t border-gray-200">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm font-semibold text-gray-700">Total Orders</span>
-                        <span className="text-xl font-bold text-gray-900">{stats.totalOrders}</span>
+                        <span className="text-xs sm:text-sm font-semibold text-gray-700">Total Orders</span>
+                        <span className="text-lg sm:text-xl font-bold text-gray-900">{stats.totalOrders}</span>
                       </div>
                     </div>
                   </div>
