@@ -121,6 +121,8 @@ const ProductDetail = () => {
   const [loadingRecommendations, setLoadingRecommendations] = useState(false);
   const [loadingTrending, setLoadingTrending] = useState(false);
   const [loadingSale, setLoadingSale] = useState(false);
+  const [shouldLoadTrending, setShouldLoadTrending] = useState(false);
+  const [shouldLoadSale, setShouldLoadSale] = useState(false);
 
   // Scroll to top when product ID changes
   useEffect(() => {
@@ -130,6 +132,47 @@ const ProductDetail = () => {
   useEffect(() => {
     fetchProduct();
   }, [id, category]);
+
+  // Lazy load trending and sale sections when scrolled into view
+  useEffect(() => {
+    if (!product) return;
+
+    const trendingObserver = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !shouldLoadTrending) {
+          setShouldLoadTrending(true);
+          fetchTrendingProducts(product);
+        }
+      },
+      { rootMargin: '200px' } // Start loading 200px before visible
+    );
+
+    const saleObserver = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !shouldLoadSale) {
+          setShouldLoadSale(true);
+          fetchSaleProducts(product);
+        }
+      },
+      { rootMargin: '200px' }
+    );
+
+    // Use setTimeout to ensure DOM is ready
+    setTimeout(() => {
+      const trendingElement = document.getElementById('trending-section');
+      const saleElement = document.getElementById('sale-section');
+
+      if (trendingElement) trendingObserver.observe(trendingElement);
+      if (saleElement) saleObserver.observe(saleElement);
+    }, 500);
+
+    return () => {
+      const trendingElement = document.getElementById('trending-section');
+      const saleElement = document.getElementById('sale-section');
+      if (trendingElement) trendingObserver.unobserve(trendingElement);
+      if (saleElement) saleObserver.unobserve(saleElement);
+    };
+  }, [product, shouldLoadTrending, shouldLoadSale]);
 
   const fetchProduct = async () => {
     setLoading(true);
@@ -145,10 +188,11 @@ const ProductDetail = () => {
         setSelectedColor(data.product_info?.color || data.color);
       }
       
-      // Fetch related products
+      // Fetch recommended products immediately (same category, fast)
       fetchRecommendedProducts(data);
-      fetchTrendingProducts(data);
-      fetchSaleProducts(data);
+      
+      // Load trending and sale products lazily (only when scrolled into view)
+      // This makes initial page load faster
     } catch (error) {
       console.error('Error fetching product:', error);
       setProduct(null);
@@ -223,25 +267,49 @@ const ProductDetail = () => {
     setLoadingTrending(true);
     try {
       const currentProductId = currentProduct._id || currentProduct.id;
-      const categories = ['kids-clothing', 'kids-accessories', 'footwear', 'baby-care', 'toys'];
       
-      // Fetch products from all categories
+      // Try to use backend trending API first (faster)
+      try {
+        const { getTrendingProducts } = await import('../services/api');
+        const trendingData = await getTrendingProducts(12, 7);
+        if (trendingData?.products && trendingData.products.length > 0) {
+          const filtered = trendingData.products.filter(p => (p._id || p.id) !== currentProductId).slice(0, 12);
+          const normalized = filtered.map(p => ({
+            ...p,
+            id: p._id || p.id,
+            images: p.images || (p.image ? [p.image] : []),
+            image: Array.isArray(p.images) && p.images.length > 0 
+              ? (typeof p.images[0] === 'string' ? p.images[0] : p.images[0].url)
+              : p.image || getProductImage(p, 'image1'),
+            price: p.finalPrice || p.price || (p.mrp ? p.mrp - (p.mrp * (p.discountPercent || 0) / 100) : 0),
+            originalPrice: p.originalPrice || p.mrp || p.price || 0,
+          }));
+          setTrendingProducts(normalized);
+          setLoadingTrending(false);
+          return;
+        }
+      } catch (apiError) {
+        console.log('Trending API not available, using fallback');
+      }
+      
+      // Fallback: Fetch from only 2-3 categories (faster)
+      const categories = ['kids-clothing', 'kids-accessories', 'footwear'];
       const allProductsPromises = categories.map(cat => fetchSarees(cat).catch(() => []));
       const allProductsArrays = await Promise.all(allProductsPromises);
       const allProducts = allProductsArrays.flat().filter(p => (p._id || p.id) !== currentProductId);
 
-      // Shuffle array to randomize
-      const shuffleArray = (array) => {
-        const shuffled = [...array];
-        for (let i = shuffled.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      // Simple random selection (faster than shuffle)
+      const randomProducts = [];
+      const maxProducts = Math.min(12, allProducts.length);
+      const usedIndices = new Set();
+      
+      while (randomProducts.length < maxProducts && usedIndices.size < allProducts.length) {
+        const randomIndex = Math.floor(Math.random() * allProducts.length);
+        if (!usedIndices.has(randomIndex)) {
+          usedIndices.add(randomIndex);
+          randomProducts.push(allProducts[randomIndex]);
         }
-        return shuffled;
-      };
-
-      const shuffled = shuffleArray(allProducts);
-      const randomProducts = shuffled.slice(0, 12);
+      }
 
       // Normalize products
       const normalized = randomProducts.map(p => ({
@@ -270,38 +338,42 @@ const ProductDetail = () => {
     setLoadingSale(true);
     try {
       const currentProductId = currentProduct._id || currentProduct.id;
-      const categories = ['kids-clothing', 'kids-accessories', 'footwear', 'baby-care', 'toys'];
       
-      // Fetch products from all categories
+      // Fetch from only 2-3 categories (faster)
+      const categories = ['kids-clothing', 'kids-accessories', 'footwear'];
       const allProductsPromises = categories.map(cat => fetchSarees(cat).catch(() => []));
       const allProductsArrays = await Promise.all(allProductsPromises);
       const allProducts = allProductsArrays.flat();
 
-      // Filter products that are on sale
-      const saleItems = allProducts.filter(p => {
+      // Filter products that are on sale (optimized)
+      const saleItems = [];
+      for (const p of allProducts) {
         const productId = p._id || p.id;
-        if (productId === currentProductId) return false;
+        if (productId === currentProductId) continue;
         
         const finalPrice = p.finalPrice || p.price || (p.mrp ? p.mrp - (p.mrp * (p.discountPercent || 0) / 100) : 0);
         const originalPrice = p.originalPrice || p.mrp || p.price || 0;
         const hasDiscount = originalPrice > finalPrice;
         const discountPercent = p.discountPercent || (hasDiscount ? Math.round(((originalPrice - finalPrice) / originalPrice) * 100) : 0);
         
-        return p.onSale === true || hasDiscount || discountPercent > 0;
-      });
-
-      // Shuffle array to randomize
-      const shuffleArray = (array) => {
-        const shuffled = [...saleItems];
-        for (let i = shuffled.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        if (p.onSale === true || hasDiscount || discountPercent > 0) {
+          saleItems.push(p);
+          if (saleItems.length >= 12) break; // Stop early if we have enough
         }
-        return shuffled;
-      };
+      }
 
-      const shuffled = shuffleArray(saleItems);
-      const selectedSaleProducts = shuffled.slice(0, 12);
+      // Simple random selection (faster than shuffle)
+      const selectedSaleProducts = [];
+      const maxProducts = Math.min(12, saleItems.length);
+      const usedIndices = new Set();
+      
+      while (selectedSaleProducts.length < maxProducts && usedIndices.size < saleItems.length) {
+        const randomIndex = Math.floor(Math.random() * saleItems.length);
+        if (!usedIndices.has(randomIndex)) {
+          usedIndices.add(randomIndex);
+          selectedSaleProducts.push(saleItems[randomIndex]);
+        }
+      }
 
       // Normalize products
       const normalized = selectedSaleProducts.map(p => ({
@@ -863,40 +935,42 @@ const ProductDetail = () => {
             )}
 
             {/* On Sale Section */}
-            {(saleProducts.length > 0 || loadingSale) && (
-              <div className="mb-8 sm:mb-12">
-                <h3 className="text-base sm:text-lg font-semibold text-black mb-3 sm:mb-4">On Sale</h3>
-                {loadingSale ? (
-                  <div className="flex gap-4 overflow-x-auto pb-4">
-                    {[...Array(4)].map((_, i) => (
-                      <div key={i} className="flex-shrink-0 w-48 animate-pulse">
-                        <div className="aspect-[4/5] bg-gray-200 rounded-lg mb-2"></div>
-                        <div className="h-4 bg-gray-200 rounded mb-2"></div>
-                        <div className="h-4 bg-gray-200 rounded w-2/3"></div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="relative">
-                    <div 
-                      className="overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide" 
-                      style={{ 
-                        scrollbarWidth: 'none', 
-                        msOverflowStyle: 'none'
-                      }}
-                    >
-                      <div className="flex gap-4 min-w-max">
-                        {saleProducts.map((saleProduct) => (
-                          <div key={saleProduct.id} className="flex-shrink-0 w-48">
-                            <ProductCard product={saleProduct} />
-                          </div>
-                        ))}
+            <div id="sale-section" className="mb-8 sm:mb-12">
+              {(saleProducts.length > 0 || loadingSale || shouldLoadSale) && (
+                <>
+                  <h3 className="text-base sm:text-lg font-semibold text-black mb-3 sm:mb-4">On Sale</h3>
+                  {loadingSale ? (
+                    <div className="flex gap-4 overflow-x-auto pb-4">
+                      {[...Array(4)].map((_, i) => (
+                        <div key={i} className="flex-shrink-0 w-48 animate-pulse">
+                          <div className="aspect-[4/5] bg-gray-200 rounded-lg mb-2"></div>
+                          <div className="h-4 bg-gray-200 rounded mb-2"></div>
+                          <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="relative">
+                      <div 
+                        className="overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide" 
+                        style={{ 
+                          scrollbarWidth: 'none', 
+                          msOverflowStyle: 'none'
+                        }}
+                      >
+                        <div className="flex gap-4 min-w-max">
+                          {saleProducts.map((saleProduct) => (
+                            <div key={saleProduct.id} className="flex-shrink-0 w-48">
+                              <ProductCard product={saleProduct} />
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                )}
-              </div>
-            )}
+                  )}
+                </>
+              )}
+            </div>
 
             {/* More from [Brand] Section */}
             {product?.brand && (recommendedProducts.length > 0 || loadingRecommendations) && (
@@ -937,40 +1011,45 @@ const ProductDetail = () => {
               </div>
             )}
 
-            {/* Trending Now - Random Mix from ALL Categories */}
-            {(trendingProducts.length > 0 || loadingTrending) && (
-              <div>
-                {loadingTrending ? (
-                  <div className="flex gap-4 overflow-x-auto pb-4">
-                    {[...Array(4)].map((_, i) => (
-                      <div key={i} className="flex-shrink-0 w-48 animate-pulse">
-                        <div className="aspect-[4/5] bg-gray-200 rounded-lg mb-2"></div>
-                        <div className="h-4 bg-gray-200 rounded mb-2"></div>
-                        <div className="h-4 bg-gray-200 rounded w-2/3"></div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="relative">
-                    <div 
-                      className="overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide" 
-                      style={{ 
-                        scrollbarWidth: 'none', 
-                        msOverflowStyle: 'none'
-                      }}
-                    >
-                      <div className="flex gap-4 min-w-max">
-                        {trendingProducts.map((trendingProduct) => (
-                          <div key={trendingProduct.id} className="flex-shrink-0 w-48">
-                            <ProductCard product={trendingProduct} />
-                          </div>
-                        ))}
+            {/* Trending Now - Popular picks across all categories */}
+            <div id="trending-section" className="mb-8 sm:mb-12">
+              {(trendingProducts.length > 0 || loadingTrending || shouldLoadTrending) && (
+                <>
+                  <h3 className="text-base sm:text-lg font-semibold text-black mb-3 sm:mb-4">
+                    Trending Now - Popular picks across all categories
+                  </h3>
+                  {loadingTrending ? (
+                    <div className="flex gap-4 overflow-x-auto pb-4">
+                      {[...Array(4)].map((_, i) => (
+                        <div key={i} className="flex-shrink-0 w-48 animate-pulse">
+                          <div className="aspect-[4/5] bg-gray-200 rounded-lg mb-2"></div>
+                          <div className="h-4 bg-gray-200 rounded mb-2"></div>
+                          <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="relative">
+                      <div 
+                        className="overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide" 
+                        style={{ 
+                          scrollbarWidth: 'none', 
+                          msOverflowStyle: 'none'
+                        }}
+                      >
+                        <div className="flex gap-4 min-w-max">
+                          {trendingProducts.map((trendingProduct) => (
+                            <div key={trendingProduct.id} className="flex-shrink-0 w-48">
+                              <ProductCard product={trendingProduct} />
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                )}
-              </div>
-            )}
+                  )}
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>
