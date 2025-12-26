@@ -1,9 +1,8 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
-import { getMyAddress, saveMyAddress, deleteAddressById, createPaymentOrder, verifyPayment, createCodOrder } from '../services/api';
+import { getMyAddress, saveMyAddress, deleteAddressById, updateAddressById, createPaymentOrder, verifyPayment, createCodOrder } from '../services/api';
 import ScrollToTop from '../components/ScrollToTop';
-import { useHeaderColor } from '../utils/useHeaderColor';
 
 const indianStates = [
   'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh',
@@ -18,7 +17,6 @@ const indianStates = [
 
 export default function AddressForm() {
   const navigate = useNavigate();
-  const headerColor = useHeaderColor();
   const [showStateDropdown, setShowStateDropdown] = useState(false);
   const [filteredStates, setFilteredStates] = useState([...indianStates]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -28,6 +26,9 @@ export default function AddressForm() {
   const [hasSavedAddress, setHasSavedAddress] = useState(false);
   const [editMode, setEditMode] = useState(true);
   const [addressId, setAddressId] = useState(null);
+  const [addresses, setAddresses] = useState([]);
+  const [selectedAddressId, setSelectedAddressId] = useState(null);
+  const [showAddForm, setShowAddForm] = useState(false);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -284,6 +285,7 @@ export default function AddressForm() {
       pincode: formData.pincode.trim(),
       locality: formData.locality.trim(),
       address: formData.address.trim(),
+      addressLine1: formData.address.trim(),
       city: formData.city.trim(),
       state: formData.state.trim(),
       landmark: formData.landmark.trim(),
@@ -292,11 +294,38 @@ export default function AddressForm() {
     };
     try {
       setSaving(true);
-      const saved = await saveMyAddress(payload);
+      if (editMode && addressId) {
+        // Update existing address
+        await updateAddressById(addressId, payload);
+        // Reload addresses
+        const addressData = await getMyAddress();
+        if (Array.isArray(addressData)) {
+          setAddresses(addressData);
+        } else if (addressData && addressData._id) {
+          setAddresses([addressData]);
+        }
+      } else {
+        // Create new address
+        const saved = await saveMyAddress(payload);
+        // Reload addresses
+        const addressData = await getMyAddress();
+        if (Array.isArray(addressData)) {
+          setAddresses(addressData);
+          if (saved && saved._id) {
+            setSelectedAddressId(saved._id);
+            setAddressId(saved._id);
+          }
+        } else if (addressData && addressData._id) {
+          setAddresses([addressData]);
+          setSelectedAddressId(addressData._id);
+          setAddressId(addressData._id);
+        }
+      }
       setHasSavedAddress(true);
       setShowSuccess(true);
       setEditMode(false);
-      setShowForm(false); // Hide the form after successful save
+      setShowForm(false);
+      setShowAddForm(false);
       
       // Auto-hide success message after 3 seconds
       setTimeout(() => {
@@ -314,35 +343,65 @@ export default function AddressForm() {
     console.log('Cancel clicked');
   };
 
-  // Load existing address on mount
+  // Load existing addresses on mount
   useEffect(() => {
     const load = async () => {
       try {
         setLoadingAddress(true);
-        const doc = await getMyAddress();
-        if (doc && doc._id) {
-          setAddressId(doc._id);
+        const addressData = await getMyAddress();
+        if (addressData && Array.isArray(addressData) && addressData.length > 0) {
+          setAddresses(addressData);
           setHasSavedAddress(true);
-          setShowForm(false); // Hide form if address exists
-          setEditMode(false);
+          setShowForm(false);
+          setShowAddForm(false);
+          // Select first address by default
+          if (addressData[0] && addressData[0]._id) {
+            setSelectedAddressId(addressData[0]._id);
+            setAddressId(addressData[0]._id);
+            const firstAddr = addressData[0];
+            setFormData({
+              name: firstAddr.fullName || '',
+              mobile: firstAddr.mobileNumber || '',
+              pincode: firstAddr.pincode || '',
+              locality: firstAddr.locality || '',
+              address: firstAddr.address || firstAddr.addressLine1 || '',
+              city: firstAddr.city || '',
+              state: firstAddr.state || '',
+              landmark: firstAddr.landmark || '',
+              alternatePhone: firstAddr.alternatePhone || '',
+              addressType: (firstAddr.addressType || 'Home').toLowerCase(),
+            });
+          }
+        } else if (addressData && addressData._id) {
+          // Handle single address object (backward compatibility)
+          setAddresses([addressData]);
+          setAddressId(addressData._id);
+          setSelectedAddressId(addressData._id);
+          setHasSavedAddress(true);
+          setShowForm(false);
+          setShowAddForm(false);
           setFormData({
-            name: doc.fullName || '',
-            mobile: doc.mobileNumber || '',
-            pincode: doc.pincode || '',
-            locality: doc.locality || '',
-            address: doc.address || '',
-            city: doc.city || '',
-            state: doc.state || '',
-            landmark: doc.landmark || '',
-            alternatePhone: doc.alternatePhone || '',
-            addressType: (doc.addressType || 'Home').toLowerCase(),
+            name: addressData.fullName || '',
+            mobile: addressData.mobileNumber || '',
+            pincode: addressData.pincode || '',
+            locality: addressData.locality || '',
+            address: addressData.address || addressData.addressLine1 || '',
+            city: addressData.city || '',
+            state: addressData.state || '',
+            landmark: addressData.landmark || '',
+            alternatePhone: addressData.alternatePhone || '',
+            addressType: (addressData.addressType || 'Home').toLowerCase(),
           });
         } else {
+          setAddresses([]);
           setShowForm(true); // Show form if no address exists
+          setShowAddForm(true);
         }
       } catch (e) {
         // no-op if unauthenticated
+        setAddresses([]);
         setShowForm(true); // Show form if there's an error
+        setShowAddForm(true);
       } finally {
         setLoadingAddress(false);
       }
@@ -350,36 +409,123 @@ export default function AddressForm() {
     load();
   }, []);
 
-  const handleEditAddress = () => {
+  const handleEditAddress = (addressToEdit = null) => {
+    if (addressToEdit) {
+      setAddressId(addressToEdit._id);
+      setSelectedAddressId(addressToEdit._id);
+      setFormData({
+        name: addressToEdit.fullName || '',
+        mobile: addressToEdit.mobileNumber || '',
+        pincode: addressToEdit.pincode || '',
+        locality: addressToEdit.locality || '',
+        address: addressToEdit.address || addressToEdit.addressLine1 || '',
+        city: addressToEdit.city || '',
+        state: addressToEdit.state || '',
+        landmark: addressToEdit.landmark || '',
+        alternatePhone: addressToEdit.alternatePhone || '',
+        addressType: (addressToEdit.addressType || 'Home').toLowerCase(),
+      });
+    }
     setShowForm(true);
     setEditMode(true);
+    setShowAddForm(false);
   };
 
-  const handleDeleteAddress = async () => {
+  const handleSelectAddress = (address) => {
+    setSelectedAddressId(address._id);
+    setAddressId(address._id);
+    setFormData({
+      name: address.fullName || '',
+      mobile: address.mobileNumber || '',
+      pincode: address.pincode || '',
+      locality: address.locality || '',
+      address: address.address || address.addressLine1 || '',
+      city: address.city || '',
+      state: address.state || '',
+      landmark: address.landmark || '',
+      alternatePhone: address.alternatePhone || '',
+      addressType: (address.addressType || 'Home').toLowerCase(),
+    });
+    setShowForm(false);
+    setShowAddForm(false);
+  };
+
+  const handleAddNewAddress = () => {
+    setShowForm(true);
+    setShowAddForm(true);
+    setEditMode(false);
+    setAddressId(null);
+    setSelectedAddressId(null);
+    setFormData({
+      name: '',
+      mobile: '',
+      pincode: '',
+      locality: '',
+      address: '',
+      city: '',
+      state: '',
+      landmark: '',
+      alternatePhone: '',
+      addressType: 'home'
+    });
+  };
+
+  const handleDeleteAddress = async (addrId) => {
     if (!window.confirm('Are you sure you want to delete this address?')) {
       return;
     }
     
     try {
       setLoadingAddress(true);
-      await deleteAddressById(addressId);
-      // Reset form and show empty form
-      setFormData({
-        name: '',
-        mobile: '',
-        pincode: '',
-        locality: '',
-        address: '',
-        city: '',
-        state: '',
-        landmark: '',
-        alternatePhone: '',
-        addressType: 'home'
-      });
-      setAddressId(null);
-      setHasSavedAddress(false);
-      setShowForm(true);
-      setEditMode(true);
+      await deleteAddressById(addrId);
+      // Reload addresses
+      const addressData = await getMyAddress();
+      if (Array.isArray(addressData) && addressData.length > 0) {
+        setAddresses(addressData);
+        // Select first address if deleted was selected
+        if (addrId === selectedAddressId) {
+          const firstAddr = addressData[0];
+          setSelectedAddressId(firstAddr._id);
+          setAddressId(firstAddr._id);
+          setFormData({
+            name: firstAddr.fullName || '',
+            mobile: firstAddr.mobileNumber || '',
+            pincode: firstAddr.pincode || '',
+            locality: firstAddr.locality || '',
+            address: firstAddr.address || firstAddr.addressLine1 || '',
+            city: firstAddr.city || '',
+            state: firstAddr.state || '',
+            landmark: firstAddr.landmark || '',
+            alternatePhone: firstAddr.alternatePhone || '',
+            addressType: (firstAddr.addressType || 'Home').toLowerCase(),
+          });
+        }
+        setHasSavedAddress(true);
+        setShowForm(false);
+        setShowAddForm(false);
+      } else {
+        // No addresses left
+        setAddresses([]);
+        setAddressId(null);
+        setSelectedAddressId(null);
+        setHasSavedAddress(false);
+        setShowForm(true);
+        setShowAddForm(true);
+        setEditMode(false);
+        setFormData({
+          name: '',
+          mobile: '',
+          pincode: '',
+          locality: '',
+          address: '',
+          city: '',
+          state: '',
+          landmark: '',
+          alternatePhone: '',
+          addressType: 'home'
+        });
+      }
+      alert('Address deleted successfully!');
     } catch (error) {
       console.error('Error deleting address:', error);
       alert('Failed to delete address. Please try again.');
@@ -389,31 +535,119 @@ export default function AddressForm() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white p-4">
+    <div className="min-h-screen bg-white p-4">
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
+          {addresses.length > 0 && !showForm && (
+            <div className="bg-white shadow-lg rounded-2xl border border-gray-200 overflow-hidden mb-6">
+              <div className="bg-white border-b border-gray-200 p-4 flex items-center justify-between">
+                <span className="font-semibold text-lg text-black">SELECT DELIVERY ADDRESS</span>
+                <button
+                  onClick={handleAddNewAddress}
+                  className="px-4 py-2 bg-pink-500 hover:bg-pink-600 text-white rounded-lg font-semibold transition-all"
+                >
+                  + Add New
+                </button>
+              </div>
+              <div className="p-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {addresses.map((address) => (
+                    <div
+                      key={address._id}
+                      onClick={() => handleSelectAddress(address)}
+                      className={`border-2 rounded-xl p-4 cursor-pointer transition-all ${
+                        selectedAddressId === address._id
+                          ? 'border-pink-500 bg-white shadow-lg'
+                          : 'border-gray-200 hover:border-gray-300 hover:shadow-md'
+                      }`}
+                    >
+                      <div className="flex justify-between items-start mb-2">
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="radio"
+                            checked={selectedAddressId === address._id}
+                            onChange={() => handleSelectAddress(address)}
+                            className="w-4 h-4 text-pink-500"
+                          />
+                          <span className="font-semibold text-black">{address.fullName}</span>
+                          <span className="px-2 py-1 text-xs rounded-full bg-gray-100 text-black">
+                            {address.addressType || 'Home'}
+                          </span>
+                        </div>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleEditAddress(address);
+                            }}
+                            className="text-pink-500 hover:text-pink-600 text-sm font-semibold"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteAddress(address._id);
+                            }}
+                            className="text-black hover:text-gray-700 text-sm font-semibold"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                      <div className="text-sm text-black space-y-1">
+                        <p>{address.addressLine1 || address.address}</p>
+                        {address.addressLine2 && <p>{address.addressLine2}</p>}
+                        {address.landmark && <p className="italic">Landmark: {address.landmark}</p>}
+                        <p className="font-semibold">{address.city}, {address.state} - {address.pincode}</p>
+                        <p>Mobile: {address.mobileNumber || address.alternatePhone}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
           {showForm ? (
-            <form onSubmit={handleSaveAddress} className="bg-white shadow-lg rounded-2xl border border-pink-100 overflow-hidden">
-            <div className="bg-gradient-to-r from-[#FF1493] to-[#8B2BE2] text-white p-4 flex items-center gap-3">
-              <span className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center font-bold">1</span>
-              <span className="font-semibold text-lg">DELIVERY ADDRESS</span>
+            <form onSubmit={handleSaveAddress} className="bg-white shadow-lg rounded-2xl border border-gray-200 overflow-hidden">
+            <div className="bg-white border-b border-gray-200 p-4 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <span className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center font-bold text-black">1</span>
+                <span className="font-semibold text-lg text-black">{editMode ? 'EDIT ADDRESS' : 'ADD NEW ADDRESS'}</span>
+              </div>
+              {addresses.length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowForm(false);
+                    setShowAddForm(false);
+                    if (addresses.length > 0 && selectedAddressId) {
+                      const selected = addresses.find(a => a._id === selectedAddressId);
+                      if (selected) handleSelectAddress(selected);
+                    }
+                  }}
+                  className="text-black hover:text-gray-700"
+                >
+                  Cancel
+                </button>
+              )}
             </div>
 
             <div className="p-6">
               {loadingAddress && (
-                <div className="mb-4 text-sm text-gray-600">Loading your saved address…</div>
+                <div className="mb-4 text-sm text-black">Loading your saved address…</div>
               )}
               {hasSavedAddress && !editMode && (
-                <div className="mb-6 border rounded p-4 bg-gray-50">
-                  <div className="font-medium text-gray-900">{formData.name}</div>
-                  <div className="text-sm text-gray-700">{formData.address}</div>
-                  <div className="text-sm text-gray-700">{formData.locality}, {formData.city} - {formData.pincode}</div>
-                  <div className="text-sm text-gray-700">{formData.state}</div>
-                  <div className="text-sm text-gray-700">Mobile: {formData.mobile}</div>
-                  {formData.landmark && <div className="text-sm text-gray-700">Landmark: {formData.landmark}</div>}
-                  {formData.alternatePhone && <div className="text-sm text-gray-700">Alt: {formData.alternatePhone}</div>}
+                <div className="mb-6 border border-gray-200 rounded p-4 bg-white">
+                  <div className="font-medium text-black">{formData.name}</div>
+                  <div className="text-sm text-black">{formData.address}</div>
+                  <div className="text-sm text-black">{formData.locality}, {formData.city} - {formData.pincode}</div>
+                  <div className="text-sm text-black">{formData.state}</div>
+                  <div className="text-sm text-black">Mobile: {formData.mobile}</div>
+                  {formData.landmark && <div className="text-sm text-black">Landmark: {formData.landmark}</div>}
+                  {formData.alternatePhone && <div className="text-sm text-black">Alt: {formData.alternatePhone}</div>}
                   <div className="mt-4 flex gap-3">
-                    <button type="button" onClick={() => setEditMode(true)} className="px-4 py-2 border-2 rounded-lg text-black border-black cursor-pointer font-semibold transition-all shadow-sm hover:shadow-md" style={{ backgroundColor: headerColor }}>Edit Address</button>
+                    <button type="button" onClick={() => setEditMode(true)} className="px-4 py-2 bg-pink-500 hover:bg-pink-600 text-white rounded-lg cursor-pointer font-semibold transition-all shadow-sm hover:shadow-md">Edit Address</button>
                     <button 
                       type="button" 
                       onClick={async () => {
@@ -442,7 +676,7 @@ export default function AddressForm() {
                           }
                         }
                       }}
-                      className="px-4 py-2 border-2 rounded-lg text-red-600 border-red-600 hover:bg-red-50 cursor-pointer font-semibold transition-all shadow-sm hover:shadow-md"
+                      className="px-4 py-2 border-2 border-gray-300 hover:bg-gray-50 text-black cursor-pointer font-semibold transition-all shadow-sm hover:shadow-md rounded-lg"
                     >
                       Delete Address
                     </button>
@@ -453,8 +687,7 @@ export default function AddressForm() {
               <button
                 type="button"
                 onClick={handleUseCurrentLocation}
-                className="mb-6 text-black px-4 py-2 rounded-lg flex items-center gap-2 border-2 border-black transition-all font-medium shadow-md hover:shadow-lg cursor-pointer"
-                style={{ backgroundColor: headerColor }}
+                className="mb-6 bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all font-medium shadow-md hover:shadow-lg cursor-pointer"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
@@ -464,7 +697,7 @@ export default function AddressForm() {
 
               <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 ${hasSavedAddress && !editMode ? 'opacity-50 pointer-events-none select-none' : ''}`}>
                 <div>
-                  <label className="block text-xs text-gray-600 mb-1">Name</label>
+                  <label className="block text-xs text-black mb-1">Name</label>
                   <input
                     type="text"
                     name="name"
@@ -472,11 +705,11 @@ export default function AddressForm() {
                     onChange={handleInputChange}
                     placeholder="Enter your full name"
                     required
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all text-black bg-white"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-gray-600 mb-1">10-digit mobile number</label>
+                  <label className="block text-xs text-black mb-1">10-digit mobile number</label>
                   <input
                     type="tel"
                     name="mobile"
@@ -485,14 +718,14 @@ export default function AddressForm() {
                     maxLength={10}
                     placeholder="Enter 10-digit mobile number"
                     required
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all text-black bg-white"
                   />
                 </div>
               </div>
 
               <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 ${hasSavedAddress && !editMode ? 'opacity-50 pointer-events-none select-none' : ''}`}>
                 <div>
-                  <label className="block text-xs text-gray-600 mb-1">Pincode</label>
+                  <label className="block text-xs text-black mb-1">Pincode</label>
                   <input
                     type="text"
                     name="pincode"
@@ -501,11 +734,11 @@ export default function AddressForm() {
                     maxLength={6}
                     placeholder="Enter 6-digit pincode"
                     required
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all text-black bg-white"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-gray-600 mb-1">Locality</label>
+                  <label className="block text-xs text-black mb-1">Locality</label>
                   <input
                     type="text"
                     name="locality"
@@ -513,13 +746,13 @@ export default function AddressForm() {
                     onChange={handleInputChange}
                     placeholder="Enter your locality"
                     required
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all text-black bg-white"
                   />
                 </div>
               </div>
 
               <div className={`${hasSavedAddress && !editMode ? 'opacity-50 pointer-events-none select-none' : ''}`}>
-                <label className="block text-xs text-gray-600 mb-1">Address (Area and Street)</label>
+                <label className="block text-xs text-black mb-1">Address (Area and Street)</label>
                 <textarea
                   name="address"
                   value={formData.address}
@@ -527,13 +760,13 @@ export default function AddressForm() {
                   rows={3}
                   placeholder="Enter your complete address"
                   required
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all text-black bg-white"
                 />
               </div>
 
               <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 ${hasSavedAddress && !editMode ? 'opacity-50 pointer-events-none select-none' : ''}`}>
                 <div>
-                  <label className="block text-xs text-gray-600 mb-1">City/District/Town</label>
+                  <label className="block text-xs text-black mb-1">City/District/Town</label>
                   <input
                     type="text"
                     name="city"
@@ -541,11 +774,11 @@ export default function AddressForm() {
                     onChange={handleInputChange}
                     placeholder="Enter your city"
                     required
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all text-black bg-white"
                   />
                 </div>
                 <div className="relative" ref={stateDropdownRef}>
-                  <label className="block text-xs text-gray-600 mb-1">State</label>
+                  <label className="block text-xs text-black mb-1">State</label>
                   <div 
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white cursor-pointer transition-all"
                     onClick={() => setShowStateDropdown(!showStateDropdown)}
@@ -570,8 +803,8 @@ export default function AddressForm() {
                           filteredStates.map((state) => (
                             <div
                               key={state}
-                              className={`px-4 py-2 hover:bg-pink-50 cursor-pointer transition-colors ${
-                                formData.state === state ? 'bg-pink-100 text-[#FF1493] font-medium' : 'text-gray-700'
+                              className={`px-4 py-2 hover:bg-gray-100 cursor-pointer transition-colors ${
+                                formData.state === state ? 'bg-gray-100 text-black font-medium' : 'text-black'
                               }`}
                               onClick={() => {
                                 setFormData({ ...formData, state });
@@ -583,7 +816,7 @@ export default function AddressForm() {
                             </div>
                           ))
                         ) : (
-                          <div className="px-4 py-2 text-gray-500">No states found</div>
+                          <div className="px-4 py-2 text-black">No states found</div>
                         )}
                       </div>
                     </div>
@@ -593,18 +826,18 @@ export default function AddressForm() {
 
               <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 ${hasSavedAddress && !editMode ? 'opacity-50 pointer-events-none select-none' : ''}`}>
                 <div>
-                  <label className="block text-xs text-gray-600 mb-1">Landmark (Optional)</label>
+                  <label className="block text-xs text-black mb-1">Landmark (Optional)</label>
                   <input
                     type="text"
                     name="landmark"
                     value={formData.landmark}
                     onChange={handleInputChange}
                     placeholder="E.g., Near Central Mall"
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all text-black bg-white"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-gray-600 mb-1">Alternate Phone (Optional)</label>
+                  <label className="block text-xs text-black mb-1">Alternate Phone (Optional)</label>
                   <input
                     type="text"
                     name="alternatePhone"
@@ -612,13 +845,13 @@ export default function AddressForm() {
                     onChange={handleInputChange}
                     maxLength={10}
                     placeholder="Alternate phone (Optional)"
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all text-black bg-white"
                   />
                 </div>
               </div>
 
               <div className={`${hasSavedAddress && !editMode ? 'opacity-50 pointer-events-none select-none' : ''}`}>
-                <label className="block text-xs text-gray-600 mb-2">Address Type</label>
+                <label className="block text-xs text-black mb-2">Address Type</label>
                 <div className="flex gap-4">
                   <label className="flex items-center gap-2">
                     <input
@@ -628,7 +861,7 @@ export default function AddressForm() {
                       onChange={() => handleAddressTypeChange('home')}
                       className="w-4 h-4"
                     />
-                    <span className="text-sm">Home (All day delivery)</span>
+                    <span className="text-sm text-black">Home (All day delivery)</span>
                   </label>
                   <label className="flex items-center gap-2">
                     <input
@@ -636,9 +869,9 @@ export default function AddressForm() {
                       name="addressType"
                       checked={formData.addressType === 'work'}
                       onChange={() => handleAddressTypeChange('work')}
-                      className="w-4 h-4"
+                      className="w-4 h-4 text-pink-500"
                     />
-                    <span className="text-sm">Work (Delivery between 10 AM - 5 PM)</span>
+                    <span className="text-sm text-black">Work (Delivery between 10 AM - 5 PM)</span>
                   </label>
                 </div>
               </div>
@@ -647,23 +880,21 @@ export default function AddressForm() {
                 <button
                   type="submit"
                   disabled={saving}
-                  className={`text-black px-8 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl cursor-pointer w-full sm:w-auto text-center transform hover:scale-105 active:scale-95 border-2 border-black ${saving ? 'opacity-70 cursor-not-allowed' : ''}`}
-                  style={{ backgroundColor: headerColor }}
+                  className={`bg-pink-500 hover:bg-pink-600 text-white px-8 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl cursor-pointer w-full sm:w-auto text-center transform hover:scale-105 active:scale-95 ${saving ? 'opacity-70 cursor-not-allowed' : ''}`}
                 >
                   {saving ? 'Saving...' : 'SAVE AND DELIVER HERE'}
                 </button>
                 <button
                   onClick={handleCancel}
-                  className="text-black px-6 py-3 rounded-xl font-semibold transition-all cursor-pointer w-full sm:w-auto text-center border-2 border-black shadow-md hover:shadow-lg"
-                  style={{ backgroundColor: headerColor }}
+                  className="bg-white border-2 border-gray-300 hover:bg-gray-50 text-black px-6 py-3 rounded-xl font-semibold transition-all cursor-pointer w-full sm:w-auto text-center shadow-md hover:shadow-lg"
                 >
                   CANCEL
                 </button>
               </div>
 
               {showSuccess && (
-                <div className="bg-pink-50 border-2 border-pink-300 text-[#FF1493] px-4 py-3 rounded-lg flex items-center gap-2 font-medium mt-4">
-                  <svg className="w-5 h-5 text-[#FF1493]" fill="currentColor" viewBox="0 0 20 20">
+                <div className="bg-white border-2 border-gray-300 text-black px-4 py-3 rounded-lg flex items-center gap-2 font-medium mt-4">
+                  <svg className="w-5 h-5 text-black" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
                   Address saved successfully!
@@ -671,95 +902,109 @@ export default function AddressForm() {
               )}
             </div>
             </form>
-          ) : (
-            <div className="bg-white shadow-lg rounded-2xl border border-pink-100 overflow-hidden">
-              <div className="bg-gradient-to-r from-[#FF1493] to-[#8B2BE2] text-white p-4 flex items-center gap-3">
-                <span className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center font-bold">1</span>
-                <span className="font-semibold text-lg">DELIVERY ADDRESS</span>
+          ) : addresses.length > 0 ? (
+            <div className="bg-white shadow-lg rounded-2xl border border-gray-200 overflow-hidden">
+              <div className="bg-white border-b border-gray-200 p-4 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <span className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center font-bold text-black">1</span>
+                  <span className="font-semibold text-lg text-black">SELECTED ADDRESS</span>
+                </div>
+                <button
+                  onClick={handleAddNewAddress}
+                  className="px-4 py-2 bg-pink-500 hover:bg-pink-600 text-white rounded-lg font-semibold transition-all"
+                >
+                  + Add New
+                </button>
               </div>
               <div className="p-6">
-                <div className="mb-4 p-4 border-2 border-pink-200 bg-pink-50 rounded-xl">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="font-medium">{formData.name}</h3>
-                      <p className="text-gray-700">
-                        {formData.address}, {formData.locality},<br />
-                        {formData.city}, {formData.state} - {formData.pincode}
-                      </p>
-                      <p className="mt-2">
-                        <span className="font-medium">Mobile:</span> {formData.mobile}
-                        {formData.alternatePhone && `, ${formData.alternatePhone}`}
-                      </p>
-                      {formData.landmark && (
-                        <p><span className="font-medium">Landmark:</span> {formData.landmark}</p>
-                      )}
-                    </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <div className="flex gap-3">
-                        <button
-                          type="button"
-                          onClick={handleEditAddress}
-                          className="text-[#FF1493] hover:text-[#E01282] text-sm font-semibold px-3 py-1.5 rounded-lg hover:bg-pink-100 transition-colors"
-                        >
-                          EDIT
-                        </button>
-                        <button
-                          type="button"
-                          onClick={handleDeleteAddress}
-                          className="text-red-600 hover:text-red-800 text-sm font-semibold px-3 py-1.5 rounded-lg hover:bg-red-50 transition-colors"
-                        >
-                          DELETE
-                        </button>
+                {selectedAddressId && addresses.find(a => a._id === selectedAddressId) && (() => {
+                  const selected = addresses.find(a => a._id === selectedAddressId);
+                  return (
+                    <div className="mb-4 p-4 border-2 border-gray-200 bg-white rounded-xl">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h3 className="font-medium text-black">{selected.fullName}</h3>
+                          <p className="text-black">
+                            {selected.addressLine1 || selected.address}, {selected.locality},<br />
+                            {selected.city}, {selected.state} - {selected.pincode}
+                          </p>
+                          {selected.addressLine2 && <p className="text-black">{selected.addressLine2}</p>}
+                          <p className="mt-2 text-black">
+                            <span className="font-medium">Mobile:</span> {selected.mobileNumber}
+                            {selected.alternatePhone && `, ${selected.alternatePhone}`}
+                          </p>
+                          {selected.landmark && (
+                            <p><span className="font-medium">Landmark:</span> {selected.landmark}</p>
+                          )}
+                        </div>
+                        <div className="flex flex-col items-end gap-2">
+                          <div className="flex gap-3">
+                            <button
+                              type="button"
+                              onClick={() => handleEditAddress(selected)}
+                              className="text-pink-500 hover:text-pink-600 text-sm font-semibold px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors"
+                            >
+                              EDIT
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteAddress(selected._id)}
+                              className="text-black hover:text-gray-700 text-sm font-semibold px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors"
+                            >
+                              DELETE
+                            </button>
+                          </div>
+                          <div className="text-xs text-black">
+                            {(selected.addressType || 'Home').toUpperCase()} ADDRESS
+                          </div>
+                        </div>
                       </div>
-                      <div className="text-xs text-gray-500">
-                        {formData.addressType.toUpperCase()} ADDRESS
-                      </div>
                     </div>
-                  </div>
-                </div>
+                  );
+                })()}
               </div>
             </div>
-          )}
+          ) : null}
         </div>
 
         <div className="lg:col-span-1">
-          <div className="bg-white shadow-lg rounded-2xl border border-pink-100 p-6 sticky top-4">
-            <h3 className="text-gray-900 text-lg font-bold mb-6 flex items-center gap-2">
-              <span className="w-1 h-6 bg-gradient-to-b from-[#FF1493] to-[#8B2BE2] rounded-full"></span>
+          <div className="bg-white shadow-lg rounded-2xl border border-gray-200 p-6 sticky top-4">
+            <h3 className="text-black text-lg font-bold mb-6 flex items-center gap-2">
+              <span className="w-1 h-6 bg-pink-500 rounded-full"></span>
               PRICE DETAILS
             </h3>
 
             <div className="space-y-3 mb-4 pb-4 border-b border-gray-200">
-              <div className="flex justify-between text-sm text-gray-700">
+              <div className="flex justify-between text-sm text-black">
                 <span>Price ({priceDetails.items} {priceDetails.items === 1 ? 'item' : 'items'})</span>
                 <span className="font-semibold">₹{priceDetails.subtotal.toLocaleString()}</span>
               </div>
-              <div className="flex justify-between text-sm text-gray-700">
+              <div className="flex justify-between text-sm text-black">
                 <span>Shipping</span>
-                <span className={`font-semibold ${priceDetails.shippingCharge > 0 ? 'text-gray-900' : 'text-[#FF1493]'}`}>
+                <span className="font-semibold">
                   {priceDetails.shippingCharge > 0 ? `₹${priceDetails.shippingCharge.toLocaleString()}` : 'Free ✓'}
                 </span>
               </div>
-              <div className="flex justify-between text-sm text-gray-700">
+              <div className="flex justify-between text-sm text-black">
                 <span>Tax (5%)</span>
                 <span className="font-semibold">₹{priceDetails.tax.toLocaleString()}</span>
               </div>
             </div>
 
-            <div className="flex justify-between font-bold text-lg mb-4 pb-4 border-b-2 border-pink-200">
-              <span className="text-gray-900">Total Payable</span>
-              <span className="text-[#FF1493]">₹{priceDetails.total.toLocaleString()}</span>
+            <div className="flex justify-between font-bold text-lg mb-4 pb-4 border-b-2 border-gray-200">
+              <span className="text-black">Total Payable</span>
+              <span className="text-black">₹{priceDetails.total.toLocaleString()}</span>
             </div>
 
             {/* Payment Method Selection */}
             {hasSavedAddress && (
-              <div className="mb-4 pb-4 border-b-2 border-pink-200">
-                <h4 className="text-gray-900 font-semibold mb-3 text-sm">Select Payment Method</h4>
+              <div className="mb-4 pb-4 border-b-2 border-gray-200">
+                <h4 className="text-black font-semibold mb-3 text-sm">Select Payment Method</h4>
                 <div className="space-y-2">
                   <label className={`flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer transition-all ${
                     paymentMethod === 'online' 
-                      ? 'border-[#FF1493] bg-pink-50' 
-                      : 'border-gray-200 hover:border-pink-200'
+                      ? 'border-pink-500 bg-white' 
+                      : 'border-gray-200 hover:border-gray-300'
                   }`}>
                     <input
                       type="radio"
@@ -767,21 +1012,21 @@ export default function AddressForm() {
                       value="online"
                       checked={paymentMethod === 'online'}
                       onChange={(e) => setPaymentMethod(e.target.value)}
-                      className="w-4 h-4 text-[#FF1493] focus:ring-[#FF1493]"
+                      className="w-4 h-4 text-pink-500 focus:ring-pink-500"
                     />
                     <div className="flex-1">
-                      <div className="font-medium text-gray-900">Online Payment</div>
-                      <div className="text-xs text-gray-600">Pay securely with Razorpay</div>
+                      <div className="font-medium text-black">Online Payment</div>
+                      <div className="text-xs text-black">Pay securely with Razorpay</div>
                     </div>
-                    <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                     </svg>
                   </label>
                   
                   <label className={`flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer transition-all ${
                     paymentMethod === 'cod' 
-                      ? 'border-[#FF1493] bg-pink-50' 
-                      : 'border-gray-200 hover:border-pink-200'
+                      ? 'border-pink-500 bg-white' 
+                      : 'border-gray-200 hover:border-gray-300'
                   }`}>
                     <input
                       type="radio"
@@ -789,13 +1034,13 @@ export default function AddressForm() {
                       value="cod"
                       checked={paymentMethod === 'cod'}
                       onChange={(e) => setPaymentMethod(e.target.value)}
-                      className="w-4 h-4 text-[#FF1493] focus:ring-[#FF1493]"
+                      className="w-4 h-4 text-pink-500 focus:ring-pink-500"
                     />
                     <div className="flex-1">
-                      <div className="font-medium text-gray-900">Cash on Delivery</div>
-                      <div className="text-xs text-gray-600">Pay when you receive your order</div>
+                      <div className="font-medium text-black">Cash on Delivery</div>
+                      <div className="text-xs text-black">Pay when you receive your order</div>
                     </div>
-                    <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
                     </svg>
                   </label>
@@ -806,12 +1051,11 @@ export default function AddressForm() {
             <button 
               onClick={handlePayment}
               disabled={!hasSavedAddress}
-              className={`w-full mt-4 py-4 px-4 rounded-xl transition-all font-bold cursor-pointer shadow-lg border-2 border-black ${
+              className={`w-full mt-4 py-4 px-4 rounded-xl transition-all font-bold cursor-pointer shadow-lg ${
                 hasSavedAddress 
-                  ? 'text-black hover:shadow-xl transform hover:scale-105 active:scale-95' 
-                  : 'bg-gray-300 text-gray-600 cursor-not-allowed border-gray-300'
+                  ? 'bg-pink-500 hover:bg-pink-600 text-white hover:shadow-xl transform hover:scale-105 active:scale-95' 
+                  : 'bg-gray-300 text-gray-600 cursor-not-allowed'
               }`}
-              style={hasSavedAddress ? { backgroundColor: headerColor } : {}}
             >
               {paymentMethod === 'cod' ? 'PLACE ORDER (COD)' : 'PROCEED TO PAYMENT'}
             </button>

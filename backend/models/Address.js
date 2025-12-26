@@ -7,6 +7,8 @@ const addressSchema = new mongoose.Schema({
   pincode: { type: String, required: true },
   locality: { type: String, required: true },
   address: { type: String, required: true },
+  addressLine1: { type: String },
+  addressLine2: { type: String },
   city: { type: String, required: true },
   state: { type: String, required: true },
   landmark: { type: String },

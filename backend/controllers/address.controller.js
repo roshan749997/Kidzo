@@ -8,13 +8,9 @@ export const createOrUpdateAddress = async (req, res) => {
     const payload = sanitize(req.body);
     payload.userId = userId;
 
-    // Upsert one address per user for now
-    const doc = await Address.findOneAndUpdate(
-      { userId },
-      { $set: payload },
-      { new: true, upsert: true }
-    );
-    return res.json(doc);
+    // Always create a new address (support multiple addresses per user)
+    const doc = await Address.create(payload);
+    return res.status(201).json(doc);
   } catch (err) {
     return res.status(500).json({ message: 'Failed to save address', error: err.message });
   }
@@ -24,10 +20,11 @@ export const getMyAddress = async (req, res) => {
   try {
     const userId = req.userId;
     if (!userId) return res.status(401).json({ message: 'Unauthorized' });
-    const doc = await Address.findOne({ userId });
-    return res.json(doc || null);
+    // Return all addresses for the user, sorted by creation date (newest first)
+    const docs = await Address.find({ userId }).sort({ createdAt: -1 });
+    return res.json(docs);
   } catch (err) {
-    return res.status(500).json({ message: 'Failed to fetch address', error: err.message });
+    return res.status(500).json({ message: 'Failed to fetch addresses', error: err.message });
   }
 };
 
@@ -73,6 +70,8 @@ function sanitize(body) {
     pincode,
     locality,
     address,
+    addressLine1,
+    addressLine2,
     city,
     state,
     landmark,
@@ -85,6 +84,8 @@ function sanitize(body) {
     ...(pincode !== undefined ? { pincode } : {}),
     ...(locality !== undefined ? { locality } : {}),
     ...(address !== undefined ? { address } : {}),
+    ...(addressLine1 !== undefined ? { addressLine1 } : {}),
+    ...(addressLine2 !== undefined ? { addressLine2 } : {}),
     ...(city !== undefined ? { city } : {}),
     ...(state !== undefined ? { state } : {}),
     ...(landmark !== undefined ? { landmark } : {}),

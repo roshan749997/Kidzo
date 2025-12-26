@@ -357,6 +357,46 @@ export async function adminListAddresses(req, res) {
   }
 }
 
+export async function adminUpdateAddress(req, res) {
+  try {
+    const { id } = req.params;
+    const {
+      fullName,
+      mobileNumber,
+      pincode,
+      locality,
+      address,
+      addressLine1,
+      addressLine2,
+      city,
+      state,
+      landmark,
+      alternatePhone,
+      addressType,
+    } = req.body || {};
+
+    const updates = {};
+    if (fullName !== undefined) updates.fullName = fullName;
+    if (mobileNumber !== undefined) updates.mobileNumber = mobileNumber;
+    if (pincode !== undefined) updates.pincode = pincode;
+    if (locality !== undefined) updates.locality = locality;
+    if (address !== undefined) updates.address = address;
+    if (addressLine1 !== undefined) updates.addressLine1 = addressLine1;
+    if (addressLine2 !== undefined) updates.addressLine2 = addressLine2;
+    if (city !== undefined) updates.city = city;
+    if (state !== undefined) updates.state = state;
+    if (landmark !== undefined) updates.landmark = landmark;
+    if (alternatePhone !== undefined) updates.alternatePhone = alternatePhone;
+    if (addressType !== undefined) updates.addressType = addressType;
+
+    const doc = await Address.findByIdAndUpdate(id, { $set: updates }, { new: true });
+    if (!doc) return res.status(404).json({ message: 'Address not found' });
+    return res.json(doc);
+  } catch (err) {
+    return res.status(500).json({ message: 'Failed to update address', error: err.message });
+  }
+}
+
 export async function updateProduct(req, res) {
   try {
     const { id } = req.params;

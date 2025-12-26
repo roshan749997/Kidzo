@@ -206,6 +206,7 @@ export const api = {
     deleteProduct: (id) => request(`/api/admin/products/${id}`, { method: 'DELETE' }),
     listOrders: () => request('/api/admin/orders', { method: 'GET' }),
     listAddresses: () => request('/api/admin/addresses', { method: 'GET' }),
+    updateAddress: (id, payload) => request(`/api/admin/addresses/${id}`, { method: 'PUT', body: JSON.stringify(payload) }),
     getPolicies: () => request('/api/admin/policies', { method: 'GET' }),
     updatePolicy: (type, title, content, sections) => request(`/api/admin/policies/${type}`, { method: 'PUT', body: JSON.stringify({ title, content, sections }) }),
     getContactInfo: () => request('/api/admin/contact-info', { method: 'GET' }),

@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { api } from '../../utils/api';
-import { FiUser, FiMapPin, FiMail, FiPhone, FiSearch, FiHome, FiBriefcase } from 'react-icons/fi';
+import { FiUser, FiMapPin, FiMail, FiPhone, FiSearch, FiHome, FiBriefcase, FiEdit, FiX } from 'react-icons/fi';
 import ScrollToTop from '../../components/ScrollToTop';
 
 const AdminAddresses = () => {
@@ -10,6 +10,38 @@ const AdminAddresses = () => {
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [editingAddress, setEditingAddress] = useState(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [savingAddress, setSavingAddress] = useState(false);
+  const [addressFormData, setAddressFormData] = useState({
+    fullName: '',
+    mobileNumber: '',
+    pincode: '',
+    locality: '',
+    address: '',
+    addressLine1: '',
+    addressLine2: '',
+    city: '',
+    state: '',
+    landmark: '',
+    alternatePhone: '',
+    addressType: 'Home'
+  });
+  const [showStateDropdown, setShowStateDropdown] = useState(false);
+  const [filteredStates, setFilteredStates] = useState([]);
+  const [stateSearchTerm, setStateSearchTerm] = useState('');
+  const stateDropdownRef = useRef(null);
+
+  const indianStates = [
+    'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh',
+    'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand',
+    'Karnataka', 'Kerala', 'Madhya Pradesh', 'Maharashtra', 'Manipur',
+    'Meghalaya', 'Mizoram', 'Nagaland', 'Odisha', 'Punjab',
+    'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura',
+    'Uttar Pradesh', 'Uttarakhand', 'West Bengal',
+    'Andaman and Nicobar Islands', 'Chandigarh', 'Dadra and Nagar Haveli and Daman and Diu',
+    'Delhi', 'Jammu and Kashmir', 'Ladakh', 'Lakshadweep', 'Puducherry'
+  ].sort();
 
   useEffect(() => {
     let mounted = true;
@@ -25,6 +57,105 @@ const AdminAddresses = () => {
     })();
     return () => { mounted = false; };
   }, []);
+
+  useEffect(() => {
+    if (showStateDropdown) {
+      const filtered = indianStates.filter(state =>
+        state.toLowerCase().includes(stateSearchTerm.toLowerCase())
+      );
+      setFilteredStates(filtered);
+    }
+  }, [stateSearchTerm, showStateDropdown]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (stateDropdownRef.current && !stateDropdownRef.current.contains(event.target)) {
+        setShowStateDropdown(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const openEditModal = (address) => {
+    setEditingAddress(address);
+    setAddressFormData({
+      fullName: address.fullName || '',
+      mobileNumber: address.mobileNumber || address.phoneNumber || '',
+      pincode: address.pincode || '',
+      locality: address.locality || '',
+      address: address.address || address.addressLine1 || '',
+      addressLine1: address.addressLine1 || address.address || '',
+      addressLine2: address.addressLine2 || '',
+      city: address.city || '',
+      state: address.state || '',
+      landmark: address.landmark || '',
+      alternatePhone: address.alternatePhone || '',
+      addressType: address.addressType || 'Home'
+    });
+    setIsEditModalOpen(true);
+  };
+
+  const closeEditModal = () => {
+    setIsEditModalOpen(false);
+    setEditingAddress(null);
+    setAddressFormData({
+      fullName: '',
+      mobileNumber: '',
+      pincode: '',
+      locality: '',
+      address: '',
+      addressLine1: '',
+      addressLine2: '',
+      city: '',
+      state: '',
+      landmark: '',
+      alternatePhone: '',
+      addressType: 'Home'
+    });
+    setStateSearchTerm('');
+    setShowStateDropdown(false);
+  };
+
+  const handleAddressFormChange = (e) => {
+    const { name, value } = e.target;
+    setAddressFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSaveAddress = async (e) => {
+    e.preventDefault();
+    try {
+      setSavingAddress(true);
+      const payload = {
+        fullName: addressFormData.fullName.trim(),
+        mobileNumber: addressFormData.mobileNumber.trim(),
+        pincode: addressFormData.pincode.trim(),
+        locality: addressFormData.locality.trim(),
+        address: addressFormData.address.trim() || addressFormData.addressLine1.trim(),
+        addressLine1: addressFormData.addressLine1.trim() || addressFormData.address.trim(),
+        addressLine2: addressFormData.addressLine2.trim(),
+        city: addressFormData.city.trim(),
+        state: addressFormData.state.trim(),
+        landmark: addressFormData.landmark.trim(),
+        alternatePhone: addressFormData.alternatePhone.trim(),
+        addressType: addressFormData.addressType === 'work' ? 'Work' : 'Home',
+      };
+
+      if (editingAddress && editingAddress._id) {
+        await api.admin.updateAddress(editingAddress._id, payload);
+        // Refresh the addresses list
+        const data = await api.admin.listAddresses();
+        setRows(Array.isArray(data) ? data : []);
+        closeEditModal();
+        alert('Address updated successfully!');
+      }
+    } catch (error) {
+      console.error('Error saving address:', error);
+      alert('Failed to update address. Please try again.');
+    } finally {
+      setSavingAddress(false);
+    }
+  };
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -170,6 +301,7 @@ const AdminAddresses = () => {
                       <th className="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Pincode</th>
                       <th className="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Type</th>
                       <th className="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider hidden lg:table-cell">Created</th>
+                      <th className="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
@@ -223,6 +355,15 @@ const AdminAddresses = () => {
                         </td>
                         <td className="px-4 py-3 hidden lg:table-cell text-sm text-gray-600">
                           {a.createdAt ? new Date(a.createdAt).toLocaleString() : 'N/A'}
+                        </td>
+                        <td className="px-4 py-3">
+                          <button
+                            onClick={() => openEditModal(a)}
+                            className="inline-flex items-center gap-1 px-3 py-1.5 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors text-sm font-semibold"
+                          >
+                            <FiEdit className="w-4 h-4" />
+                            Edit
+                          </button>
                         </td>
                       </tr>
                     ))}
@@ -314,6 +455,15 @@ const AdminAddresses = () => {
                         </div>
                       )}
                     </div>
+                    <div className="pt-3 border-t border-gray-200">
+                      <button
+                        onClick={() => openEditModal(a)}
+                        className="w-full inline-flex items-center justify-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors text-sm font-semibold"
+                      >
+                        <FiEdit className="w-4 h-4" />
+                        Edit Address
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -353,6 +503,202 @@ const AdminAddresses = () => {
           </>
         )}
       </div>
+
+      {/* Edit Address Modal */}
+      {isEditModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-y-auto">
+          <div className="bg-white rounded-2xl w-full max-w-2xl shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-4 flex justify-between items-center rounded-t-2xl z-10">
+              <h3 className="text-xl font-bold text-white">Edit Address</h3>
+              <button onClick={closeEditModal} className="text-white hover:text-white">
+                <FiX className="h-6 w-6" />
+              </button>
+            </div>
+            
+            <form onSubmit={handleSaveAddress} className="p-6 space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">Full Name *</label>
+                  <input
+                    type="text"
+                    name="fullName"
+                    value={addressFormData.fullName}
+                    onChange={handleAddressFormChange}
+                    className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none text-gray-900"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">Mobile Number *</label>
+                  <input
+                    type="tel"
+                    name="mobileNumber"
+                    value={addressFormData.mobileNumber}
+                    onChange={handleAddressFormChange}
+                    className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none text-gray-900"
+                    required
+                    maxLength="10"
+                    pattern="[0-9]{10}"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 mb-2">Address Line 1 *</label>
+                <input
+                  type="text"
+                  name="addressLine1"
+                  value={addressFormData.addressLine1}
+                  onChange={handleAddressFormChange}
+                  className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none text-gray-900"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 mb-2">Address Line 2</label>
+                <input
+                  type="text"
+                  name="addressLine2"
+                  value={addressFormData.addressLine2}
+                  onChange={handleAddressFormChange}
+                  className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none text-gray-900"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 mb-2">Locality</label>
+                <input
+                  type="text"
+                  name="locality"
+                  value={addressFormData.locality}
+                  onChange={handleAddressFormChange}
+                  className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none text-gray-900"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">City *</label>
+                  <input
+                    type="text"
+                    name="city"
+                    value={addressFormData.city}
+                    onChange={handleAddressFormChange}
+                    className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none text-gray-900"
+                    required
+                  />
+                </div>
+                <div className="relative" ref={stateDropdownRef}>
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">State *</label>
+                  <input
+                    type="text"
+                    name="state"
+                    value={addressFormData.state}
+                    onChange={(e) => {
+                      handleAddressFormChange(e);
+                      setStateSearchTerm(e.target.value);
+                      setShowStateDropdown(true);
+                    }}
+                    onFocus={() => setShowStateDropdown(true)}
+                    className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none text-gray-900"
+                    required
+                  />
+                  {showStateDropdown && (
+                    <div className="absolute z-20 w-full mt-1 bg-white border-2 border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                      {filteredStates.map((state) => (
+                        <div
+                          key={state}
+                          onClick={() => {
+                            setAddressFormData(prev => ({ ...prev, state }));
+                            setShowStateDropdown(false);
+                            setStateSearchTerm('');
+                          }}
+                          className="px-4 py-2 hover:bg-blue-100 hover:text-blue-900 cursor-pointer text-sm text-gray-900"
+                        >
+                          {state}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">Pincode *</label>
+                  <input
+                    type="text"
+                    name="pincode"
+                    value={addressFormData.pincode}
+                    onChange={handleAddressFormChange}
+                    className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none text-gray-900"
+                    required
+                    maxLength="6"
+                    pattern="[0-9]{6}"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">Address Type *</label>
+                  <select
+                    name="addressType"
+                    value={addressFormData.addressType}
+                    onChange={handleAddressFormChange}
+                    className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none text-gray-900"
+                    required
+                  >
+                    <option value="Home">Home</option>
+                    <option value="Work">Work</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 mb-2">Landmark</label>
+                <input
+                  type="text"
+                  name="landmark"
+                  value={addressFormData.landmark}
+                  onChange={handleAddressFormChange}
+                  className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none text-gray-900"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 mb-2">Alternate Phone</label>
+                <input
+                  type="tel"
+                  name="alternatePhone"
+                  value={addressFormData.alternatePhone}
+                  onChange={handleAddressFormChange}
+                  className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none text-gray-900"
+                  maxLength="10"
+                  pattern="[0-9]{10}"
+                />
+              </div>
+
+              <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+                <button
+                  type="button"
+                  onClick={closeEditModal}
+                  className="px-6 py-2 border-2 border-gray-300 rounded-lg text-gray-700 font-semibold hover:bg-gray-50 transition-all"
+                  disabled={savingAddress}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-6 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all transform hover:scale-105 disabled:opacity-50 flex items-center gap-2"
+                  disabled={savingAddress}
+                >
+                  {savingAddress ? 'Saving...' : 'Save Address'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       <ScrollToTop />
     </div>
   );

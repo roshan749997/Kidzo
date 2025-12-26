@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { api } from '../utils/api';
-import { getMyAddress, getMyOrders, updateAddressById, saveMyAddress, getOrderById } from '../services/api';
+import { getMyAddress, getMyOrders, updateAddressById, saveMyAddress, getOrderById, deleteAddressById } from '../services/api';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { FiSettings, FiPackage, FiUser, FiMapPin, FiLogOut, FiMenu, FiX, FiEdit, FiEye, FiShoppingBag, FiDollarSign, FiClock, FiCheckCircle, FiTrendingUp, FiHeart, FiHome, FiBriefcase, FiTrash2, FiSave, FiFileText, FiTruck, FiCreditCard, FiMap, FiCamera, FiUpload } from 'react-icons/fi';
 import ScrollToTop from '../components/ScrollToTop';
@@ -170,22 +170,41 @@ export default function FlipkartAccountSettings() {
     }
   };
 
-  const openEditModal = (address) => {
-    setEditingAddress(address);
-    setAddressFormData({
-      fullName: address.fullName || '',
-      mobileNumber: address.mobileNumber || address.phoneNumber || '',
-      pincode: address.pincode || '',
-      locality: address.locality || '',
-      address: address.address || address.addressLine1 || '',
-      addressLine1: address.addressLine1 || address.address || '',
-      addressLine2: address.addressLine2 || '',
-      city: address.city || '',
-      state: address.state || '',
-      landmark: address.landmark || '',
-      alternatePhone: address.alternatePhone || '',
-      addressType: address.addressType || 'Home'
-    });
+  const openEditModal = (address = null) => {
+    if (address) {
+      setEditingAddress(address);
+      setAddressFormData({
+        fullName: address.fullName || '',
+        mobileNumber: address.mobileNumber || address.phoneNumber || '',
+        pincode: address.pincode || '',
+        locality: address.locality || '',
+        address: address.address || address.addressLine1 || '',
+        addressLine1: address.addressLine1 || address.address || '',
+        addressLine2: address.addressLine2 || '',
+        city: address.city || '',
+        state: address.state || '',
+        landmark: address.landmark || '',
+        alternatePhone: address.alternatePhone || '',
+        addressType: address.addressType || 'Home'
+      });
+    } else {
+      // Add new address mode
+      setEditingAddress(null);
+      setAddressFormData({
+        fullName: '',
+        mobileNumber: '',
+        pincode: '',
+        locality: '',
+        address: '',
+        addressLine1: '',
+        addressLine2: '',
+        city: '',
+        state: '',
+        landmark: '',
+        alternatePhone: '',
+        addressType: 'Home'
+      });
+    }
     setIsEditModalOpen(true);
   };
 
@@ -1438,54 +1457,83 @@ export default function FlipkartAccountSettings() {
                         </div>
                       </div>
                     ) : addresses.length > 0 ? (
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                        {addresses.map((address, index) => (
-                          <div key={address._id || index} className="border-2 border-gray-200 rounded-xl p-4 sm:p-5 hover:border-gray-400 hover:shadow-lg transition-all duration-300 bg-white">
-                            <div className="flex justify-between items-start mb-3">
-                              <h3 className="font-bold text-black text-base sm:text-lg flex items-center gap-2">
-                                {address.addressType?.toLowerCase() === 'home' ? (
-                                  <FiHome className="w-5 h-5 text-black" />
-                                ) : (
-                                  <FiBriefcase className="w-5 h-5 text-black" />
+                      <>
+                        <div className="mb-4 flex justify-end">
+                          <button
+                            onClick={() => openEditModal(null)}
+                            className="px-4 py-2 bg-pink-100 text-black rounded-lg font-semibold shadow-md hover:shadow-lg transition-all flex items-center gap-2"
+                          >
+                            <FiMapPin className="w-4 h-4" />
+                            Add New Address
+                          </button>
+                        </div>
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                          {addresses.map((address, index) => (
+                            <div key={address._id || index} className="border-2 border-gray-200 rounded-xl p-4 sm:p-5 hover:border-gray-400 hover:shadow-lg transition-all duration-300 bg-white">
+                              <div className="flex justify-between items-start mb-3">
+                                <h3 className="font-bold text-black text-base sm:text-lg flex items-center gap-2">
+                                  {address.addressType?.toLowerCase() === 'home' ? (
+                                    <FiHome className="w-5 h-5 text-black" />
+                                  ) : (
+                                    <FiBriefcase className="w-5 h-5 text-black" />
+                                  )}
+                                  {address.fullName}
+                                </h3>
+                                <div className="flex items-center gap-2">
+                                  {address.isDefault && (
+                                    <span className="px-3 py-1 text-xs font-bold bg-pink-100 text-black rounded-full shadow-md">
+                                      Default
+                                    </span>
+                                  )}
+                                  <button
+                                    onClick={() => openEditModal(address)}
+                                    className="p-2 bg-pink-100 text-black rounded-lg transition-colors hover:bg-pink-200"
+                                    title="Edit Address"
+                                  >
+                                    <FiEdit className="w-4 h-4" />
+                                  </button>
+                                  <button
+                                    onClick={async () => {
+                                      if (window.confirm('Are you sure you want to delete this address?')) {
+                                        try {
+                                          await deleteAddressById(address._id);
+                                          await fetchAddresses();
+                                          alert('Address deleted successfully!');
+                                        } catch (error) {
+                                          console.error('Error deleting address:', error);
+                                          alert('Failed to delete address. Please try again.');
+                                        }
+                                      }
+                                    }}
+                                    className="p-2 bg-red-100 text-red-700 rounded-lg transition-colors hover:bg-red-200"
+                                    title="Delete Address"
+                                  >
+                                    <FiTrash2 className="w-4 h-4" />
+                                  </button>
+                                </div>
+                              </div>
+                              <div className="space-y-1.5 text-sm text-black">
+                                <p className="leading-relaxed">{address.addressLine1 || address.address}</p>
+                                {address.addressLine2 && (
+                                  <p className="leading-relaxed">{address.addressLine2}</p>
                                 )}
-                                {address.fullName}
-                              </h3>
-                              <div className="flex items-center gap-2">
-                                {address.isDefault && (
-                                  <span className="px-3 py-1 text-xs font-bold bg-pink-100 text-black rounded-full shadow-md">
-                                    Default
-                                  </span>
+                                {address.landmark && (
+                                  <p className="text-black italic">Landmark: {address.landmark}</p>
                                 )}
-                                <button
-                                  onClick={() => openEditModal(address)}
-                                  className="p-2 bg-pink-100 text-black rounded-lg transition-colors"
-                                  title="Edit Address"
-                                >
-                                  <FiEdit className="w-4 h-4" />
-                                </button>
+                                <p className="font-semibold text-black mt-2">
+                                  {address.city}, {address.state} - {address.pincode}
+                                </p>
+                                <div className="flex items-center gap-2 pt-2 mt-2 border-t border-gray-200">
+                                  <svg className="w-4 h-4 text-black" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/>
+                                  </svg>
+                                  <span className="font-medium text-black">{address.phoneNumber || address.mobileNumber || address.alternatePhone}</span>
+                                </div>
                               </div>
                             </div>
-                            <div className="space-y-1.5 text-sm text-black">
-                              <p className="leading-relaxed">{address.addressLine1 || address.address}</p>
-                              {address.addressLine2 && (
-                                <p className="leading-relaxed">{address.addressLine2}</p>
-                              )}
-                              {address.landmark && (
-                                <p className="text-black italic">Landmark: {address.landmark}</p>
-                              )}
-                              <p className="font-semibold text-black mt-2">
-                                {address.city}, {address.state} - {address.pincode}
-                              </p>
-                              <div className="flex items-center gap-2 pt-2 mt-2 border-t border-gray-200">
-                                <svg className="w-4 h-4 text-black" fill="currentColor" viewBox="0 0 24 24">
-                                  <path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/>
-                                </svg>
-                                <span className="font-medium text-black">{address.phoneNumber || address.mobileNumber || address.alternatePhone}</span>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
+                          ))}
+                        </div>
+                      </>
                     ) : (
                       <div className="text-center py-12 sm:py-16">
                         <div className="relative inline-block mb-6">
@@ -1497,7 +1545,7 @@ export default function FlipkartAccountSettings() {
                         <h3 className="text-xl sm:text-2xl font-bold text-black mb-2">No Addresses Saved</h3>
                         <p className="text-black text-sm sm:text-base mb-6">You haven't added any addresses yet. Add your first address to get started with faster checkout.</p>
                         <button 
-                          onClick={() => navigate('/address')}
+                          onClick={() => openEditModal(null)}
                           className="px-6 sm:px-8 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-95 bg-pink-100 text-black border-2 border-pink-200"
                         >
                           Add New Address
@@ -1517,7 +1565,7 @@ export default function FlipkartAccountSettings() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-y-auto">
           <div className="bg-white rounded-2xl w-full max-w-2xl shadow-2xl max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-pink-100 px-6 py-4 flex justify-between items-center rounded-t-2xl z-10">
-              <h3 className="text-xl font-bold text-white">Edit Address</h3>
+              <h3 className="text-xl font-bold text-white">{editingAddress ? 'Edit Address' : 'Add New Address'}</h3>
               <button onClick={closeEditModal} className="text-white hover:text-white">
                 <FiX className="h-6 w-6" />
               </button>

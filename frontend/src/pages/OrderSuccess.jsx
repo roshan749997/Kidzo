@@ -6,19 +6,17 @@ import { getOrderById } from '../services/api';
 import { CheckCircle, Package, Calendar, Receipt, Truck, FileText } from 'lucide-react';
 import Invoice from '../components/Invoice';
 import ScrollToTop from '../components/ScrollToTop';
-import { useHeaderColor } from '../utils/useHeaderColor';
 
 const OrderSuccess = () => {
   const navigate = useNavigate();
-  const headerColor = useHeaderColor();
   const [searchParams] = useSearchParams();
   const { cartTotal } = useCart();
   const [user, setUser] = useState(null);
-  const [countdown, setCountdown] = useState(10);
-  const [isVisible, setIsVisible] = useState(false);
+  const [countdown, setCountdown] = useState(5);
   const [showInvoice, setShowInvoice] = useState(false);
   const [order, setOrder] = useState(null);
   const [loadingOrder, setLoadingOrder] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
   const paymentMethod = searchParams.get('method') || 'COD';
   const orderId = searchParams.get('orderId') || '';
   
@@ -89,11 +87,7 @@ const OrderSuccess = () => {
       setCountdown((prev) => {
         if (prev <= 1) {
           clearInterval(timer);
-          // Smooth transition before navigation
-          setIsVisible(false);
-          setTimeout(() => {
-            navigate('/profile?tab=orders');
-          }, 300);
+          navigate('/profile?tab=orders');
           return 0;
         }
         return prev - 1;
@@ -104,248 +98,152 @@ const OrderSuccess = () => {
   }, [navigate]);
 
   const handleGoToOrders = () => {
-    setIsVisible(false);
-    setTimeout(() => {
-      navigate('/profile?tab=orders');
-    }, 300);
+    navigate('/profile?tab=orders');
   };
 
   const handleContinueShopping = () => {
-    setIsVisible(false);
-    setTimeout(() => {
-      navigate('/');
-    }, 300);
+    navigate('/');
   };
 
   return (
-    <div 
-      className="min-h-screen w-full bg-gradient-to-br from-gray-50 via-white to-gray-50 transition-opacity duration-300 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
-      style={{
-        opacity: isVisible ? 1 : 0
-      }}
-    >
-      {/* Single Frame Container - Everything visible without scrolling */}
+    <div className="min-h-screen bg-white flex items-center justify-center px-4 py-8">
       <div 
-        className={`w-full max-w-6xl mx-auto bg-white rounded-2xl sm:rounded-3xl shadow-2xl transform transition-all duration-500 overflow-hidden ${
-          isVisible ? 'translate-y-0 opacity-100 scale-100' : 'translate-y-10 opacity-0 scale-95'
+        className={`w-full max-w-4xl mx-auto bg-white rounded-lg shadow-md border border-gray-200 p-6 sm:p-8 transition-all duration-500 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}
       >
-        {/* Main Content Grid - Single Frame Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 p-6 sm:p-8 lg:p-10">
+        
+        {/* Header Section */}
+        <div className="text-center mb-8">
+          {/* Countdown Timer */}
+          <div className="flex justify-end mb-4">
+            <div className="bg-gray-100 border border-gray-300 rounded-lg px-3 py-1.5 flex items-center gap-2 animate-fadeIn">
+              <div className="w-2 h-2 bg-pink-500 rounded-full animate-pulse"></div>
+              <p className="text-sm text-black font-medium">
+                Redirecting in <span className="font-bold text-pink-500 animate-countdown">{countdown}</span>s
+              </p>
+            </div>
+          </div>
+
+          {/* Success Icon */}
+          <div className="flex justify-center mb-4">
+            <div className={`w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center transition-all duration-700 ${
+              isVisible ? 'scale-100 animate-bounce-once' : 'scale-0'
+            }`}>
+              <CheckCircle className={`w-12 h-12 text-pink-500 transition-all duration-500 ${
+                isVisible ? 'scale-100 opacity-100' : 'scale-0 opacity-0'
+              }`} style={{ animationDelay: '0.2s' }} />
+            </div>
+          </div>
+
+          {/* Success Message */}
+          <h1 className={`text-3xl font-bold text-black mb-3 transition-all duration-500 ${
+            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+          }`} style={{ animationDelay: '0.3s' }}>
+            Order Placed Successfully! 🎉
+          </h1>
           
-          {/* Left Column - Success Message & Details (2 columns on desktop) */}
-          <div className="lg:col-span-2 space-y-5 sm:space-y-6">
-            
-            {/* Success Header Section with Countdown in Top Right */}
-            <div className="relative">
-              {/* Countdown Timer - Top Right Corner */}
-              <div className="absolute top-0 right-0 bg-green-50 border border-green-200 rounded-lg px-3 py-2 flex items-center gap-2">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <p className="text-xs sm:text-sm text-gray-700 font-medium">
-                  Redirecting in <span className="font-bold text-green-600">{countdown}</span>s
-                </p>
-              </div>
+          {/* Order Number */}
+          <div className={`inline-flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-lg border border-gray-200 mb-4 transition-all duration-500 ${
+            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+          }`} style={{ animationDelay: '0.4s' }}>
+            <Receipt className="w-4 h-4 text-black" />
+            <span className="text-sm font-medium text-black">Order Number:</span>
+            <span className="text-sm font-bold text-black">#{orderNumber}</span>
+          </div>
+          
+          <p className={`text-base text-black transition-all duration-500 ${
+            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+          }`} style={{ animationDelay: '0.5s' }}>
+            Your order has been confirmed and will be processed shortly.
+          </p>
+        </div>
 
-              {/* Success Icon and Message */}
-              <div className="text-center lg:text-left pr-32 sm:pr-40 lg:pr-0">
-                {/* Animated Success Icon */}
-                <div className="flex justify-center lg:justify-start mb-4 sm:mb-5">
-                  <div 
-                    className="w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 bg-gradient-to-br from-green-100 to-green-50 rounded-full flex items-center justify-center relative transform transition-all duration-700"
-                    style={{
-                      animation: 'successPulse 2s ease-in-out infinite'
-                    }}
-                  >
-                    <div 
-                      className="absolute inset-0 bg-green-200 rounded-full opacity-0"
-                      style={{
-                        animation: 'ripple 2s ease-out infinite'
-                      }}
-                    ></div>
-                    <CheckCircle 
-                      className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 text-green-600 relative z-10 transform transition-all duration-700"
-                      style={{
-                        animation: 'checkmarkDraw 0.8s ease-out 0.3s both'
-                      }}
-                    />
-                  </div>
-                </div>
-
-                {/* Success Message */}
-                <h1 
-                  className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 sm:mb-4 transform transition-all duration-500"
-                  style={{
-                    animation: 'fadeInUp 0.6s ease-out 0.2s both'
-                  }}
-                >
-                  Order Placed Successfully! 🎉
-                </h1>
-                
-                {/* Order Number */}
-                <div 
-                  className="mb-3 sm:mb-4 transform transition-all duration-500"
-                  style={{
-                    animation: 'fadeInUp 0.6s ease-out 0.3s both'
-                  }}
-                >
-                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-lg border border-gray-200">
-                    <Receipt className="w-4 h-4 text-gray-600" />
-                    <span className="text-sm font-medium text-gray-600">Order Number:</span>
-                    <span className="text-sm font-bold text-gray-900">#{orderNumber}</span>
-                  </div>
-                </div>
-                
-                <p 
-                  className="text-sm sm:text-base lg:text-lg text-gray-600 mb-5 sm:mb-6 transform transition-all duration-500"
-                  style={{
-                    animation: 'fadeInUp 0.6s ease-out 0.4s both'
-                  }}
-                >
-                  Your order has been confirmed and will be processed shortly.
-                </p>
-              </div>
+        {/* Order Details Grid */}
+        <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 transition-all duration-500 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+        }`} style={{ animationDelay: '0.6s' }}>
+          {/* Estimated Delivery */}
+          <div className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-all duration-300 hover:scale-105">
+            <div className="flex items-center gap-2 mb-2">
+              <Calendar className="w-5 h-5 text-black" />
+              <span className="text-sm font-semibold text-black">Estimated Delivery</span>
             </div>
-              
-            {/* Order Details Cards Grid */}
-            <div 
-              className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 transform transition-all duration-500"
-              style={{
-                animation: 'fadeInUp 0.6s ease-out 0.5s both'
-              }}
-            >
-              {/* Estimated Delivery */}
-              <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-4 sm:p-5 hover:shadow-md transition-shadow">
-                <div className="flex items-center gap-2 mb-2 sm:mb-3">
-                  <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
-                  <span className="text-xs sm:text-sm font-semibold text-blue-900 uppercase">Estimated Delivery</span>
-                </div>
-                <p className="text-base sm:text-lg font-semibold text-blue-700 mb-1">
-                  {estimatedDelivery.toLocaleDateString('en-US', { 
-                    weekday: 'long', 
-                    month: 'short', 
-                    day: 'numeric' 
-                  })}
-                </p>
-                <p className="text-xs sm:text-sm text-blue-600">5-7 business days</p>
-              </div>
-              
-              {/* Payment Method */}
-              <div className="bg-purple-50 border-2 border-purple-200 rounded-xl p-4 sm:p-5 hover:shadow-md transition-shadow">
-                <div className="flex items-center gap-2 mb-2 sm:mb-3">
-                  <Package className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600" />
-                  <span className="text-xs sm:text-sm font-semibold text-purple-900 uppercase">Payment Method</span>
-                </div>
-                <p className="text-base sm:text-lg font-semibold text-purple-700 mb-1">
-                  {paymentMethod === 'COD' ? 'Cash on Delivery' : 'Online Payment'}
-                </p>
-                {paymentMethod === 'COD' && (
-                  <p className="text-xs sm:text-sm text-purple-600">Pay on delivery</p>
-                )}
-              </div>
+            <p className="text-lg font-semibold text-black mb-1">
+              {estimatedDelivery.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                month: 'short', 
+                day: 'numeric' 
+              })}
+            </p>
+            <p className="text-sm text-black">5-7 business days</p>
+          </div>
+          
+          {/* Payment Method */}
+          <div className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-all duration-300 hover:scale-105">
+            <div className="flex items-center gap-2 mb-2">
+              <Package className="w-5 h-5 text-black" />
+              <span className="text-sm font-semibold text-black">Payment Method</span>
             </div>
-              
-            {/* Order Summary & Timeline - Side by Side */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5">
-              {/* Order Receipt Summary */}
-              {orderTotal > 0 && (
-                <div 
-                  className="bg-gray-50 border-2 border-gray-200 rounded-xl p-4 sm:p-5 transform transition-all duration-500"
-                  style={{
-                    animation: 'fadeInUp 0.6s ease-out 0.6s both'
-                  }}
-                >
-                  <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-                    <Receipt className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
-                    <p className="text-sm sm:text-base font-semibold text-gray-900">Order Summary</p>
-                  </div>
-                  <div className="space-y-2 sm:space-y-2.5 text-sm sm:text-base">
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Order Total</span>
-                      <span className="font-bold text-base sm:text-lg text-gray-900">₹{orderTotal.toLocaleString()}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Payment Method</span>
-                      <span className="font-medium text-gray-900">{paymentMethod === 'COD' ? 'Cash on Delivery' : 'Online Payment'}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Order Date</span>
-                      <span className="font-medium text-gray-900">{new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
-                    </div>
-                  </div>
-                </div>
-              )}
+            <p className="text-lg font-semibold text-black mb-1">
+              {paymentMethod === 'COD' ? 'Cash on Delivery' : 'Online Payment'}
+            </p>
+            {paymentMethod === 'COD' && (
+              <p className="text-sm text-black">Pay on delivery</p>
+            )}
+          </div>
+        </div>
 
-              {/* Order Timeline */}
-              <div 
-                className="bg-gray-50 border-2 border-gray-200 rounded-xl p-4 sm:p-5 transform transition-all duration-500"
-                style={{
-                  animation: 'fadeInUp 0.6s ease-out 0.7s both'
-                }}
-              >
-                <div className="flex items-start gap-2 sm:gap-3 mb-3 sm:mb-4">
-                  <Truck className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600 mt-0.5 flex-shrink-0" />
-                  <p className="text-sm sm:text-base font-semibold text-gray-900">Order Timeline</p>
-                </div>
-                <div className="space-y-2 sm:space-y-2.5 text-xs sm:text-sm">
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 bg-green-500 rounded-full flex-shrink-0"></div>
-                    <span className="text-gray-600 flex-1">Order confirmed</span>
-                    <span className="text-xs text-gray-400">Just now</span>
-                  </div>
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 bg-gray-300 rounded-full flex-shrink-0"></div>
-                    <span className="text-gray-500 flex-1">Processing</span>
-                    <span className="text-xs text-gray-400">Within 24hrs</span>
-                  </div>
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 bg-gray-300 rounded-full flex-shrink-0"></div>
-                    <span className="text-gray-500 flex-1">Shipped</span>
-                    <span className="text-xs text-gray-400">2-3 days</span>
-                  </div>
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 bg-gray-300 rounded-full flex-shrink-0"></div>
-                    <span className="text-gray-500 flex-1">Delivered</span>
-                    <span className="text-xs text-gray-400">{estimatedDelivery.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
-                  </div>
-                </div>
+        {/* Order Summary */}
+        {orderTotal > 0 && (
+          <div className={`bg-white border border-gray-200 rounded-lg p-4 mb-6 transition-all duration-500 ${
+            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+          }`} style={{ animationDelay: '0.7s' }}>
+            <div className="flex items-center gap-2 mb-3">
+              <Receipt className="w-5 h-5 text-black" />
+              <p className="text-base font-semibold text-black">Order Summary</p>
+            </div>
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between items-center">
+                <span className="text-black">Order Total</span>
+                <span className="font-bold text-lg text-black">₹{orderTotal.toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-black">Payment Method</span>
+                <span className="font-medium text-black">{paymentMethod === 'COD' ? 'Cash on Delivery' : 'Online Payment'}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-black">Order Date</span>
+                <span className="font-medium text-black">{new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
               </div>
             </div>
           </div>
+        )}
 
-          {/* Right Column - Action Buttons (1 column on desktop) */}
-          <div 
-            className="lg:col-span-1 transform transition-all duration-500 flex flex-col justify-center"
-            style={{
-              animation: 'fadeInUp 0.6s ease-out 0.8s both'
-            }}
+        {/* Action Buttons */}
+        <div className={`space-y-3 transition-all duration-500 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+        }`} style={{ animationDelay: '0.8s' }}>
+          <button
+            onClick={() => setShowInvoice(true)}
+            className="w-full bg-pink-500 hover:bg-pink-600 text-white py-3 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center gap-2 transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg"
           >
-            {/* Action Buttons */}
-            <div className="space-y-3 sm:space-y-4">
-              <button
-                onClick={() => setShowInvoice(true)}
-                className="w-full text-black py-3 sm:py-3.5 lg:py-4 rounded-xl border-2 border-black transition-all duration-300 font-semibold text-sm sm:text-base shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 sm:gap-3"
-                style={{ backgroundColor: headerColor }}
-              >
-                <FileText className="w-5 h-5 sm:w-6 sm:h-6" />
-                <span>View Invoice</span>
-              </button>
-              <button
-                onClick={handleGoToOrders}
-                className="w-full text-black py-3 sm:py-3.5 lg:py-4 rounded-xl border-2 border-black transition-all duration-300 font-semibold text-sm sm:text-base shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 sm:gap-3"
-                style={{ backgroundColor: headerColor }}
-              >
-                <Package className="w-5 h-5 sm:w-6 sm:h-6" />
-                <span>View My Orders</span>
-              </button>
-              <button
-                onClick={handleContinueShopping}
-                className="w-full text-black py-3 sm:py-3.5 lg:py-4 rounded-xl border-2 border-black transition-all duration-300 font-semibold text-sm sm:text-base transform hover:scale-[1.02] active:scale-[0.98]"
-                style={{ backgroundColor: headerColor }}
-              >
-                Continue Shopping
-              </button>
-            </div>
-          </div>
+            <FileText className="w-5 h-5" />
+            <span>View Invoice</span>
+          </button>
+          <button
+            onClick={handleGoToOrders}
+            className="w-full bg-pink-500 hover:bg-pink-600 text-white py-3 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center gap-2 transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg"
+          >
+            <Package className="w-5 h-5" />
+            <span>View My Orders</span>
+          </button>
+          <button
+            onClick={handleContinueShopping}
+            className="w-full bg-white border-2 border-gray-300 hover:bg-gray-50 hover:border-gray-400 text-black py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95"
+          >
+            Continue Shopping
+          </button>
         </div>
       </div>
 
@@ -354,10 +252,10 @@ const OrderSuccess = () => {
         <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4 overflow-y-auto" onClick={() => setShowInvoice(false)}>
           <div className="bg-white rounded-lg max-w-4xl w-full my-8 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center">
-              <h2 className="text-xl font-bold text-gray-900">Invoice</h2>
+              <h2 className="text-xl font-bold text-black">Invoice</h2>
               <button
                 onClick={() => setShowInvoice(false)}
-                className="text-gray-400 hover:text-gray-600 transition-colors"
+                className="text-black hover:text-gray-700 transition-colors"
               >
                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -373,12 +271,12 @@ const OrderSuccess = () => {
                 />
               ) : loadingOrder ? (
                 <div className="text-center py-12">
-                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-4"></div>
-                  <p className="text-gray-600">Loading invoice...</p>
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black mx-auto mb-4"></div>
+                  <p className="text-black">Loading invoice...</p>
                 </div>
               ) : (
                 <div className="text-center py-12">
-                  <p className="text-gray-600">Order details not available</p>
+                  <p className="text-black">Order details not available</p>
                 </div>
               )}
             </div>
@@ -386,52 +284,50 @@ const OrderSuccess = () => {
         </div>
       )}
 
-      {/* Add CSS animations */}
+      {/* CSS Animations */}
       <style>{`
-        @keyframes successPulse {
-          0%, 100% { 
-            transform: scale(1);
-            box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
-          }
-          50% { 
-            transform: scale(1.05);
-            box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);
-          }
-        }
-        @keyframes ripple {
-          0% {
-            transform: scale(1);
-            opacity: 0.5;
-          }
-          100% {
-            transform: scale(2);
+        @keyframes fadeIn {
+          from {
             opacity: 0;
           }
-        }
-        @keyframes checkmarkDraw {
-          0% { 
-            transform: scale(0) rotate(-45deg);
-            opacity: 0;
-          }
-          50% { 
-            transform: scale(1.2) rotate(5deg);
-          }
-          100% { 
-            transform: scale(1) rotate(0deg);
+          to {
             opacity: 1;
           }
         }
-        @keyframes fadeInUp {
-          from { 
+        
+        @keyframes bounce-once {
+          0%, 100% {
+            transform: scale(1);
+          }
+          50% {
+            transform: scale(1.1);
+          }
+        }
+        
+        @keyframes slideUp {
+          from {
             opacity: 0;
             transform: translateY(20px);
           }
-          to { 
+          to {
             opacity: 1;
             transform: translateY(0);
           }
         }
+        
+        .animate-fadeIn {
+          animation: fadeIn 0.5s ease-out;
+        }
+        
+        .animate-bounce-once {
+          animation: bounce-once 0.6s ease-out;
+        }
+        
+        .animate-countdown {
+          animation: fadeIn 0.3s ease-out;
+        }
       `}</style>
+
       <ScrollToTop />
     </div>
   );
