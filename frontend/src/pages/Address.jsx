@@ -535,52 +535,52 @@ export default function AddressForm() {
   };
 
   return (
-    <div className="min-h-screen bg-white p-4">
-      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div className="min-h-screen bg-white p-2 sm:p-4 md:p-6">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         <div className="lg:col-span-2">
           {addresses.length > 0 && !showForm && (
-            <div className="bg-white shadow-lg rounded-2xl border border-gray-200 overflow-hidden mb-6">
-              <div className="bg-white border-b border-gray-200 p-4 flex items-center justify-between">
-                <span className="font-semibold text-lg text-black">SELECT DELIVERY ADDRESS</span>
+            <div className="bg-white shadow-lg rounded-lg sm:rounded-xl lg:rounded-2xl border border-gray-200 overflow-hidden mb-4 sm:mb-6">
+              <div className="bg-white border-b border-gray-200 p-3 sm:p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                <span className="font-semibold text-base sm:text-lg text-black">SELECT DELIVERY ADDRESS</span>
                 <button
                   onClick={handleAddNewAddress}
-                  className="px-4 py-2 bg-pink-500 hover:bg-pink-600 text-white rounded-lg font-semibold transition-all"
+                  className="w-full sm:w-auto px-3 sm:px-4 py-2 bg-pink-500 hover:bg-pink-600 text-white rounded-lg text-sm sm:text-base font-semibold transition-all"
                 >
                   + Add New
                 </button>
               </div>
-              <div className="p-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="p-3 sm:p-4 md:p-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   {addresses.map((address) => (
                     <div
                       key={address._id}
                       onClick={() => handleSelectAddress(address)}
-                      className={`border-2 rounded-xl p-4 cursor-pointer transition-all ${
+                      className={`border-2 rounded-lg sm:rounded-xl p-3 sm:p-4 cursor-pointer transition-all ${
                         selectedAddressId === address._id
                           ? 'border-pink-500 bg-white shadow-lg'
                           : 'border-gray-200 hover:border-gray-300 hover:shadow-md'
                       }`}
                     >
-                      <div className="flex justify-between items-start mb-2">
-                        <div className="flex items-center gap-2">
+                      <div className="flex flex-col sm:flex-row justify-between items-start gap-2 mb-2">
+                        <div className="flex items-center gap-2 flex-wrap">
                           <input
                             type="radio"
                             checked={selectedAddressId === address._id}
                             onChange={() => handleSelectAddress(address)}
-                            className="w-4 h-4 text-pink-500"
+                            className="w-4 h-4 text-pink-500 flex-shrink-0"
                           />
-                          <span className="font-semibold text-black">{address.fullName}</span>
+                          <span className="font-semibold text-sm sm:text-base text-black">{address.fullName}</span>
                           <span className="px-2 py-1 text-xs rounded-full bg-gray-100 text-black">
                             {address.addressType || 'Home'}
                           </span>
                         </div>
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 ml-6 sm:ml-0">
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
                               handleEditAddress(address);
                             }}
-                            className="text-pink-500 hover:text-pink-600 text-sm font-semibold"
+                            className="text-pink-500 hover:text-pink-600 text-xs sm:text-sm font-semibold px-2 py-1 rounded hover:bg-pink-50 transition-colors"
                           >
                             Edit
                           </button>
@@ -589,18 +589,18 @@ export default function AddressForm() {
                               e.stopPropagation();
                               handleDeleteAddress(address._id);
                             }}
-                            className="text-black hover:text-gray-700 text-sm font-semibold"
+                            className="text-black hover:text-gray-700 text-xs sm:text-sm font-semibold px-2 py-1 rounded hover:bg-gray-100 transition-colors"
                           >
                             Delete
                           </button>
                         </div>
                       </div>
-                      <div className="text-sm text-black space-y-1">
-                        <p>{address.addressLine1 || address.address}</p>
-                        {address.addressLine2 && <p>{address.addressLine2}</p>}
+                      <div className="text-xs sm:text-sm text-black space-y-1">
+                        <p className="break-words">{address.addressLine1 || address.address}</p>
+                        {address.addressLine2 && <p className="break-words">{address.addressLine2}</p>}
                         {address.landmark && <p className="italic">Landmark: {address.landmark}</p>}
                         <p className="font-semibold">{address.city}, {address.state} - {address.pincode}</p>
-                        <p>Mobile: {address.mobileNumber || address.alternatePhone}</p>
+                        <p className="break-all">Mobile: {address.mobileNumber || address.alternatePhone}</p>
                       </div>
                     </div>
                   ))}
@@ -609,11 +609,11 @@ export default function AddressForm() {
             </div>
           )}
           {showForm ? (
-            <form onSubmit={handleSaveAddress} className="bg-white shadow-lg rounded-2xl border border-gray-200 overflow-hidden">
-            <div className="bg-white border-b border-gray-200 p-4 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <span className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center font-bold text-black">1</span>
-                <span className="font-semibold text-lg text-black">{editMode ? 'EDIT ADDRESS' : 'ADD NEW ADDRESS'}</span>
+            <form onSubmit={handleSaveAddress} className="bg-white shadow-lg rounded-lg sm:rounded-xl lg:rounded-2xl border border-gray-200 overflow-hidden">
+            <div className="bg-white border-b border-gray-200 p-3 sm:p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <span className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gray-100 flex items-center justify-center font-bold text-xs sm:text-sm text-black">1</span>
+                <span className="font-semibold text-sm sm:text-base lg:text-lg text-black">{editMode ? 'EDIT ADDRESS' : 'ADD NEW ADDRESS'}</span>
               </div>
               {addresses.length > 0 && (
                 <button
@@ -626,28 +626,28 @@ export default function AddressForm() {
                       if (selected) handleSelectAddress(selected);
                     }
                   }}
-                  className="text-black hover:text-gray-700"
+                  className="text-sm sm:text-base text-black hover:text-gray-700 px-3 py-1 rounded hover:bg-gray-100 transition-colors"
                 >
                   Cancel
                 </button>
               )}
             </div>
 
-            <div className="p-6">
+            <div className="p-3 sm:p-4 md:p-6">
               {loadingAddress && (
                 <div className="mb-4 text-sm text-black">Loading your saved address…</div>
               )}
               {hasSavedAddress && !editMode && (
-                <div className="mb-6 border border-gray-200 rounded p-4 bg-white">
-                  <div className="font-medium text-black">{formData.name}</div>
-                  <div className="text-sm text-black">{formData.address}</div>
-                  <div className="text-sm text-black">{formData.locality}, {formData.city} - {formData.pincode}</div>
-                  <div className="text-sm text-black">{formData.state}</div>
-                  <div className="text-sm text-black">Mobile: {formData.mobile}</div>
-                  {formData.landmark && <div className="text-sm text-black">Landmark: {formData.landmark}</div>}
-                  {formData.alternatePhone && <div className="text-sm text-black">Alt: {formData.alternatePhone}</div>}
-                  <div className="mt-4 flex gap-3">
-                    <button type="button" onClick={() => setEditMode(true)} className="px-4 py-2 bg-pink-500 hover:bg-pink-600 text-white rounded-lg cursor-pointer font-semibold transition-all shadow-sm hover:shadow-md">Edit Address</button>
+                <div className="mb-4 sm:mb-6 border border-gray-200 rounded p-3 sm:p-4 bg-white">
+                  <div className="font-medium text-sm sm:text-base text-black mb-2">{formData.name}</div>
+                  <div className="text-xs sm:text-sm text-black break-words">{formData.address}</div>
+                  <div className="text-xs sm:text-sm text-black">{formData.locality}, {formData.city} - {formData.pincode}</div>
+                  <div className="text-xs sm:text-sm text-black">{formData.state}</div>
+                  <div className="text-xs sm:text-sm text-black break-all">Mobile: {formData.mobile}</div>
+                  {formData.landmark && <div className="text-xs sm:text-sm text-black">Landmark: {formData.landmark}</div>}
+                  {formData.alternatePhone && <div className="text-xs sm:text-sm text-black break-all">Alt: {formData.alternatePhone}</div>}
+                  <div className="mt-3 sm:mt-4 flex flex-col sm:flex-row gap-2 sm:gap-3">
+                    <button type="button" onClick={() => setEditMode(true)} className="w-full sm:w-auto px-3 sm:px-4 py-2 bg-pink-500 hover:bg-pink-600 text-white rounded-lg text-sm sm:text-base cursor-pointer font-semibold transition-all shadow-sm hover:shadow-md">Edit Address</button>
                     <button 
                       type="button" 
                       onClick={async () => {
@@ -676,7 +676,7 @@ export default function AddressForm() {
                           }
                         }
                       }}
-                      className="px-4 py-2 border-2 border-gray-300 hover:bg-gray-50 text-black cursor-pointer font-semibold transition-all shadow-sm hover:shadow-md rounded-lg"
+                      className="w-full sm:w-auto px-3 sm:px-4 py-2 border-2 border-gray-300 hover:bg-gray-50 text-black cursor-pointer text-sm sm:text-base font-semibold transition-all shadow-sm hover:shadow-md rounded-lg"
                     >
                       Delete Address
                     </button>
@@ -687,17 +687,17 @@ export default function AddressForm() {
               <button
                 type="button"
                 onClick={handleUseCurrentLocation}
-                className="mb-6 bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all font-medium shadow-md hover:shadow-lg cursor-pointer"
+                className="mb-4 sm:mb-6 bg-pink-500 hover:bg-pink-600 text-white px-3 sm:px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-all text-sm sm:text-base font-medium shadow-md hover:shadow-lg cursor-pointer w-full sm:w-auto"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
                 </svg>
-                Use my current location
+                <span className="whitespace-nowrap">Use my current location</span>
               </button>
 
-              <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 ${hasSavedAddress && !editMode ? 'opacity-50 pointer-events-none select-none' : ''}`}>
+              <div className={`grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 ${hasSavedAddress && !editMode ? 'opacity-50 pointer-events-none select-none' : ''}`}>
                 <div>
-                  <label className="block text-xs text-black mb-1">Name</label>
+                  <label className="block text-xs sm:text-sm text-black mb-1">Name</label>
                   <input
                     type="text"
                     name="name"
@@ -705,11 +705,11 @@ export default function AddressForm() {
                     onChange={handleInputChange}
                     placeholder="Enter your full name"
                     required
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all text-black bg-white"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all text-black bg-white"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-black mb-1">10-digit mobile number</label>
+                  <label className="block text-xs sm:text-sm text-black mb-1">10-digit mobile number</label>
                   <input
                     type="tel"
                     name="mobile"
@@ -718,14 +718,14 @@ export default function AddressForm() {
                     maxLength={10}
                     placeholder="Enter 10-digit mobile number"
                     required
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all text-black bg-white"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all text-black bg-white"
                   />
                 </div>
               </div>
 
-              <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 ${hasSavedAddress && !editMode ? 'opacity-50 pointer-events-none select-none' : ''}`}>
+              <div className={`grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 ${hasSavedAddress && !editMode ? 'opacity-50 pointer-events-none select-none' : ''}`}>
                 <div>
-                  <label className="block text-xs text-black mb-1">Pincode</label>
+                  <label className="block text-xs sm:text-sm text-black mb-1">Pincode</label>
                   <input
                     type="text"
                     name="pincode"
@@ -734,11 +734,11 @@ export default function AddressForm() {
                     maxLength={6}
                     placeholder="Enter 6-digit pincode"
                     required
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all text-black bg-white"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all text-black bg-white"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-black mb-1">Locality</label>
+                  <label className="block text-xs sm:text-sm text-black mb-1">Locality</label>
                   <input
                     type="text"
                     name="locality"
@@ -746,13 +746,13 @@ export default function AddressForm() {
                     onChange={handleInputChange}
                     placeholder="Enter your locality"
                     required
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all text-black bg-white"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all text-black bg-white"
                   />
                 </div>
               </div>
 
               <div className={`${hasSavedAddress && !editMode ? 'opacity-50 pointer-events-none select-none' : ''}`}>
-                <label className="block text-xs text-black mb-1">Address (Area and Street)</label>
+                <label className="block text-xs sm:text-sm text-black mb-1">Address (Area and Street)</label>
                 <textarea
                   name="address"
                   value={formData.address}
@@ -760,13 +760,13 @@ export default function AddressForm() {
                   rows={3}
                   placeholder="Enter your complete address"
                   required
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all text-black bg-white"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all text-black bg-white resize-none"
                 />
               </div>
 
-              <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 ${hasSavedAddress && !editMode ? 'opacity-50 pointer-events-none select-none' : ''}`}>
+              <div className={`grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 ${hasSavedAddress && !editMode ? 'opacity-50 pointer-events-none select-none' : ''}`}>
                 <div>
-                  <label className="block text-xs text-black mb-1">City/District/Town</label>
+                  <label className="block text-xs sm:text-sm text-black mb-1">City/District/Town</label>
                   <input
                     type="text"
                     name="city"
@@ -774,25 +774,25 @@ export default function AddressForm() {
                     onChange={handleInputChange}
                     placeholder="Enter your city"
                     required
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all text-black bg-white"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all text-black bg-white"
                   />
                 </div>
                 <div className="relative" ref={stateDropdownRef}>
-                  <label className="block text-xs text-black mb-1">State</label>
+                  <label className="block text-xs sm:text-sm text-black mb-1">State</label>
                   <div 
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white cursor-pointer transition-all"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white cursor-pointer transition-all"
                     onClick={() => setShowStateDropdown(!showStateDropdown)}
                   >
                     {formData.state || 'Select State'}
                   </div>
                   
                   {showStateDropdown && (
-                    <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-xl max-h-60 overflow-y-auto">
-                      <div className="p-2 border-b border-gray-200">
+                    <div className="absolute z-20 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-xl max-h-60 overflow-y-auto">
+                      <div className="p-2 border-b border-gray-200 sticky top-0 bg-white">
                         <input
                           type="text"
                           placeholder="Search state..."
-                          className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all"
+                          className="w-full p-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all"
                           value={searchTerm}
                           onChange={(e) => setSearchTerm(e.target.value)}
                           onClick={(e) => e.stopPropagation()}
@@ -803,7 +803,7 @@ export default function AddressForm() {
                           filteredStates.map((state) => (
                             <div
                               key={state}
-                              className={`px-4 py-2 hover:bg-gray-100 cursor-pointer transition-colors ${
+                              className={`px-3 sm:px-4 py-2 text-sm sm:text-base hover:bg-gray-100 cursor-pointer transition-colors ${
                                 formData.state === state ? 'bg-gray-100 text-black font-medium' : 'text-black'
                               }`}
                               onClick={() => {
@@ -816,7 +816,7 @@ export default function AddressForm() {
                             </div>
                           ))
                         ) : (
-                          <div className="px-4 py-2 text-black">No states found</div>
+                          <div className="px-4 py-2 text-sm text-black">No states found</div>
                         )}
                       </div>
                     </div>
@@ -824,20 +824,20 @@ export default function AddressForm() {
                 </div>
               </div>
 
-              <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 ${hasSavedAddress && !editMode ? 'opacity-50 pointer-events-none select-none' : ''}`}>
+              <div className={`grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 ${hasSavedAddress && !editMode ? 'opacity-50 pointer-events-none select-none' : ''}`}>
                 <div>
-                  <label className="block text-xs text-black mb-1">Landmark (Optional)</label>
+                  <label className="block text-xs sm:text-sm text-black mb-1">Landmark (Optional)</label>
                   <input
                     type="text"
                     name="landmark"
                     value={formData.landmark}
                     onChange={handleInputChange}
                     placeholder="E.g., Near Central Mall"
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all text-black bg-white"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all text-black bg-white"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-black mb-1">Alternate Phone (Optional)</label>
+                  <label className="block text-xs sm:text-sm text-black mb-1">Alternate Phone (Optional)</label>
                   <input
                     type="text"
                     name="alternatePhone"
@@ -845,25 +845,25 @@ export default function AddressForm() {
                     onChange={handleInputChange}
                     maxLength={10}
                     placeholder="Alternate phone (Optional)"
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all text-black bg-white"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all text-black bg-white"
                   />
                 </div>
               </div>
 
               <div className={`${hasSavedAddress && !editMode ? 'opacity-50 pointer-events-none select-none' : ''}`}>
-                <label className="block text-xs text-black mb-2">Address Type</label>
-                <div className="flex gap-4">
-                  <label className="flex items-center gap-2">
+                <label className="block text-xs sm:text-sm text-black mb-2">Address Type</label>
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                  <label className="flex items-center gap-2 cursor-pointer">
                     <input
                       type="radio"
                       name="addressType"
                       checked={formData.addressType === 'home'}
                       onChange={() => handleAddressTypeChange('home')}
-                      className="w-4 h-4"
+                      className="w-4 h-4 text-pink-500"
                     />
-                    <span className="text-sm text-black">Home (All day delivery)</span>
+                    <span className="text-xs sm:text-sm text-black">Home (All day delivery)</span>
                   </label>
-                  <label className="flex items-center gap-2">
+                  <label className="flex items-center gap-2 cursor-pointer">
                     <input
                       type="radio"
                       name="addressType"
@@ -871,22 +871,22 @@ export default function AddressForm() {
                       onChange={() => handleAddressTypeChange('work')}
                       className="w-4 h-4 text-pink-500"
                     />
-                    <span className="text-sm text-black">Work (Delivery between 10 AM - 5 PM)</span>
+                    <span className="text-xs sm:text-sm text-black">Work (Delivery between 10 AM - 5 PM)</span>
                   </label>
                 </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-4 pt-2 w-full">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2 w-full">
                 <button
                   type="submit"
                   disabled={saving}
-                  className={`bg-pink-500 hover:bg-pink-600 text-white px-8 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl cursor-pointer w-full sm:w-auto text-center transform hover:scale-105 active:scale-95 ${saving ? 'opacity-70 cursor-not-allowed' : ''}`}
+                  className={`bg-pink-500 hover:bg-pink-600 text-white px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 rounded-lg sm:rounded-xl text-sm sm:text-base font-semibold transition-all shadow-lg hover:shadow-xl cursor-pointer w-full text-center transform hover:scale-105 active:scale-95 ${saving ? 'opacity-70 cursor-not-allowed' : ''}`}
                 >
                   {saving ? 'Saving...' : 'SAVE AND DELIVER HERE'}
                 </button>
                 <button
                   onClick={handleCancel}
-                  className="bg-white border-2 border-gray-300 hover:bg-gray-50 text-black px-6 py-3 rounded-xl font-semibold transition-all cursor-pointer w-full sm:w-auto text-center shadow-md hover:shadow-lg"
+                  className="bg-white border-2 border-gray-300 hover:bg-gray-50 text-black px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl text-sm sm:text-base font-semibold transition-all cursor-pointer w-full text-center shadow-md hover:shadow-lg"
                 >
                   CANCEL
                 </button>
@@ -903,53 +903,53 @@ export default function AddressForm() {
             </div>
             </form>
           ) : addresses.length > 0 ? (
-            <div className="bg-white shadow-lg rounded-2xl border border-gray-200 overflow-hidden">
-              <div className="bg-white border-b border-gray-200 p-4 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <span className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center font-bold text-black">1</span>
-                  <span className="font-semibold text-lg text-black">SELECTED ADDRESS</span>
+            <div className="bg-white shadow-lg rounded-lg sm:rounded-xl lg:rounded-2xl border border-gray-200 overflow-hidden">
+              <div className="bg-white border-b border-gray-200 p-3 sm:p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <span className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gray-100 flex items-center justify-center font-bold text-xs sm:text-sm text-black">1</span>
+                  <span className="font-semibold text-sm sm:text-base lg:text-lg text-black">SELECTED ADDRESS</span>
                 </div>
                 <button
                   onClick={handleAddNewAddress}
-                  className="px-4 py-2 bg-pink-500 hover:bg-pink-600 text-white rounded-lg font-semibold transition-all"
+                  className="w-full sm:w-auto px-3 sm:px-4 py-2 bg-pink-500 hover:bg-pink-600 text-white rounded-lg text-sm sm:text-base font-semibold transition-all"
                 >
                   + Add New
                 </button>
               </div>
-              <div className="p-6">
+              <div className="p-3 sm:p-4 md:p-6">
                 {selectedAddressId && addresses.find(a => a._id === selectedAddressId) && (() => {
                   const selected = addresses.find(a => a._id === selectedAddressId);
                   return (
-                    <div className="mb-4 p-4 border-2 border-gray-200 bg-white rounded-xl">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h3 className="font-medium text-black">{selected.fullName}</h3>
-                          <p className="text-black">
+                    <div className="mb-4 p-3 sm:p-4 border-2 border-gray-200 bg-white rounded-lg sm:rounded-xl">
+                      <div className="flex flex-col sm:flex-row justify-between items-start gap-3">
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-medium text-sm sm:text-base text-black mb-1">{selected.fullName}</h3>
+                          <p className="text-xs sm:text-sm text-black break-words">
                             {selected.addressLine1 || selected.address}, {selected.locality},<br />
                             {selected.city}, {selected.state} - {selected.pincode}
                           </p>
-                          {selected.addressLine2 && <p className="text-black">{selected.addressLine2}</p>}
-                          <p className="mt-2 text-black">
+                          {selected.addressLine2 && <p className="text-xs sm:text-sm text-black break-words">{selected.addressLine2}</p>}
+                          <p className="mt-2 text-xs sm:text-sm text-black break-all">
                             <span className="font-medium">Mobile:</span> {selected.mobileNumber}
                             {selected.alternatePhone && `, ${selected.alternatePhone}`}
                           </p>
                           {selected.landmark && (
-                            <p><span className="font-medium">Landmark:</span> {selected.landmark}</p>
+                            <p className="text-xs sm:text-sm text-black"><span className="font-medium">Landmark:</span> {selected.landmark}</p>
                           )}
                         </div>
-                        <div className="flex flex-col items-end gap-2">
-                          <div className="flex gap-3">
+                        <div className="flex flex-col sm:flex-col items-start sm:items-end gap-2 w-full sm:w-auto">
+                          <div className="flex gap-2 sm:gap-3 w-full sm:w-auto">
                             <button
                               type="button"
                               onClick={() => handleEditAddress(selected)}
-                              className="text-pink-500 hover:text-pink-600 text-sm font-semibold px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors"
+                              className="flex-1 sm:flex-none text-pink-500 hover:text-pink-600 text-xs sm:text-sm font-semibold px-2 sm:px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors"
                             >
                               EDIT
                             </button>
                             <button
                               type="button"
                               onClick={() => handleDeleteAddress(selected._id)}
-                              className="text-black hover:text-gray-700 text-sm font-semibold px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors"
+                              className="flex-1 sm:flex-none text-black hover:text-gray-700 text-xs sm:text-sm font-semibold px-2 sm:px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors"
                             >
                               DELETE
                             </button>
@@ -968,40 +968,40 @@ export default function AddressForm() {
         </div>
 
         <div className="lg:col-span-1">
-          <div className="bg-white shadow-lg rounded-2xl border border-gray-200 p-6 sticky top-4">
-            <h3 className="text-black text-lg font-bold mb-6 flex items-center gap-2">
-              <span className="w-1 h-6 bg-pink-500 rounded-full"></span>
-              PRICE DETAILS
+          <div className="bg-white shadow-lg rounded-lg sm:rounded-xl lg:rounded-2xl border border-gray-200 p-4 sm:p-5 md:p-6 sticky top-2 sm:top-4">
+            <h3 className="text-black text-base sm:text-lg font-bold mb-4 sm:mb-6 flex items-center gap-2">
+              <span className="w-1 h-4 sm:h-6 bg-pink-500 rounded-full"></span>
+              <span className="text-sm sm:text-base lg:text-lg">PRICE DETAILS</span>
             </h3>
 
-            <div className="space-y-3 mb-4 pb-4 border-b border-gray-200">
-              <div className="flex justify-between text-sm text-black">
-                <span>Price ({priceDetails.items} {priceDetails.items === 1 ? 'item' : 'items'})</span>
-                <span className="font-semibold">₹{priceDetails.subtotal.toLocaleString()}</span>
+            <div className="space-y-2 sm:space-y-3 mb-3 sm:mb-4 pb-3 sm:pb-4 border-b border-gray-200">
+              <div className="flex justify-between text-xs sm:text-sm text-black">
+                <span className="break-words">Price ({priceDetails.items} {priceDetails.items === 1 ? 'item' : 'items'})</span>
+                <span className="font-semibold ml-2 whitespace-nowrap">₹{priceDetails.subtotal.toLocaleString()}</span>
               </div>
-              <div className="flex justify-between text-sm text-black">
+              <div className="flex justify-between text-xs sm:text-sm text-black">
                 <span>Shipping</span>
-                <span className="font-semibold">
+                <span className="font-semibold whitespace-nowrap">
                   {priceDetails.shippingCharge > 0 ? `₹${priceDetails.shippingCharge.toLocaleString()}` : 'Free ✓'}
                 </span>
               </div>
-              <div className="flex justify-between text-sm text-black">
+              <div className="flex justify-between text-xs sm:text-sm text-black">
                 <span>Tax (5%)</span>
-                <span className="font-semibold">₹{priceDetails.tax.toLocaleString()}</span>
+                <span className="font-semibold whitespace-nowrap">₹{priceDetails.tax.toLocaleString()}</span>
               </div>
             </div>
 
-            <div className="flex justify-between font-bold text-lg mb-4 pb-4 border-b-2 border-gray-200">
+            <div className="flex justify-between font-bold text-base sm:text-lg mb-3 sm:mb-4 pb-3 sm:pb-4 border-b-2 border-gray-200">
               <span className="text-black">Total Payable</span>
-              <span className="text-black">₹{priceDetails.total.toLocaleString()}</span>
+              <span className="text-black whitespace-nowrap">₹{priceDetails.total.toLocaleString()}</span>
             </div>
 
             {/* Payment Method Selection */}
             {hasSavedAddress && (
-              <div className="mb-4 pb-4 border-b-2 border-gray-200">
-                <h4 className="text-black font-semibold mb-3 text-sm">Select Payment Method</h4>
+              <div className="mb-3 sm:mb-4 pb-3 sm:pb-4 border-b-2 border-gray-200">
+                <h4 className="text-black font-semibold mb-2 sm:mb-3 text-xs sm:text-sm">Select Payment Method</h4>
                 <div className="space-y-2">
-                  <label className={`flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer transition-all ${
+                  <label className={`flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg border-2 cursor-pointer transition-all ${
                     paymentMethod === 'online' 
                       ? 'border-pink-500 bg-white' 
                       : 'border-gray-200 hover:border-gray-300'
@@ -1012,18 +1012,18 @@ export default function AddressForm() {
                       value="online"
                       checked={paymentMethod === 'online'}
                       onChange={(e) => setPaymentMethod(e.target.value)}
-                      className="w-4 h-4 text-pink-500 focus:ring-pink-500"
+                      className="w-4 h-4 text-pink-500 focus:ring-pink-500 flex-shrink-0"
                     />
-                    <div className="flex-1">
-                      <div className="font-medium text-black">Online Payment</div>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium text-xs sm:text-sm text-black">Online Payment</div>
                       <div className="text-xs text-black">Pay securely with Razorpay</div>
                     </div>
-                    <svg className="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 sm:w-5 sm:h-5 text-black flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                     </svg>
                   </label>
                   
-                  <label className={`flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer transition-all ${
+                  <label className={`flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg border-2 cursor-pointer transition-all ${
                     paymentMethod === 'cod' 
                       ? 'border-pink-500 bg-white' 
                       : 'border-gray-200 hover:border-gray-300'
@@ -1034,13 +1034,13 @@ export default function AddressForm() {
                       value="cod"
                       checked={paymentMethod === 'cod'}
                       onChange={(e) => setPaymentMethod(e.target.value)}
-                      className="w-4 h-4 text-pink-500 focus:ring-pink-500"
+                      className="w-4 h-4 text-pink-500 focus:ring-pink-500 flex-shrink-0"
                     />
-                    <div className="flex-1">
-                      <div className="font-medium text-black">Cash on Delivery</div>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium text-xs sm:text-sm text-black">Cash on Delivery</div>
                       <div className="text-xs text-black">Pay when you receive your order</div>
                     </div>
-                    <svg className="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 sm:w-5 sm:h-5 text-black flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
                     </svg>
                   </label>
@@ -1051,7 +1051,7 @@ export default function AddressForm() {
             <button 
               onClick={handlePayment}
               disabled={!hasSavedAddress}
-              className={`w-full mt-4 py-4 px-4 rounded-xl transition-all font-bold cursor-pointer shadow-lg ${
+              className={`w-full mt-3 sm:mt-4 py-3 sm:py-4 px-3 sm:px-4 rounded-lg sm:rounded-xl transition-all text-sm sm:text-base font-bold cursor-pointer shadow-lg ${
                 hasSavedAddress 
                   ? 'bg-pink-500 hover:bg-pink-600 text-white hover:shadow-xl transform hover:scale-105 active:scale-95' 
                   : 'bg-gray-300 text-gray-600 cursor-not-allowed'
